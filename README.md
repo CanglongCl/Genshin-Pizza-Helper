@@ -6,9 +6,9 @@
 
 This is the source code of **the newest version on the App Store** of Genshin Pizza Helper.
 
-We are making this App open-sourced so that **every one can read the source code and compile the App on their local, and everyone can know how does this App work.** If you are worrying about something like this App may cause your personal data leaked, or anything else, this source code can proof that this will never happen.
+We are making this App open-sourced so that **every one can read the source code and compile the App on their local, and everyone can know how does this App work.** If you are worrying about something like this App may cause your personal data leaked, or anything else, this source code can prove that this will never happen.
 
-If you are not a developer and you cannot understand this source code, all the people in the world who can read this can help proof it. Also, everyone in the world can supervise us about the security of this app.
+If you are not a developer and you cannot understand this source code, all the people in the world who can read this can help prove it. Also, everyone in the world can supervise us about the security of this app.
 
 ## **License**
 
