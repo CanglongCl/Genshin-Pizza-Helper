@@ -1,0 +1,11 @@
+/* 
+  InfoPlist.strings
+  GenshinPizzaHelper
+
+  Created by Bill Haku on 2022/8/23.
+  
+*/
+
+"CFBundleDisplayName" = "Genshin Pizza";
+"NSPhotoLibraryAddUsageDescription" = "Please allow images to be saved";
+"NSCameraUsageDescription" = "If you want use camera in HoYoLAB's web and upload photos, please allow the use of camera";

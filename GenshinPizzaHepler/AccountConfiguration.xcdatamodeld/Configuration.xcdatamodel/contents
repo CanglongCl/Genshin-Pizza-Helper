@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="AccountConfiguration" representedClassName="AccountConfiguration" syncable="YES" codeGenerationType="class">
+        <attribute name="cookie" attributeType="String" defaultValueString=""/>
+        <attribute name="name" attributeType="String" defaultValueString="我的账号"/>
+        <attribute name="serverRawValue" attributeType="String" defaultValueString="&quot;天空岛&quot;"/>
+        <attribute name="uid" attributeType="String" defaultValueString=""/>
+        <attribute name="uuid" attributeType="UUID" usesScalarValueType="NO"/>
+    </entity>
+    <elements>
+        <element name="AccountConfiguration" positionX="-63" positionY="-18" width="128" height="104"/>
+    </elements>
+</model>

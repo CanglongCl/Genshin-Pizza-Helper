@@ -1,0 +1,184 @@
+"1Ev2Th-7Mpxy7" = "Just to confirm, you wanted ‘（未知）’?";
+
+"1Ev2Th-Az9Qxm" = "Just to confirm, you wanted ‘完成后不显示’?";
+
+"1Ev2Th-TDccRa" = "Just to confirm, you wanted ‘始终不显示’?";
+
+"1Ev2Th-lMTFKb" = "Just to confirm, you wanted ‘始终显示’?";
+
+"2yWIH0" = "（未知）";
+
+"3m73ML" = "（未知）";
+
+"6LTnsO" = "false";
+
+"7Mpxy7" = "（未知）";
+
+"81ss5Y" = "全部完成の時";
+
+"9W1NzG" = "true";
+
+"Az9Qxm" = "完了後表示しない";
+
+"DKesAN" = "完了所要時間";
+
+"DQpiCm" = "週ボスを表示";
+
+"EnqoJ9" = "アカウント";
+
+"Jbahdk" = "false";
+
+"K2iJCd" = "今日の材料を表示（大サイズのみ）";
+
+"MVmO5f" = "参量物質変化器を表示";
+
+"NEV35Z" = "探索派遣中人数";
+
+"NI3XnI" = "ウィジェット対応のアカウントを選択";
+
+"P3fcKK" = "ウィジェット対応のアカウントを選択";
+
+"PLml4M" = "Weekly Bosses Showing Method";
+
+"PS8etl" = "はい";
+
+"TDccRa" = "消して表示しない";
+
+"TYuPZZ" = "アカウント";
+
+"XXexIV" = "参量物質変化器を表示";
+
+"a0FhAC-9W1NzG" = "There are ${count} options matching ‘true’.";
+
+"a0FhAC-Jbahdk" = "There are ${count} options matching ‘false’.";
+
+"a0FhAC-i8VQT9" = "There are ${count} options matching ‘true’.";
+
+"a0FhAC-vl1bDD" = "There are ${count} options matching ‘false’.";
+
+"a5PB3w" = "次回の完了時間";
+
+"cjQ7ix-3m73ML" = "Just to confirm, you wanted ‘（未知）’?";
+
+"cjQ7ix-DKesAN" = "Just to confirm, you wanted ‘完成所需时间’?";
+
+"cjQ7ix-NEV35Z" = "Just to confirm, you wanted ‘正在探索人数’?";
+
+"cjQ7ix-vFlGnC" = "Just to confirm, you wanted ‘完成时间点’?";
+
+"d0PsaK" = "true";
+
+"d7jH4f-7Mpxy7" = "There are ${count} options matching ‘（未知）’.";
+
+"d7jH4f-Az9Qxm" = "There are ${count} options matching ‘完成后不显示’.";
+
+"d7jH4f-TDccRa" = "There are ${count} options matching ‘始终不显示’.";
+
+"d7jH4f-lMTFKb" = "There are ${count} options matching ‘始终显示’.";
+
+"dUyzRX" = "探索派遣表示フォーム";
+
+"e0kZEQ-2yWIH0" = "Just to confirm, you wanted ‘（未知）’?";
+
+"e0kZEQ-81ss5Y" = "Just to confirm, you wanted ‘全部完成时’?";
+
+"e0kZEQ-a5PB3w" = "Just to confirm, you wanted ‘下一个完成时’?";
+
+"enBbLR" = "アカウント";
+
+"f8OJzI" = "ウィジェット背景";
+
+"fYQAf4" = "Expedition Notice Method";
+
+"gknWkx" = "ランダムな背景";
+
+"gxv19W" = "はい";
+
+"hT68r4" = "週ボス表示フォーム";
+
+"i8VQT9" = "true";
+
+"k2M7XL" = "Expedition Showing Method";
+
+"ktBsgM" = "true";
+
+"l4a3No-2yWIH0" = "There are ${count} options matching ‘（未知）’.";
+
+"l4a3No-81ss5Y" = "There are ${count} options matching ‘全部完成时’.";
+
+"l4a3No-a5PB3w" = "There are ${count} options matching ‘下一个完成时’.";
+
+"lMTFKb" = "常に表示";
+
+"lbRsap" = "探索派遣通知時間";
+
+"ll3vKn" = "false";
+
+"mKzz1P" = "ダークモードを使用する（システムに従う）";
+
+"mRXrdK" = "いいえ";
+
+"ppnCJD" = "いいえ";
+
+"qijLJm" = "アカウント名";
+
+"rfBAEx-3m73ML" = "There are ${count} options matching ‘（未知）’.";
+
+"rfBAEx-DKesAN" = "There are ${count} options matching ‘完成所需时间’.";
+
+"rfBAEx-NEV35Z" = "There are ${count} options matching ‘正在探索人数’.";
+
+"rfBAEx-vFlGnC" = "There are ${count} options matching ‘完成时间点’.";
+
+"sWpemX" = "アカウントを選択";
+
+"vAR6GW" = "アカウントを選択";
+
+"vFlGnC" = "完成時間";
+
+"vK3j6C" = "背景";
+
+"vl1bDD" = "false";
+
+"yjs09O" = "アカウントを選択とその他";
+
+"zQrKVi" = "ウィジェットの表示されたアカウントを選択";
+
+"3xS9bp" = "Widget Background Color";
+
+"52SZIK" = "★★緑";
+
+"89DxTH" = "風元素";
+
+"DYkkLk" = "★★★★★金";
+
+"H3Ih3C" = "★灰";
+
+"I4e2SF" = "炎元素";
+
+"NKtRSE" = "岩元素";
+
+"S20R6h" = "氷元素";
+
+"TAftI9" = "草元素";
+
+"Vs9Whf" = "Widget Background Type";
+
+"YrOyp9" = "★★★青";
+
+"bMiiOE" = "（未知）";
+
+"fFVHow" = "namecard";
+
+"ft3ye3" = "★★★★★赤";
+
+"lnnUEA" = "水元素";
+
+"oi0S30" = "color";
+
+"pmxRYI" = "★★★★紫";
+
+"sCNVNi" = "雷元素";
+
+"wnGFsd" = "紡がれた運命";
+
