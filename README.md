@@ -1,6 +1,6 @@
 # Genshin Pizza Helper Open Source Project
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/canglongci/genshin-pizza-helper?label=App%20Store)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/canglongcl/genshin-pizza-helper?label=App%20Store)
 
 ## Introduction
 
