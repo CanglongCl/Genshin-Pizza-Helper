@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct InAppMaterialNavigator: View {
-    var today: MaterialWeekday = .today()
-    var talentMaterialProvider: TalentMaterialProvider { .init(weekday: today) }
-    var weaponMaterialProvider: WeaponMaterialProvider { .init(weekday: today) }
+    @State var showingWeekday: MaterialWeekday = .today()
+    var talentMaterialProvider: TalentMaterialProvider { .init(weekday: showingWeekday) }
+    var weaponMaterialProvider: WeaponMaterialProvider { .init(weekday: showingWeekday) }
 
     let uuid = UUID()
 
@@ -25,12 +25,26 @@ struct InAppMaterialNavigator: View {
     var body: some View {
         VStack {
             HStack {
-                if today != .sunday {
-                    Text("今日材料")
-                        .padding(.leading, 25)
-                        .font(.caption)
-                        .padding(.top)
-                        .padding(.bottom, -10)
+                if showingWeekday != .sunday {
+                    Group {
+                        if showMaterialDetail {
+                            Menu(showingWeekday.describe()) {
+                                ForEach(MaterialWeekday.allCases, id: \.hashValue) { weekday in
+                                    Button(weekday.describe()) {
+                                        withAnimation {
+                                            showingWeekday = weekday
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            Text("今日材料")
+                        }
+                    }
+                    .padding(.leading, 25)
+                    .font(.caption)
+                    .padding(.top)
+                    .padding(.bottom, -10)
                     Spacer()
                     if showMaterialDetail == false {
                         Text(getDate())
@@ -41,6 +55,7 @@ struct InAppMaterialNavigator: View {
                         Button("收起") {
                             simpleTaptic(type: .light)
                             withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 1.0, blendDuration: 0)) {
+                                showingWeekday = .today()
                                 showRelatedDetailOfMaterial = nil
                                 showMaterialDetail = false
                             }
@@ -57,15 +72,26 @@ struct InAppMaterialNavigator: View {
                         .padding(.top)
                         .padding(.bottom, -10)
                 } else {
-                    Text("今日材料")
-                        .font(.caption)
-                        .padding(.vertical)
-                        .padding(.leading, 25)
+                    Group {
+                        if showMaterialDetail {
+                            Menu(showingWeekday.describe()) {
+                                ForEach(MaterialWeekday.allCases, id: \.hashValue) { weekday in
+                                    Button(weekday.describe()) {
+                                        showingWeekday = weekday
+                                    }
+                                }
+                            }
+                        } else {
+                            Text("今日材料")
+                        }
+                    }
+                    .font(.caption)
+                    .padding(.vertical)
+                    .padding(.leading, 25)
                     Spacer()
                     Group {
-                        if showMaterialDetail { Text("点击材料查看关联角色") }
-                        else if showRelatedDetailOfMaterial != nil { Text("左右滑动查看所有角色") }
-                        else { Text("所有材料均可获取")}
+                        if showRelatedDetailOfMaterial != nil { Text("左右滑动查看所有角色") }
+                        else { Text("所有材料均可获取") }
                     }
                     .multilineTextAlignment(.center)
                     .font(.caption)
@@ -79,6 +105,7 @@ struct InAppMaterialNavigator: View {
                         Button("收起") {
                             simpleTaptic(type: .light)
                             withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 1.0, blendDuration: 0)) {
+                                showingWeekday = .today()
                                 showRelatedDetailOfMaterial = nil
                                 showMaterialDetail = false
                             }
@@ -93,26 +120,12 @@ struct InAppMaterialNavigator: View {
                         .font(.caption)
                 }
             }
-            .onTapGesture {
-                if showMaterialDetail {
-                    simpleTaptic(type: .light)
-                    withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 1.0, blendDuration: 0)) {
-                        showRelatedDetailOfMaterial = nil
-                        showMaterialDetail = false
-                    }
-                } else {
-                    simpleTaptic(type: .light)
-                    withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 1.0, blendDuration: 0)) {
-                        showMaterialDetail = true
-                    }
-                }
-            }
             if !showMaterialDetail {
                 materials()
             } else {
                 if showRelatedDetailOfMaterial == nil {
                     materialsDetail()
-                        .padding(.vertical)
+                        .padding(showingWeekday != .sunday ? .vertical : .bottom)
                 } else {
                     materialRelatedItemView()
                         .padding()
@@ -126,6 +139,7 @@ struct InAppMaterialNavigator: View {
             if !showMaterialDetail {
                 simpleTaptic(type: .light)
                 withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 1.0, blendDuration: 0)) {
+                    showingWeekday = .today()
                     showMaterialDetail = true
                 }
             }
@@ -140,7 +154,7 @@ struct InAppMaterialNavigator: View {
 
     @ViewBuilder
     func materials() -> some View {
-        if today != .sunday {
+        if showingWeekday != .sunday {
             let imageWidth = CGFloat(40)
             HStack(spacing: 0) {
                 Spacer()
@@ -216,11 +230,6 @@ struct InAppMaterialNavigator: View {
                 Spacer()
             }
             Spacer()
-            Text("点击材料查看更多")
-                .font(.caption)
-                .padding(.trailing)
-                .foregroundColor(.secondary)
-            Spacer()
         }
     }
 
@@ -277,4 +286,5 @@ struct InAppMaterialNavigator: View {
         formatter.setLocalizedDateFormatFromTemplate("MMMMd EEEE")
         return formatter.string(from: Date())
     }
+
 }

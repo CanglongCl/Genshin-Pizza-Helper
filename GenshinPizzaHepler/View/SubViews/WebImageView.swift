@@ -14,11 +14,19 @@ struct WebImage: View {
 
     var body: some View {
         if #available(iOS 15.0, watchOS 8.0, *) {
-            AsyncImage(url: URL(string: urlStr)) { image in
-                image.resizable().aspectRatio(contentMode: .fit)
-            } placeholder: {
-                ProgressView()
-            }
+            AsyncImage(
+                        url: URL(string: urlStr),
+                        transaction: Transaction(animation: .default)
+                    ) { phase in
+                        switch phase {
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        default:
+                            ProgressView()
+                        }
+                    }
         } else {
             // Fallback on earlier versions
             if imageData == nil {
@@ -60,3 +68,32 @@ struct NetworkImage: View {
         }
     }
 }
+
+struct EnkaWebIcon: View {
+    var iconString: String
+
+    var body: some View {
+        if let image = UIImage(named: iconString) {
+            Image(uiImage: image)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+        } else {
+            WebImage(urlStr: "https://enka.network/ui/\(iconString).png")
+        }
+    }
+}
+
+struct HomeSourceWebIcon: View {
+    var iconString: String
+
+    var body: some View {
+        if let image = UIImage(named: iconString) {
+            Image(uiImage: image)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+        } else {
+            WebImage(urlStr: "http://ophelper.top/resource/\(iconString).png")
+        }
+    }
+}
+

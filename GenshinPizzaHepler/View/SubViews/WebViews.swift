@@ -41,6 +41,61 @@ struct WebBroswerView: UIViewRepresentable {
     }
 }
 
+struct TeyvatMapWebView: UIViewRepresentable {
+    var isHoYoLAB: Bool
+    var url: String {
+        if isHoYoLAB {
+            return "https://act.hoyolab.com/ys/app/interactive-map/index.html"
+        } else {
+            return "https://webstatic.mihoyo.com/ys/app/interactive-map/index.html"
+        }
+    }
+    
+    func makeUIView(context: Context) -> WKWebView {
+        guard let url = URL(string: self.url)
+        else {
+            return WKWebView()
+        }
+        let request = URLRequest(url: url)
+
+        let webView = WKWebView()
+        webView.navigationDelegate = context.coordinator
+        webView.load(request)
+        return webView
+    }
+
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+        if let url = URL(string: self.url) {
+            let request = URLRequest(url: url)
+            uiView.load(request)
+        }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    class Coordinator: NSObject, WKNavigationDelegate {
+        var parent: TeyvatMapWebView
+
+        init(_ parent: TeyvatMapWebView) {
+            self.parent = parent
+        }
+
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            var js = ""
+            js.append("let timer = setInterval(() => {");
+            js.append("const bar = document.getElementsByClassName('mhy-bbs-app-header')[0];");
+            js.append("const hoyolabBar = document.getElementsByClassName('mhy-hoyolab-app-header')[0];");
+            js.append("bar?.parentNode.removeChild(bar);");
+            js.append("hoyolabBar?.parentNode.removeChild(hoyolabBar);");
+            js.append("}, 300);");
+            js.append("setTimeout(() => {clearInterval(timer);timer = null}, 10000);");
+            webView.evaluateJavaScript(js)
+        }
+    }
+}
+
 struct EventDetailWebView: UIViewRepresentable {
     @Environment(\.colorScheme) var colorScheme
     let webView = WKWebView()

@@ -43,7 +43,7 @@ struct TalentMaterialProvider {
     }
 }
 
-enum MaterialWeekday {
+enum MaterialWeekday: CaseIterable {
     case mondayAndThursday
     case tuesdayAndFriday
     case wednesdayAndSaturday
@@ -64,6 +64,32 @@ enum MaterialWeekday {
             return .wednesdayAndSaturday
         default:
             return .sunday
+        }
+    }
+
+    func tomorrow() -> Self {
+        switch self {
+        case .mondayAndThursday:
+            return .tuesdayAndFriday
+        case .tuesdayAndFriday:
+            return .wednesdayAndSaturday
+        case .wednesdayAndSaturday:
+            return .mondayAndThursday
+        case .sunday:
+            return .mondayAndThursday
+        }
+    }
+
+    func describe() -> String {
+        switch self {
+        case .mondayAndThursday:
+            return "星期一 & 星期四".localized
+        case .tuesdayAndFriday:
+            return "星期二 & 星期五".localized
+        case .wednesdayAndSaturday:
+            return "星期三 & 星期六".localized
+        case .sunday:
+            return "星期日".localized
         }
     }
 }

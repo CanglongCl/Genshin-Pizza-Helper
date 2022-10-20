@@ -14,46 +14,61 @@ struct LatestVersionInfoView: View {
 
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text(newestVersionInfos?.shortVersion ?? "Error").font(.largeTitle) +
-                    Text(" (\(newestVersionInfos?.buildVersion ?? -1))")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+            ScrollView {
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text(newestVersionInfos?.shortVersion ?? "Error").font(.largeTitle).bold() +
+                        Text(" (\(String(newestVersionInfos?.buildVersion ?? -1)))")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Image("AppIconHD")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .cornerRadius(10)
+                    }
+                    Divider()
+                        .padding(.bottom)
+                    if !getLocalizedNoticeInfos(meta: newestVersionInfos!).isEmpty {
+                        Text("更新公告")
+                            .bold()
+                            .font(.title2)
+                            .padding(.vertical, 2)
+                        ForEach(getLocalizedNoticeInfos(meta: newestVersionInfos!), id:\.self) { item in
+                            Text("- \(item)")
+                        }
+                        Divider()
+                            .padding(.vertical)
+                    }
+                    Text("更新内容：")
+                        .bold()
+                        .font(.title2)
+                        .padding(.vertical, 2)
+                    if newestVersionInfos != nil {
+                        ForEach(getLocalizedUpdateInfos(meta: newestVersionInfos!), id:\.self) { item in
+                            Text("- \(item)")
+                        }
+                    } else {
+                        Text("Error")
+                    }
+                    if !isJustUpdated {
+                        switch AppConfig.appConfiguration {
+                        case .TestFlight, .Debug :
+                            Link (destination: URL(string: "itms-beta://beta.itunes.apple.com/v1/app/1635319193")!) {
+                                Text("前往TestFlight更新")
+                            }
+                            .padding(.top)
+                        case .AppStore:
+                            Link (destination: URL(string: "itms-apps://apps.apple.com/us/app/id1635319193")!) {
+                                Text("前往App Store更新")
+                            }
+                            .padding(.top)
+                        }
+                    }
                     Spacer()
-                    Image("AppIconHD")
-                        .resizable()
-                        .frame(width: 50, height: 50)
-                        .cornerRadius(10)
                 }
-                Divider()
-                    .padding(.vertical)
-                Text("更新内容：")
-                    .font(.subheadline)
-                if newestVersionInfos != nil {
-                    ForEach(getLocalizedUpdateInfos(meta: newestVersionInfos!), id:\.self) { item in
-                        Text("- \(item)")
-                    }
-                } else {
-                    Text("Error")
-                }
-                if !isJustUpdated {
-                    switch AppConfig.appConfiguration {
-                    case .TestFlight, .Debug :
-                        Link (destination: URL(string: "itms-beta://beta.itunes.apple.com/v1/app/1635319193")!) {
-                            Text("前往TestFlight更新")
-                        }
-                        .padding(.top)
-                    case .AppStore:
-                        Link (destination: URL(string: "itms-apps://apps.apple.com/us/app/id1635319193")!) {
-                            Text("前往App Store更新")
-                        }
-                        .padding(.top)
-                    }
-                }
-                Spacer()
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
             .navigationTitle(isJustUpdated ? "感谢您更新到最新版本" : "发现新版本")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -81,6 +96,21 @@ struct LatestVersionInfoView: View {
             return meta.updates.fr
         default:
             return meta.updates.en
+        }
+    }
+    
+    func getLocalizedNoticeInfos(meta: NewestVersion) -> [String] {
+        switch Locale.current.languageCode {
+        case "zh":
+            return meta.notice.zhcn
+        case "en":
+            return meta.notice.en
+        case "ja":
+            return meta.notice.ja
+        case "fr":
+            return meta.notice.fr
+        default:
+            return meta.notice.en
         }
     }
 }

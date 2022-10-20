@@ -54,7 +54,7 @@ struct AllEventsView: View {
                                 .font(.caption)
                             Group {
                                 if getRemainDays(content.endAt) == nil {
-                                    Text("Error")
+                                    Text(content.endAt)
                                 }
                                 else if getRemainDays(content.endAt)!.day! > 0 {
                                     Text("剩余 \(getRemainDays(content.endAt)!.day!)天")
@@ -90,12 +90,6 @@ struct AllEventsView: View {
         return eventContents.firstIndex { currentCard in
             return currentCard.id == Card.id
         } ?? 0
-    }
-
-    func generateHTMLString(banner: String, nameFull: String, description: String) -> String {
-        let format = "<head><style> img{ max-width: 100%; }</style> <meta charset=\"UTF-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"http://zhuaiyuwen.xyz/static/event.css\">  <title>Document</title> </head>"
-        let descriptionHTML = "<div class=\"testTable default-table margin-bottom-fix p-2 font-light leading-relaxed lg:p-4\">" + "<p><strong>\(nameFull)</strong></p><hr />" + description + "</div>"
-        return format + "<body><img src=\"\(banner)\" alt=\"Event Banner\">" + descriptionHTML + "</body>"
     }
 
     func getLocalizedContent(_ content: EventModel.MultiLanguageContents) -> String {

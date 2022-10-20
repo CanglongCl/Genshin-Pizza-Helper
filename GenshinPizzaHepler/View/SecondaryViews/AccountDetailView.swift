@@ -41,7 +41,7 @@ struct AccountDetailView: View {
     @State private var isPresentingConfirm: Bool = false
     @State private var isSheetShow: Bool = false
     
-    @State private var isWebShown: Bool = false
+    @State var isWebShown: Bool = false
 
     @State private var connectStatus: ConnectStatus = .unknown
     
@@ -80,6 +80,9 @@ struct AccountDetailView: View {
         }
         .sheet(isPresented: $isWebShown) {
             GetCookieWebView(isShown: $isWebShown, cookie: bindingCookie, region: server.region)
+                .onDisappear {
+                    connectStatus = .testing
+                }
         }
         .onAppear {
             connectStatus = .testing

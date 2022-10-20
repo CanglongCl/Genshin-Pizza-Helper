@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "UI_ItemIcon_203_F7E24D7ECDA465DB.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

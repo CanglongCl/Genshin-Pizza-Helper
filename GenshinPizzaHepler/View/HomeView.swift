@@ -9,6 +9,8 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var viewModel: ViewModel
+
+    @Environment(\.scenePhase) var scenePhase
     var accounts: [Account] { viewModel.accounts }
     @State var eventContents: [EventModel] = []
 
@@ -29,7 +31,14 @@ struct HomeView: View {
                     } else {
                         // MARK: - 今日材料
                         InAppMaterialNavigator()
-                            .onAppear(perform: getCurrentEvent)
+                            .onChange(of: scenePhase, perform: { newPhase in
+                                switch newPhase {
+                                case .active:
+                                    getCurrentEvent()
+                                default:
+                                    break
+                                }
+                            })
                             .padding(.bottom)
 
                         // MARK: - 当前活动
@@ -48,7 +57,9 @@ struct HomeView: View {
         .navigationViewStyle(.stack)
         .myRefreshable {
             withAnimation {
-                viewModel.refreshData()
+                DispatchQueue.main.async {
+                    viewModel.refreshData()
+                }
                 getCurrentEvent()
             }
         }

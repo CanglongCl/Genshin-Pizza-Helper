@@ -16,7 +16,7 @@ struct InfoPreviewer: View {
 
     var body: some View {
         HStack {
-            Text(LocalizedStringKey(title))
+            Text(LocalizedStringKey(title.localized))
             Spacer()
             switch contentStyle {
             case .standard:

@@ -140,7 +140,7 @@ struct AccountDisplayView: View {
                     }
                 }
                 else if scrollOffset.y < -20 && isAccountInfoShow && !isAnimationLocked {
-                    simpleTaptic(type: .medium)
+                    simpleTaptic(type: .light)
                     withAnimation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 0.8)) {
                         isAccountInfoShow = false
                         isStatusBarHide = false
@@ -173,8 +173,8 @@ struct AccountDisplayView: View {
             isStatusBarHide = false
             scrollOffset = .zero
         }
+        simpleTaptic(type: .light)
         withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 1.0, blendDuration: 0)) {
-            simpleTaptic(type: .light)
             viewModel.showDetailOfAccount = nil
         }
     }

@@ -24,7 +24,6 @@ struct LockScreenLoopWidgetCorner: View {
         case .homeCoin:
             LockScreenHomeCoinWidgetCorner(result: result)
 
-        // TODO: delete here
         default:
             LockScreenResinWidgetCorner(result: result)
         }

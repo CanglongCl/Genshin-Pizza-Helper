@@ -37,7 +37,9 @@ struct CurrentEventNavigator: View {
                             .foregroundColor(.secondary)
                             .frame(width: 4)
                         VStack(spacing: 7) {
-                            ForEach(eventContents.prefix(3), id: \.id) { content in
+                            ForEach(eventContents.filter({
+                                (getRemainDays($0.endAt)?.day ?? 0) >= 0
+                            }).prefix(3), id: \.id) { content in
                                 eventItem(event: content)
                             }
                         }
@@ -57,7 +59,7 @@ struct CurrentEventNavigator: View {
             Text(" \(getLocalizedContent(event.name))")
             Spacer()
             if getRemainDays(event.endAt) == nil {
-                Text("Error")
+                Text(event.endAt)
             }
             else if getRemainDays(event.endAt)!.day! > 0 {
                 HStack(spacing: 0) {
@@ -67,11 +69,6 @@ struct CurrentEventNavigator: View {
             else {
                 HStack(spacing: 0) {
                     Text("剩余 \(getRemainDays(event.endAt)!.hour!)小时")
-//                        .onAppear {
-//                            if getRemainDays(event.endAt)!.hour! < 0 {
-//                                getCurrentEvent()
-//                            }
-//                        }
                 }
             }
         }

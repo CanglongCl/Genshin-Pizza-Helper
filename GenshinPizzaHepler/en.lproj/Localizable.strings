@@ -741,3 +741,120 @@
 "帐号" = "Account";
 "展示周本折扣" = "Show Weekly Boss Discount";
 "展示参量质变仪" = "Show Parametric Transformer";
+
+// MARK: - 2.5.0
+// Material Provider
+"星期一 & 星期四" = "Mon & Thu";
+"星期二 & 星期五" = "Tue & Fri";
+"星期三 & 星期六" = "Wed & Sat";
+"星期日" = "Sunday";
+
+// Tool View
+"请先选择账号" = "Please choose account first";
+"角色展示柜" = "Character Showcase";
+"账号未展示角色" = "No characters found in the Character Showcase";
+"今日入账" = "Acquired Today";
+"需要重新登陆本账号以查询，点击重新登陆" = "Please tap to relogin to query this part.";
+// apiral abyss sheet
+"深境螺旋详情" = "Spiral Abyss Details";
+"保存%lld层的深渊数据" = "Save image for level %lld";
+"上期深渊" = "Previous Lunar Phase";
+"本期深渊" = "Current Lunar Phase";
+"最深抵达" = "Deepest Descent";
+"获得渊星" = "Abyss Star Obtained";
+"战斗次数" = "Battles Fought";
+"获胜次数" = "Win Times";
+"战斗概览" = "Challenge Summary";
+"最强一击" = "Strongest Single Strike";
+"最多击破数" = "Most Defeats";
+"承受最多伤害" = "Most Damage Taken";
+"元素战技释放数" = "Elemental Skills Cast";
+"元素爆发次数" = "Elemental Bursts Unleashed";
+"战斗数据榜" = "Notable Stats";
+"深境螺旋第%lld层" = "Spiral Abyss Floor %lld";
+"第%lld间" = "Chamber %lld";
+"上半" = "1st";
+"下半" = "2nd";
+"获取渊星数" = "Abyss Star Obtained";
+// Other tool
+"提瓦特大地图" = "Tayvat Interactive Map";
+"请稍等%lld秒再刷新" = "Please wait for %lld seconds before refreshing.";
+"请下滑刷新" = "Please slide down to refresh";
+"原神中英日辞典" = "Genshin Dictionary";
+"原神计算器" = "Genshin Calculator";
+"由爱丽丝工坊提供" = "Provided by Alice Workshop";
+"由爱丽丝工坊提供（未安装）" = "Provided by Alice Workshop";
+"小工具" = "Gadgets";
+// Ledger sheet
+"原石摩拉账簿" = "Primogems and Mora Ledger";
+"保存本月原石账簿图片" = "Save image of this month's primogems ladger";
+"原石收入" = "Primogems";
+"摩拉收入" = "Mora";
+"较昨日" = "Compared with yesterday";
+"较上月同期" = "Compared with last month";
+"本月账单 (%lld月)" = "Ledger for this month %lld";
+"披萨工具盒" = "Pizza Toolbox";
+"总计" = "Total";
+
+// CharacterDetailView
+"精炼%lld阶" = "R%lld";
+"生命值" = "HP";
+"攻击力" = "ATK";
+"防御力" = "DEF";
+"元素精通" = "EM";
+"元素充能效率" = "Energy Recharge";
+"治疗加成" = "Healing Bonus";
+"暴击率" = "CRIT Rate";
+"暴击伤害" = "CRIT DMG";
+"风元素伤害加成" = "Anemo DMG Bonus";
+"冰元素伤害加成" = "Cryo DMG Bonus";
+"雷元素伤害加成" = "Electro DMG Bonus";
+"水元素伤害加成" = "Hydro DMG Bonus";
+"火元素伤害加成" = "Pyro DMG Bonus";
+"岩元素伤害加成" = "Geo DMG Bonus";
+"草元素伤害加成" = "Dendro DMG Bonus";
+"物理伤害加成" = "Physical DMG Bonus";
+"等级" = "Level";
+"命之座" = "Cons";
+"%lld命" = "C%lld";
+"基础攻击力" = "ATK";
+"生命值上限" = "Max HP";
+"暴击率%%" = "CR %%";
+"暴击伤害%%" = "CD %%";
+"治疗加成%%" = "Heal %%";
+"受治疗加成" = "HEALED_ADD";
+"元素充能%%" = "ER %%";
+"护盾强效" = "SHIELD_COST_MINUS_RATIO";
+"火伤加成%%" = "Pyro %%";
+"水伤加成%%" = "Hydro %%";
+"草伤加成%%" = "Dendro %%";
+"雷伤加成%%" = "Electro %%";
+"风伤加成%%" = "Anemo %%";
+"冰伤加成%%" = "Cryo %%";
+"岩伤加成%%" = "Geo %%";
+"物伤加成%%" = "Physical %%";
+"攻击力%%" = "ATK %%";
+"生命值%%" = "HP %%";
+"防御力%%" = "DEF %%";
+
+// Dictionary
+"复制英语" = "Copy English";
+"复制中文" = "Copy Chinese";
+"复制日语" = "Copy Japanese";
+"支持易错字、简写和英文标签" = "Support fuzzy search & tags";
+"本功能由[原神中英日辞典](https://genshin-dictionary.com/)提供。" = "Provided by [Genshin Dictionary](https://genshin-dictionary.com/)";
+"当前共收录了%lld个原神专有词语，并还在继续更新中。" = "A total of %lld proprietary words of Genshin Impact are currently included, and are still being updated.";
+"如发现辞典内容有误或其他问题，英语&日语问题请在Twitter私信联系[シクリ](https://twitter.com/xicri_gi?s=21&t=p-r6hSgh_TXt7iddPNZM1w)，英语&中文问题请通过邮件联系[Bill Haku](mailto:i@hakubill.tech)。" = "If you find errors in the dictionary content or have other problems, please contact [シクリ](https://twitter.com/xicri_gi?s=21&t=p-r6hSgh_TXt7iddPNZM1w) on Twitter for English & Japanese issues, and email for English & Chinese issues to [Bill Haku](mailto:i@hakubill.tech). ";
+"关于原神中英日辞典" = "About Genshin Dictionary";
+"**英语** %@" = "**EN** %@";
+"**日语** %@" = "**JA** %@";
+"**中文** %@" = "**ZH** %@";
+
+"取消" = "Cancel";
+
+// UpdateHistoryInfoView
+"更新公告" = "Update Announcement";
+"更新历史记录" = "Update History";
+
+// Water mark
+"披萨小助手" = "Pizza Helper";

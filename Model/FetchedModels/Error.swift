@@ -12,6 +12,7 @@ enum RequestError: Error {
     case noResponseData
     case responseError
     case decodeError(String)
+    case errorWithCode(Int)
 }
 
 struct ErrorCode: Codable {
@@ -41,7 +42,9 @@ enum FetchError: Error, Equatable {
     
     case defaultStatus
     
-    case accountUnbound 
+    case accountUnbound
+
+    case errorWithCode(Int)
 }
 
 extension FetchError {

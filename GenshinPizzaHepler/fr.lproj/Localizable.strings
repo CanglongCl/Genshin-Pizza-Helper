@@ -12,37 +12,37 @@
 "主页" = "Accueil";
 "设置" = "Réglage";
 "我的帐号" = "Mon Compte";
-"添加帐号" = "Ajoute Compte";
+"添加帐号" = "Ajouter Compte";
 "通知推送" = "Notifications";
 "通知推送设置" = "Réglage Notification";
 "背景名片预览" = "Aperçu du thème d'arrière plan";
 "更多" = "Plus";
 
-"通知使用提示" = "Conseil: Comment utiliser Notification?";
-"通知功能需要帐号添加至小组件后才能生效。\n通知安排与小组件刷新有关，若您的小组件长时间未刷新，推送的通知可能有误。" = "Les Notifications nécessite que le compte soit ajouté au Widget pour qu'elle soit activé \nLe planning des notifications est en rapport avec le rafraîchissement du widget, les notifications peuvent être erroné si votre widget n'a pas été rafraichi pendant un certain temps.";
+"通知使用提示" = "Conseil: Comment utiliser Notification ?";
+"通知功能需要帐号添加至小组件后才能生效。\n通知安排与小组件刷新有关，若您的小组件长时间未刷新，推送的通知可能有误。" = "Les Notifications nécessitent que le compte soit ajouté au Widget pour qu'elles soient activées \nLe planning des notifications est en rapport avec le rafraîchissement du widget, les notifications peuvent être erroné si votre widget n'a pas été rafraichi pendant un certain temps.";
 "地区: %@" = "Région: %@";
 "服务器: %@" = "Serveur: %@";
 
-"获取Cookie的脚本" = "Shortcuts por obtenir les Cookies";
+"获取Cookie的脚本" = "Shortcuts pour obtenir les Cookies";
 "在App Store评分" = "Donner un commentaire sur App Store";
 "支持我们" = "Pour nous soutenir";
 "常见使用问题（FAQ）" = "FAQ";
 "用户协议与免责声明" = "Condition d'utilisation (Chinois simplifié)";
 "用户协议" = "Condition d'utilisation";
-"关于小助手" = "About App";
+"关于小助手" = "A propos de l'App";
 "开发者" = "Developpeurs";
 "交流群：813912474 829996515" = "Group QQ: 813912474 829996515";
 
 // Account detail
 "重新登录米游社帐号" = "Reconnection à HoYoLAB";
-"帐号配置" = "Configuration des Comptes";
-"帐号名" = "Nom du Compte";
+"帐号配置" = "Configuration des comptes";
+"帐号名" = "Nom du compte";
 "服务器" = "Serveur";
-"测试连接" = "Test de Connection";
+"测试连接" = "Test de connection";
 "错误内容" = "Details des erreurs";
-"帐号信息" = "Info des Comptes";
+"帐号信息" = "Info des comptes";
 
-"你可以自定义显示在小组件上的帐号名称" = "vous pouvez customisé le nom de Compte affiché sur le Widget";
+"你可以自定义显示在小组件上的帐号名称" = "vous pouvez customiser le nom de compte affiché sur le Widget";
 "粘贴自剪贴板" = "Copié depuis Clipboard";
 
 // Add account
@@ -57,22 +57,22 @@
 "请完成登录" = "Merci de finir la Connection";
 "完成" = "Fini";
 "未获取到登录信息，请重试" = "Erreur d'obtention d'information. Merci de réessayer.";
-"尚未完成帐号设置" = "La configuration du compte n'a pas été fini";
+"尚未完成帐号设置" = "La configuration du compte n'a pas été terminée";
 "添加账号前…" = "Avant d'ajouter votre compte...";
-"请先确保绑定的米游社账号已开启并能在米游社App中查看“实时便笺”功能" = "Verifier que vous avez ouvert et activer \"Les donnés en temps réel\" dans HoYoLAB.";
+"请先确保绑定的米游社账号已开启并能在米游社App中查看“实时便笺”功能" = "Verifier que vous avez ouvert et activer \"Les données en temps réel\" dans HoYoLAB.";
 "好" = "OK";
 "提示" = "Conseils";
 "请在打开的网页完成登录米游社操作后点击「完成」。\n通过Google，Facebook或Twitter登录HoYoLAB不可使用，请使用账号密码登录。\n我们承诺：您的登录信息只会保存在您的本地设备和私人iCloud中，仅用于向米游社请求您的原神状态。" = "Cliquer sur \"Compris\" après avoir fini de vous connecter à HoYoLAB dans le page web suivant.\nLa Connection via Google, Facebook et Twitter à HoYoLAB n'est pas supporté, merci d'utiliser compte et mot de passe pour vous connecter\nVos informations de compte vont être stocké seulement dans l'appareil local et dans votre iCloud privé, et utilisé seuleument pour obtenir les données de Genshin Impact nécessaire à HoYoLAB. ";
-"自定义帐号名" = "Nom de Compte Personalisé";
-"请选择帐号" = "Choisir Votre Compte";
-"查看帐号详情" = "Détails du Compte";
-"我的帐号" = "Mon Compte";
-"请先添加帐号" = "Ajouter un Compte";
+"自定义帐号名" = "Nom de compte personalisé";
+"请选择帐号" = "Choisir votre compte";
+"查看帐号详情" = "Détails du compte";
+"我的帐号" = "Mon compte";
+"请先添加帐号" = "Ajouter un compte";
 
 // Game Info block
 "%@\n%@ 回满" = "Rempli dans %@\n%@";
-"0小时0分钟\n树脂已全部回满" = "0 ʜʀ 0 ᴍɪɴ\nLa résere de résine sera rempli";
-"%lld天" = "%lld ᴅᴀʏ";
+"0小时0分钟\n树脂已全部回满" = "0 ʜʀ 0 ᴍɪɴ\nLa résere de résine sera rempli dans";
+"%lld天" = "%lld jour";
 "%lld小时" = "%lld ʜʀ";
 "%lld分钟" = "%lld ᴍɪɴ";
 "%lld小时%lld分钟" = "%lld ʜʀ %lld ᴍɪɴ";
@@ -89,22 +89,22 @@
 "保存图片" = "Enregistrer l'image";
 
 // Notification settings
-"推送设置" = "Réglages Notifications";
+"推送设置" = "Réglages notifications";
 "启用帐号" = "Comptes activés";
 "原粹树脂提醒" = "Résine originelle";
-"提醒阈值" = "Résine Remplie";
+"提醒阈值" = "Résine remplie";
 "%lld树脂" = "%lld Résine";
 "洞天宝钱提醒" = "Pièces du Royaume";
-"提醒时间" = "L'heure d'Alerte";
+"提醒时间" = "L'heure d'alerte";
 "充满前%lld小时" = "%lld Heures avant d'être remplie";
 "探索派遣提醒" = "Expedition";
-"提醒于" = "L'heure d'Alerte";
-"全部完成时" = "Toutes Terminées";
-"任一完成时" = "Une Terminées";
-"每日委托提醒" = "Quête Quotidienne";
-"提醒时间" = "L'heure d'Alerte";
-"周本折扣提醒" = "Boss Hebdomadaire";
-"提醒日期" = "Jour d'Alerte";
+"提醒于" = "L'heure d'alerte";
+"全部完成时" = "Lorsque toutes sont terminées";
+"任一完成时" = "Lorsqu'une d'entre elles est terminée";
+"每日委托提醒" = "Quête quotidienne";
+"提醒时间" = "L'heure d'alerte";
+"周本折扣提醒" = "Boss hebdomadaire";
+"提醒日期" = "Jour d'alerte";
 "参量质变仪提醒" = "Transformateur paramétrique";
 
 // namecards
@@ -248,13 +248,13 @@
 
 // Widget
 "原神状态" = "Status de Genshin";
-"已全部完成" = "Tout Terminées";
+"已全部完成" = "Tout terminées";
 "%lld个已完成" = "%lld fini";
-"（未领取）" = " (Non Récupéré)";
+"（未领取）" = " (Non récupéré)";
 "（可使用）" = "Disponible";
 
 // Used for copy and paste to edit this file
-"查询树脂恢复状态" = "Vérifier le niveau de Récupération des résines";
+"查询树脂恢复状态" = "Vérifier le niveau de récupération des résines";
 
 // Notification
 "打开「原神」" = "Ouvrir Genshin Impact";
@@ -263,10 +263,10 @@
 "「%@」现有%lld原粹树脂，将在%@ 回满。" = "%@ a maintenant %lld de Résines Originelles, qui va être pleine à %@.";
 "「%@」洞天宝钱提醒" = "Notification de %@ pour les Pièces du Royaume";
 "「%@」的洞天财瓮现有%lld洞天宝钱，将在%@ 填满。" = "%@'s a maintenant %lld Pièces du Royaume, qui va être pleine à %@.";
-"「%@」探索派遣提醒" = "Notification de %@ pour les Expedition";
+"「%@」探索派遣提醒" = "Notification de %@ pour les expedition";
 "「%@」的探索派遣已全部完成。" = "L'expeditions de %@ est complétée.";
 "「%@」周本折扣提醒" = "Boss Hebdomadaire de %@";
-"「%@」的周本树脂折扣树脂折扣还剩%lld次。" = "Il reste 3 réduction de résine pour les Boss Hebdomadaires pour %@.";
+"「%@」的周本树脂折扣树脂折扣还剩%lld次。" = "Il reste %lld réduction(s) de résine pour les Boss Hebdomadaires pour %@.";
 "「%@」参量质变仪提醒" = "Notification de %@ pour le transformeur paramétrique";
 "「%@」的参量质变仪已经可以使用。" = "Le transformeur paramétrique de %@ est disponible.";
 "「%@」每日委托提醒" = "Notification de %@n pour les Quêtes Quotidiennes";
@@ -279,18 +279,18 @@
 "拒绝" = "Refuser";
 
 // Daily materials
-"「高塔孤王」" = "Decarabian";
-"「凛风奔狼」" = "Boreal Wolf";
-"「狮牙斗士」" = "Dandelion Gladiator";
+"「高塔孤王」" = "Décabarian";
+"「凛风奔狼」" = "Loup boréal";
+"「狮牙斗士」" = "Chevalier du Croc de Lion";
 "「孤云寒林」" = "Guyun";
-"「雾海云间」" = "Mist Veiled";
-"「漆黑陨铁」" = "Aerosiderite";
-"「远海夷地」" = "Distant Sea";
+"「雾海云间」" = "karstique";
+"「漆黑陨铁」" = "Aérosidérite noire";
+"「远海夷地」" = "Branche marine";
 "「鸣神御灵」" = "Narukami";
-"「今昔剧画」" = "Mask";
-"「谧林涓露」" = "Forest Dew";
-"「绿洲花园」" = "Oasis Garden";
-"「烈日威权」" = "Scorching Might";
+"「今昔剧画」" = "Masque";
+"「谧林涓露」" = "Talisman de la rosée";
+"「绿洲花园」" = "Jardin d'oasis";
+"「烈日威权」" = "Pouvoir brûlant";
 "「自由」" = "Liberté";
 "「抗争」" = "Résistance";
 "「诗文」" = "Poésie";
@@ -305,11 +305,11 @@
 "「笃行」" = "Usage";
 
 "今日材料" = "Les matériaux du jour";
-"今日材料：星期日所有材料均可获取" = "Les matériaux du jour: Tout disponible le Dimanche";
+"今日材料：星期日所有材料均可获取" = "Les matériaux du jour: Tout les matériaux sont disponibles le Dimanche";
 
 // large size widget
 "已完成" = "Terminée";
-"（星期日所有材料均可获取）" = "(Tout les matériaux sont disponible le Dimanche)";
+"（星期日所有材料均可获取）" = "(Tout les matériaux sont disponibles le Dimanche)";
 
 // Char's name
 "空" = "Aether";
@@ -383,14 +383,14 @@
 "错误码%lld：米游社帐号与UID不匹配" = "Code d'erreur %lld: Co,pte HoYoLAB ne correspond pas à l'UID";
 "错误码%lld：UID有误" = "Code d'erreur %lld: UID invalide";
 "请前往米游社（或Hoyolab）打开旅行便笺功能" = "Merci d'activer d'abord Les données en temps réel dans HoYoLAB ";
-"解码错误：请检查网络环境" = "Decode Error: Merci de Vérifier votre réseau";
+"解码错误：请检查网络环境" = "Decode Error: Merci de vérifier votre réseau";
 "网络错误" = "Erreur du réseau";
 "未获取到登录信息，请重试" = "Nous n'avons pas pu obtenir les informations de Connection, merci de réessayer";
-"未知错误码：%@" = "Erreur Inconnu %@";
+"未知错误码：%@" = "Erreur Inconnue %@";
 
 "无返回数据" = "Pas de réponses du serveur";
 "无响应" = "Pas de réponses";
-"未知错误" = "Erreur Inconnu";
+"未知错误" = "Erreur Inconnue";
 
 // Donate page
 "请注意，以下内容为无偿捐赠，我们不会为您提供任何额外的服务。\n我们承诺，您对「原神披萨小助手」的捐赠仅用于覆盖App开发过程中的直接成本，包括但不限于苹果开发者计划会员资格的年费等。超出这部分成本的捐赠金额将悉数再次捐出。感谢您对我们的支持。" = "Merci de savoir que le donation est le transfert volontaire et immédiat d'un bien d'une personne à une autre sans contrepartie. \nNous promettons que vos donations vont être utilisé seulement pour couvrir le coût direct du developpement, incluant mais non seulement le frais annuel du Apple Developer Program, etc. Les montants en trop seront redistribué à d'autres associations dans le besoin. Merci de votre soutien.";
@@ -402,10 +402,10 @@
 "支付" = "PAYER";
 
 // Contact & About
-"开发者与联系方式" = "Developeurs & Infos Contact ";
+"开发者与联系方式" = "Developpeurs & Infos Contact ";
 "「原神披萨小助手」与上海米哈游网络科技股份有限公司及其子公司无关。" = "Genshin Pizza Helper is not affiliated with miHoYo Co., Ltd. and its subsidiaries.";
 "原神的游戏内容和各种游戏内素材与商标的版权都属于米哈游。" = "Genshin Impact, game content and materials are trademarks and copyrights of HoYoverse.";
-"用户交流群" = "User Communication Groups";
+"用户交流群" = "Groupe de discussion";
 "QQ群1: 813912474" = "Groupe QQ 1: 813912474";
 "QQ群2: 829996515" = "Groupe QQ 2: 829996515";
 "Discord频道: Genshin Pizza Helper" = "Serveur Discord";
@@ -741,3 +741,120 @@
 "帐号" = "Account";
 "展示周本折扣" = "Show Weekly Boss Discount";
 "展示参量质变仪" = "Show Parametric Transformer";
+
+// MARK: - 2.5.0
+// Material Provider
+"星期一 & 星期四" = "Mon & Thu";
+"星期二 & 星期五" = "Tue & Fri";
+"星期三 & 星期六" = "Wed & Sat";
+"星期日" = "Sunday";
+
+// Tool View
+"请先选择账号" = "Please choose account first";
+"角色展示柜" = "Character Showcase";
+"账号未展示角色" = "No characters found in the Character Showcase";
+"今日入账" = "Acquired Today";
+"需要重新登陆本账号以查询，点击重新登陆" = "Please tap to relogin to query this part.";
+// apiral abyss sheet
+"深境螺旋详情" = "Spiral Abyss Details";
+"保存%lld层的深渊数据" = "Save image for level %lld";
+"上期深渊" = "Previous Lunar Phase";
+"本期深渊" = "Current Lunar Phase";
+"最深抵达" = "Deepest Descent";
+"获得渊星" = "Abyss Star Obtained";
+"战斗次数" = "Battles Fought";
+"获胜次数" = "Win Times";
+"战斗概览" = "Challenge Summary";
+"最强一击" = "Strongest Single Strike";
+"最多击破数" = "Most Defeats";
+"承受最多伤害" = "Most Damage Taken";
+"元素战技释放数" = "Elemental Skills Cast";
+"元素爆发次数" = "Elemental Bursts Unleashed";
+"战斗数据榜" = "Notable Stats";
+"深境螺旋第%lld层" = "Spiral Abyss Floor %lld";
+"第%lld间" = "Chamber %lld";
+"上半" = "First Half";
+"下半" = "Second Half";
+"获取渊星数" = "Abyss Star Obtained";
+// Other tool
+"提瓦特大地图" = "Tayvat Interactive Map";
+"请稍等%lld秒再刷新" = "Please wait for %lld seconds before refreshing.";
+"请下滑刷新" = "Please slide down to refresh";
+"原神中英日辞典" = "Genshin Dictionary";
+"原神计算器" = "Genshin Calculator";
+"由爱丽丝工坊提供" = "Provided by Alice Workshop";
+"由爱丽丝工坊提供（未安装）" = "Provided by Alice Workshop";
+"小工具" = "Gadgets";
+// Ledger sheet
+"原石摩拉账簿" = "Primogems and Mora Ledger";
+"保存本月原石账簿图片" = "Save image of this month's primogems ladger";
+"原石收入" = "Primogems";
+"摩拉收入" = "Mora";
+"较昨日" = "Compared with yesterday";
+"较上月同期" = "Compared with last month";
+"本月账单 (%lld月)" = "Ledger for this month %lld";
+"披萨工具盒" = "Pizza Toolbox";
+"总计" = "Amount to";
+
+// CharacterDetailView
+"精炼%lld阶" = "R%lld";
+"生命值" = "HP";
+"攻击力" = "ATK";
+"防御力" = "DEF";
+"元素精通" = "EM";
+"元素充能效率" = "Energy Recharge";
+"治疗加成" = "Healing Bonus";
+"暴击率" = "CRIT Rate";
+"暴击伤害" = "CRIT DMG";
+"风元素伤害加成" = "Anemo DMG Bonus";
+"冰元素伤害加成" = "Cryo DMG Bonus";
+"雷元素伤害加成" = "Electro DMG Bonus";
+"水元素伤害加成" = "Hydro DMG Bonus";
+"火元素伤害加成" = "Pyro DMG Bonus";
+"岩元素伤害加成" = "Geo DMG Bonus";
+"草元素伤害加成" = "Dendro DMG Bonus";
+"物理伤害加成" = "Physical DMG Bonus";
+"等级" = "Level";
+"命之座" = "Cons";
+"%lld命" = "C%lld";
+"基础攻击力" = "ATK";
+"生命值上限" = "Max HP";
+"暴击率%%" = "CR %%";
+"暴击伤害%%" = "CD %%";
+"治疗加成%%" = "Heal %%";
+"受治疗加成" = "HEALED_ADD";
+"元素充能%%" = "ER %%";
+"护盾强效" = "SHIELD_COST_MINUS_RATIO";
+"火伤加成%%" = "Pyro %%";
+"水伤加成%%" = "Hydro %%";
+"草伤加成%%" = "Dendro %%";
+"雷伤加成%%" = "Electro %%";
+"风伤加成%%" = "Anemo %%";
+"冰伤加成%%" = "Cryo %%";
+"岩伤加成%%" = "Geo %%";
+"物伤加成%%" = "Physical %%";
+"攻击力%%" = "ATK %%";
+"生命值%%" = "HP %%";
+"防御力%%" = "DEF %%";
+
+// Dictionary
+"复制英语" = "Copy English";
+"复制中文" = "Copy Chinese";
+"复制日语" = "Copy Japanese";
+"支持易错字、简写和英文标签" = "Support fuzzy search & tags";
+"本功能由[原神中英日辞典](https://genshin-dictionary.com/)提供。" = "Provided by [Genshin Dictionary](https://genshin-dictionary.com/)";
+"当前共收录了%lld个原神专有词语，并还在继续更新中。" = "A total of %lld proprietary words of Genshin Impact are currently included, and are still being updated.";
+"如发现辞典内容有误或其他问题，英语&日语问题请在Twitter私信联系[シクリ](https://twitter.com/xicri_gi?s=21&t=p-r6hSgh_TXt7iddPNZM1w)，英语&中文问题请通过邮件联系[Bill Haku](mailto:i@hakubill.tech)。" = "If you find errors in the dictionary content or other problems, please contact [シクリ](https://twitter.com/xicri_gi?s=21&t=p-r6hSgh_TXt7iddPNZM1w) on Twitter for English & Japanese questions, and email for English & Chinese questions [Bill Haku](mailto:i@hakubill.tech). ";
+"关于原神中英日辞典" = "About Genshin Dictionary";
+"**英语** %@" = "**EN** %@";
+"**日语** %@" = "**JA** %@";
+"**中文** %@" = "**CN** %@";
+
+"取消" = "Cancel";
+
+// UpdateHistoryInfoView
+"更新公告" = "Update Announcement";
+"更新历史记录" = "Update History";
+
+// Water mark
+"披萨小助手" = "Pizza Helper";

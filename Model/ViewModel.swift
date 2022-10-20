@@ -19,15 +19,22 @@ class ViewModel: NSObject, ObservableObject {
     @Published var accounts: [Account] = []
 
     @Published var showDetailOfAccount: Account?
-    
+    @Published var showCharacterDetailOfAccount: Account?
+    @Published var showingCharacterName: String?
+
+    #if !os(watchOS)
+    var charLoc: [String : String]?
+    var charMap: [String: ENCharacterMap.Character]?
+    #endif
+
     let accountConfigurationModel: AccountConfigurationModel = .shared
 
-    var session: WCSession
+//    var session: WCSession
     
     init(session: WCSession = .default) {
-        self.session = session
+//        self.session = session
         super.init()
-        self.session.delegate = self
+//        self.session.delegate = self
 //        session.activate()
         self.fetchAccount()
         NotificationCenter.default.addObserver(self,
@@ -47,6 +54,16 @@ class ViewModel: NSObject, ObservableObject {
                 self.accounts = accountConfigs.map { Account(config: $0) }
                 self.refreshData()
                 print("account fetched")
+                #if !os(watchOS)
+                if let showingPlayerDetailOfAccountUUID = UserDefaults.standard.string(forKey: "toolViewShowingAccountUUIDString"),
+                   let showingPlayerDetailOfAccount = self.accounts.first(where: { account in
+                       account.config.uuid!.uuidString == showingPlayerDetailOfAccountUUID
+                   }) {
+                    self.refreshPlayerDetail(for: showingPlayerDetailOfAccount)
+                }
+                self.refreshAbyssDetail()
+                self.refreshLedgerData()
+                #endif
             }
         }
     }
@@ -74,7 +91,6 @@ class ViewModel: NSObject, ObservableObject {
         fetchAccount()
     }
     
-    
     func refreshData() {
         accounts.indices.forEach { index in
             accounts[index].fetchComplete = false
@@ -88,6 +104,81 @@ class ViewModel: NSObject, ObservableObject {
             }
         }
     }
+
+    #if !os(watchOS)
+    func refreshPlayerDetail(for account: Account) {
+        guard let index = self.accounts.firstIndex(of: account) else { return }
+        // 如果之前返回了错误，则删除fail的result
+        if let result = self.accounts[index].playerDetailResult, (try? result.get()) == nil {
+            self.accounts[index].playerDetailResult = nil
+        }
+        self.accounts[index].fetchPlayerDetailComplete = false
+        if let charLoc = self.charLoc, let charMap = self.charMap {
+            self.accounts[index].config.fetchPlayerDetail(dateWhenNextRefreshable: try? self.accounts[index].playerDetailResult?.get().nextRefreshableDate) { result in
+                switch result {
+                case .success(let model):
+                    self.accounts[index].playerDetailResult = .success(.init(playerDetailFetchModel: model, localizedDictionary: charLoc, characterMap: charMap))
+                case .failure(let error):
+                    if self.accounts[index].playerDetailResult == nil {
+                        self.accounts[index].playerDetailResult = .failure(error)
+                    }
+                }
+                self.accounts[index].fetchPlayerDetailComplete = true
+            }
+        } else {
+            let group = DispatchGroup()
+            group.enter()
+            API.HomeAPIs.fetchENCharacterLocDatas {
+                self.charLoc = $0.getLocalizedDictionary()
+                group.leave()
+            }
+            group.enter()
+            API.HomeAPIs.fetchENCharacterDetailDatas {
+                self.charMap = $0.characterDetails
+                group.leave()
+            }
+            group.notify(queue: .main) {
+                guard let charLoc = self.charLoc else {
+                    self.accounts[index].playerDetailResult = .failure(.failToGetLocalizedDictionary)
+                    self.accounts[index].fetchPlayerDetailComplete = true
+                    return
+                }
+                guard let charMap = self.charMap else {
+                    self.accounts[index].playerDetailResult = .failure(.failToGetCharacterDictionary)
+                    self.accounts[index].fetchPlayerDetailComplete = true
+                    return
+                }
+                self.accounts[index].config.fetchPlayerDetail(dateWhenNextRefreshable: try? self.accounts[index].playerDetailResult?.get().nextRefreshableDate) { result in
+                    switch result {
+                    case .success(let model):
+                        self.accounts[index].playerDetailResult = .success(.init(playerDetailFetchModel: model, localizedDictionary: charLoc, characterMap: charMap))
+                    case .failure(let error):
+                        if self.accounts[index].playerDetailResult == nil {
+                            self.accounts[index].playerDetailResult = .failure(error)
+                        }
+                    }
+                    self.accounts[index].fetchPlayerDetailComplete = true
+                }
+            }
+        }
+    }
+
+    func refreshAbyssDetail() {
+        accounts.indices.forEach { index in
+            self.accounts[index].config.fetchAbyssInfo { data in
+                self.accounts[index].spiralAbyssDetail = data
+            }
+        }
+    }
+
+    func refreshLedgerData() {
+        accounts.indices.forEach { index in
+            self.accounts[index].config.fetchLedgerData { result in
+                self.accounts[index].ledgeDataResult = result
+            }
+        }
+    }
+    #endif
 }
 
 extension ViewModel: WCSessionDelegate {
