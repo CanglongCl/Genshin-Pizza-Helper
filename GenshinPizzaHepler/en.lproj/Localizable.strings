@@ -781,7 +781,7 @@
 "请稍等%lld秒再刷新" = "Please wait for %lld seconds before refreshing.";
 "请下滑刷新" = "Please slide down to refresh";
 "原神中英日辞典" = "Genshin Dictionary";
-"原神计算器" = "Genshin Calculator";
+"原神计算器" = "Genshin Damage Calculator";
 "由爱丽丝工坊提供" = "Provided by Alice Workshop";
 "由爱丽丝工坊提供（未安装）" = "Provided by Alice Workshop";
 "小工具" = "Gadgets";
@@ -858,3 +858,8 @@
 
 // Water mark
 "披萨小助手" = "Pizza Helper";
+
+// MARK: - 2.5.1
+"暂无本期深渊数据" = "No data of this term";
+"仅统计充值途径以外获取的资源。数据存在延迟。" = "Only includes the resources obtained ouside of top-ups. There are data delay issues.";
+"已回满" = "Full";

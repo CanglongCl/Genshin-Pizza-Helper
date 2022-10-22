@@ -35,7 +35,7 @@ struct CurrentEventNavigator: View {
                     HStack(spacing: 3) {
                         Rectangle()
                             .foregroundColor(.secondary)
-                            .frame(width: 4)
+                            .frame(width: 4, height: 60)
                         VStack(spacing: 7) {
                             ForEach(eventContents.filter({
                                 (getRemainDays($0.endAt)?.day ?? 0) >= 0

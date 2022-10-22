@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@available(iOS 15, *)
+//@available(iOS 15, *)
 struct EachCharacterDetailDatasView: View {
     var avatar: PlayerDetail.Avatar
 
@@ -130,25 +130,39 @@ struct EachCharacterDetailDatasView: View {
         // Weapon
         let weapon = avatar.weapon
         let l: CGFloat = 80
-        ZStack {
-            EnkaWebIcon(iconString: weapon.rankLevel.rectangularBackgroundIconString)
-                .scaledToFit()
-                .scaleEffect(1.1)
-                .offset(y: 10)
-                .clipShape(Circle())
-            EnkaWebIcon(iconString: weapon.awakenedIconString)
-                .scaledToFit()
-        }
-        .frame(height: l)
-        .overlay(alignment: .bottomTrailing) {
-            Text("Lv.\(weapon.level)")
-                .font(.caption)
-                .padding(.horizontal, 3)
-                .background(
-                    Capsule()
-                        .foregroundStyle(.ultraThinMaterial)
-                        .opacity(0.7)
-                )
+        if #available(iOS 15.0, *) {
+            ZStack {
+                EnkaWebIcon(iconString: weapon.rankLevel.rectangularBackgroundIconString)
+                    .scaledToFit()
+                    .scaleEffect(1.1)
+                    .offset(y: 10)
+                    .clipShape(Circle())
+                EnkaWebIcon(iconString: weapon.awakenedIconString)
+                    .scaledToFit()
+            }
+            .frame(height: l)
+            .overlay(alignment: .bottomTrailing) {
+                Text("Lv.\(weapon.level)")
+                    .font(.caption)
+                    .padding(.horizontal, 3)
+                    .background(
+                        Capsule()
+                            .foregroundStyle(.ultraThinMaterial)
+                            .opacity(0.7)
+                    )
+            }
+        } else {
+            // Fallback on earlier versions
+            ZStack {
+                EnkaWebIcon(iconString: weapon.rankLevel.rectangularBackgroundIconString)
+                    .scaledToFit()
+                    .scaleEffect(1.1)
+                    .offset(y: 10)
+                    .clipShape(Circle())
+                EnkaWebIcon(iconString: weapon.awakenedIconString)
+                    .scaledToFit()
+            }
+            .frame(height: l)
         }
         VStack(alignment: .leading, spacing: 3) {
             HStack(alignment: .firstTextBaseline) {
@@ -246,7 +260,7 @@ struct EachCharacterDetailDatasView: View {
     }
 }
 
-@available(iOS 15.0, *)
+//@available(iOS 15.0, *)
 struct AttributeLabel: View {
     let iconString: String
     let name: String
@@ -262,34 +276,49 @@ struct AttributeLabel: View {
             .padding(.vertical, 1)
             .padding(.leading, 3)
         let nameView = Text(LocalizedStringKey(name))
-        let valueView = Text(value)
-            .foregroundColor(.primary)
-            .padding(.horizontal)
-            .background(
-                Capsule()
-                    .foregroundStyle(.gray)
-                    .frame(height: 20)
-                    .frame(maxWidth: 200)
-                    .opacity(0.25)
-            )
-        if #available(iOS 16, *) {
-            GridRow {
-                image
+        if #available(iOS 15.0, *) {
+            let valueView = Text(value)
+                .foregroundColor(.primary)
+                .padding(.horizontal)
+                .background(
+                    Capsule()
+                        .foregroundStyle(.gray)
+                        .frame(height: 20)
+                        .frame(maxWidth: 200)
+                        .opacity(0.25)
+                )
+            if #available(iOS 16.0, *) {
+                GridRow {
+                    image
+                    HStack {
+                        nameView
+                        Spacer()
+                        valueView
+                    }
+                }
+                .frame(height: 20)
+            } else {
+                // Fallback on earlier versions
                 HStack {
-                    nameView
+                    HStack {
+                        image
+                        nameView
+                    }
                     Spacer()
                     valueView
                 }
             }
-//            GridRow {
-//                Spacer()
-//                nameView
-//                image
-//                valueView
-//                Spacer()
-//            }
-            .frame(height: 20)
         } else {
+            // Fallback on earlier versions
+            let valueView = Text(value)
+                .foregroundColor(.primary)
+                .padding(.horizontal)
+                .background(
+                    Capsule()
+                        .frame(height: 20)
+                        .frame(maxWidth: 200)
+                        .opacity(0.25)
+                )
             HStack {
                 HStack {
                     image
@@ -299,10 +328,13 @@ struct AttributeLabel: View {
                 valueView
             }
         }
+        if #available(iOS 16, *) {
+        } else {
+        }
     }
 }
 
-@available(iOS 15.0, *)
+//@available(iOS 15.0, *)
 private struct AvatarAndSkillView: View {
     let avatar: PlayerDetail.Avatar
 

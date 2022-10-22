@@ -858,3 +858,8 @@
 
 // Water mark
 "披萨小助手" = "Pizza Helper";
+
+// MARK: - 2.5.1
+"暂无本期深渊数据" = "No data of this term";
+"仅统计充值途径以外获取的资源。数据存在延迟。" = "Only includes the resources obtained ouside of top-ups. There are data delay issues.";
+"已回满" = "Full";

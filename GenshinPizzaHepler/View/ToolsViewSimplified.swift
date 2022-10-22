@@ -1,15 +1,14 @@
 //
-//  ToolsView.swift
+//  ToolsViewSimplified.swift
 //  GenshinPizzaHepler
 //
-//  Created by Bill Haku on 2022/9/17.
+//  Created by Bill Haku on 2022/10/22.
 //
 
 import SwiftUI
 import SwiftPieChart
 
-@available(iOS 15.0, *)
-struct ToolsView: View {
+struct ToolsViewSimplified: View {
     @EnvironmentObject var viewModel: ViewModel
     var accounts: [Account] { viewModel.accounts }
     @AppStorage("toolViewShowingAccountUUIDString") var showingAccountUUIDString: String?
@@ -38,17 +37,6 @@ struct ToolsView: View {
                 playerDetailSection()
                 abyssAndPrimogemNavigator()
                 toolsSection()
-            }
-            .refreshable {
-                withAnimation {
-                    DispatchQueue.main.async {
-                        if let account = account {
-                            viewModel.refreshPlayerDetail(for: account)
-                        }
-                        viewModel.refreshAbyssDetail()
-                        viewModel.refreshLedgerData()
-                    }
-                }
             }
             .onAppear {
                 if !accounts.isEmpty && showingAccountUUIDString == nil {
@@ -309,7 +297,7 @@ struct ToolsView: View {
             .listRowBackground(Color.white.opacity(0))
         }
     }
-    
+
     @ViewBuilder
     func ledgerSheetView() -> some View {
         LedgerSheetView(data: try! ledgerDataResult!.get(), sheetType: $sheetType)
@@ -343,16 +331,6 @@ struct ToolsView: View {
                         }
                     }
                 }
-                .toolbarSavePhotoButtonInIOS16(viewToShare: {
-                    Group {
-                        switch abyssDataViewSelection {
-                        case .thisTerm:
-                            AbyssShareView(data: thisAbyssData, charMap: viewModel.charMap!)
-                        case .lastTerm:
-                            AbyssShareView(data: lastAbyssData, charMap: viewModel.charMap!)
-                        }
-                    }
-                }, placement: .navigationBarLeading, title: String(localized: "保存\(thisAbyssData.floors.last?.index ?? 12)层的深渊数据"))
             }
         } else {
             ProgressView()
@@ -438,7 +416,7 @@ struct ToolsView: View {
             case .refreshTooFast(let dateWhenRefreshable):
                 if dateWhenRefreshable.timeIntervalSinceReferenceDate - Date().timeIntervalSinceReferenceDate > 0 {
                     let second = Int(dateWhenRefreshable.timeIntervalSinceReferenceDate - Date().timeIntervalSinceReferenceDate)
-                    Text(String(localized: "请稍等\(second)秒再刷新"))
+                    Text(String(format: NSLocalizedString("请稍等%d秒再刷新", comment: "refresh"), second))
                 } else {
                     Text("请下滑刷新")
                 }
@@ -467,9 +445,6 @@ struct ToolsView: View {
     @ViewBuilder
     func toolsSection() -> some View {
         Section {
-            NavigationLink(destination: GenshinDictionary()) {
-                Text("原神中英日辞典")
-            }
             mapNavigationLink()
             Link(destination: isInstallation(urlString: "aliceworkshop://") ? URL(string: "aliceworkshop://app/import?uid=\(account?.config.uid ?? "")")! : URL(string: "https://apps.apple.com/us/app/id1620751192")!) {
                 VStack(alignment: .leading) {
@@ -512,9 +487,6 @@ private enum AbyssDataType: String, CaseIterable {
     case lastTerm = "上期深渊"
 }
 
-
-
-@available(iOS 15.0, *)
 private struct LedgerSheetView: View {
     let data: LedgerData
     @Binding var sheetType: SheetTypes?
@@ -535,9 +507,6 @@ private struct LedgerSheetView: View {
                     Text("原石摩拉账簿").bold()
                 }
             }
-            .toolbarSavePhotoButtonInIOS16(viewToShare: {
-                LedgerShareView(data: data)
-            }, placement: .navigationBarLeading, title: "保存本月原石账簿图片".localized)
         }
     }
 
@@ -597,7 +566,7 @@ private struct LedgerSheetView: View {
                     Text("\(data.date ?? "")")
                 }
             } footer: {
-                Text("仅统计充值途径以外获取的资源。数据存在延迟。")
+                Text("提示：本页面中的数据仅统计充值途径以外获取的资源。数据存在延迟。")
                     .font(.footnote)
                     .multilineTextAlignment(.leading)
             }
@@ -635,7 +604,7 @@ private struct LedgerSheetView: View {
                         values: data.monthData.groupBy.map { Double($0.num) },
                         names: data.monthData.groupBy.map { $0.action },
                         formatter: { value in String(format: "%.0f", value)},
-                        colors: [.blue, .green, .orange, .yellow, .purple, .gray, .brown, .cyan],
+                        colors: [.blue, .green, .orange, .yellow, .purple, .gray, .white],
                         backgroundColor: Color(UIColor.systemGroupedBackground),
                         innerRadiusFraction: 0.6
                     )

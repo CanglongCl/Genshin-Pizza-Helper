@@ -24,15 +24,20 @@ struct AbyssDetailDataDisplayView: View {
             }
 
             // 战斗数据榜
-            Section {
-                BattleDataInfoProvider(name: "最强一击", value: data.damageRank.first?.value, avatarID: data.damageRank.first?.avatarId, charMap: charMap)
-                BattleDataInfoProvider(name: "最多击破数", value: data.defeatRank.first?.value, avatarID: data.defeatRank.first?.avatarId, charMap: charMap)
-                BattleDataInfoProvider(name: "承受最多伤害", value: data.takeDamageRank.first?.value, avatarID: data.takeDamageRank.first?.avatarId, charMap: charMap)
-                BattleDataInfoProvider(name: "元素战技释放数", value: data.normalSkillRank.first?.value, avatarID: data.normalSkillRank.first?.avatarId, charMap: charMap)
-                BattleDataInfoProvider(name: "元素爆发次数", value: data.energySkillRank.first?.value, avatarID: data.energySkillRank.first?.avatarId, charMap: charMap)
-            } header: {
-                Text("战斗数据榜")
+            if !data.damageRank.isEmpty && !data.defeatRank.isEmpty && !data.takeDamageRank.isEmpty && !data.normalSkillRank.isEmpty && !data.energySkillRank.isEmpty {
+                Section {
+                    BattleDataInfoProvider(name: "最强一击", value: data.damageRank.first?.value, avatarID: data.damageRank.first?.avatarId, charMap: charMap)
+                    BattleDataInfoProvider(name: "最多击破数", value: data.defeatRank.first?.value, avatarID: data.defeatRank.first?.avatarId, charMap: charMap)
+                    BattleDataInfoProvider(name: "承受最多伤害", value: data.takeDamageRank.first?.value, avatarID: data.takeDamageRank.first?.avatarId, charMap: charMap)
+                    BattleDataInfoProvider(name: "元素战技释放数", value: data.normalSkillRank.first?.value, avatarID: data.normalSkillRank.first?.avatarId, charMap: charMap)
+                    BattleDataInfoProvider(name: "元素爆发次数", value: data.energySkillRank.first?.value, avatarID: data.energySkillRank.first?.avatarId, charMap: charMap)
+                } header: {
+                    Text("战斗数据榜")
+                }
+            } else {
+                Text("暂无本期深渊数据")
             }
+
             ForEach(data.floors.reversed(), id:\.index) { floorData in
                 AbyssFloorView(floorData: floorData, charMap: charMap)
             }

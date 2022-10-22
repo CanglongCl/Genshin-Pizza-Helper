@@ -51,8 +51,6 @@ struct ContentView: View {
                     .tabItem {
                         Label("概览", systemImage: "list.bullet")
                     }
-                // TODO: Remove debug check when ready
-//                #if DEBUG
                 if #available(iOS 15.0, *) {
                     ToolsView(animation: animation)
                         .tag(1)
@@ -60,8 +58,14 @@ struct ContentView: View {
                         .tabItem {
                             Label("工具", systemImage: "shippingbox")
                         }
+                } else {
+                    ToolsViewSimplified(animation: animation)
+                        .tag(1)
+                        .environmentObject(viewModel)
+                        .tabItem {
+                            Label("工具", systemImage: "shippingbox")
+                        }
                 }
-//                #endif
                 SettingsView(storeManager: storeManager)
                     .tag(2)
                     .environmentObject(viewModel)
@@ -76,11 +80,9 @@ struct ContentView: View {
                     .zIndex(1)
             }
             if let account = viewModel.showCharacterDetailOfAccount {
-                if #available(iOS 15.0, *) {
-                    CharacterDetailView(account: account, showingCharacterName: viewModel.showingCharacterName!, animation: animation)
-                        .environment(\.colorScheme, .dark)
-                        .zIndex(2)
-                }
+                CharacterDetailView(account: account, showingCharacterName: viewModel.showingCharacterName!, animation: animation)
+                    .environment(\.colorScheme, .dark)
+                    .zIndex(2)
             }
         }
         .onChange(of: scenePhase, perform: { newPhase in
