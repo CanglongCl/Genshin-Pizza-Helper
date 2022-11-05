@@ -124,7 +124,7 @@ struct Expedition: Codable {
             return "雷泽"
         case "Bennett":
             return "班尼特"
-        case "Noelle":
+        case "Noelle", "Noel":
             return "诺艾尔"
         case "Fischl":
             return "菲谢尔·冯·露弗施洛斯·那菲多特"

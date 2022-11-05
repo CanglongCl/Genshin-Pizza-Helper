@@ -51,6 +51,7 @@ struct WebImage: View {
     }
 }
 
+/// 加载完图片后才会显示，不要放在UI中，可以放在静态的内容中如widget和保存的图片
 struct NetworkImage: View {
     let url: URL?
     

@@ -11,6 +11,7 @@ import SwiftPieChart
 @available(iOS 15.0, *)
 struct ToolsView: View {
     @EnvironmentObject var viewModel: ViewModel
+    @Environment(\.scenePhase) var scenePhase
     var accounts: [Account] { viewModel.accounts }
     @AppStorage("toolViewShowingAccountUUIDString") var showingAccountUUIDString: String?
     var account: Account? {
@@ -29,7 +30,10 @@ struct ToolsView: View {
 
     var ledgerDataResult: LedgerDataFetchResult? { account?.ledgeDataResult }
 
+
     var animation: Namespace.ID
+
+    @State private var askAllowAbyssDataCollectionAlert: Bool = false
 
     var body: some View {
         NavigationView {
@@ -45,7 +49,7 @@ struct ToolsView: View {
                         if let account = account {
                             viewModel.refreshPlayerDetail(for: account)
                         }
-                        viewModel.refreshAbyssDetail()
+                        viewModel.refreshAbyssAndBasicInfo()
                         viewModel.refreshLedgerData()
                     }
                 }
@@ -63,26 +67,52 @@ struct ToolsView: View {
                     spiralAbyssSheetView()
                 case .loginAccountAgainView:
                     NavigationView {
-                        AccountDetailView(account: $viewModel.accounts[viewModel.accounts.firstIndex(of: account!)!], isWebShown: true)
-                            .toolbar {
-                                ToolbarItem(placement: .navigationBarTrailing) {
-                                    Button("完成") {
-                                        sheetType = nil
-                                        viewModel.refreshLedgerData()
-                                    }
-                                }
+                        AccountDetailSheet(account: $viewModel.accounts[viewModel.accounts.firstIndex(of: account!)!], sheetType: $sheetType)
+                            .onDisappear {
+                                viewModel.refreshLedgerData()
                             }
                     }
+                case .allAvatarList:
+                    allAvatarListView()
                 }
             }
             .onChange(of: account) { newAccount in
                 withAnimation {
                     DispatchQueue.main.async {
-                        viewModel.refreshPlayerDetail(for: newAccount!)
+                        if let newAccount = newAccount {
+                            viewModel.refreshPlayerDetail(for: newAccount)
+                        }
                     }
                 }
             }
             .toolViewNavigationTitleInIOS15()
+            .onAppear { checkIfAllowAbyssDataCollection() }
+            .alert("是否允许我们收集您的深渊数据？", isPresented: $askAllowAbyssDataCollectionAlert) {
+                Button("不允许", role: .destructive) {
+                    UserDefaults.standard.set(false, forKey: "allowAbyssDataCollection")
+                    UserDefaults.standard.set(true, forKey: "hasAskedAllowAbyssDataCollection")
+                }
+                Button("允许", role: .cancel, action: {
+                    UserDefaults.standard.set(true, forKey: "allowAbyssDataCollection")
+                    UserDefaults.standard.set(true, forKey: "hasAskedAllowAbyssDataCollection")
+                })
+            } message: {
+                Text("我们希望收集您已拥有的角色和在攻克深渊时使用的角色。如果您同意我们使用您的数据，您将可以在App内查看我们实时汇总的深渊角色使用率、队伍使用率等情况。您的隐私非常重要，我们不会收集包括UID在内的敏感信息。更多相关问题，请查看深渊统计榜单页面右上角的FAQ.")
+            }
+            .onChange(of: scenePhase, perform: { newPhase in
+                switch newPhase {
+                case .active:
+                    withAnimation {
+                        DispatchQueue.main.async {
+                            if let account = account { viewModel.refreshPlayerDetail(for: account) }
+                            viewModel.refreshAbyssAndBasicInfo()
+                            viewModel.refreshLedgerData()
+                        }
+                    }
+                default:
+                    break
+                }
+            })
         }
         .navigationViewStyle(.stack)
     }
@@ -154,11 +184,16 @@ struct ToolsView: View {
                 loadingView()
             }
         }
-        #if DEBUG
         if (try? account?.playerDetailResult?.get()) == nil {
             Section { allAvatarNavigator() }
         }
-        #endif
+    }
+
+    @ViewBuilder
+    func allAvatarListView() -> some View {
+        NavigationView {
+            AllAvatarListSheetView(account: account!, sheetType: $sheetType)
+        }
     }
 
     @ViewBuilder
@@ -198,10 +233,8 @@ struct ToolsView: View {
                         .padding(.vertical)
                     }
                 }
-                #if DEBUG
                 Divider()
                 allAvatarNavigator()
-                #endif
             }
         }
     }
@@ -234,7 +267,7 @@ struct ToolsView: View {
                             } else {
                                 ProgressView()
                                     .onTapGesture {
-                                        viewModel.refreshAbyssDetail()
+                                        viewModel.refreshAbyssAndBasicInfo()
                                     }
                             }
                         }
@@ -343,16 +376,18 @@ struct ToolsView: View {
                         }
                     }
                 }
-                .toolbarSavePhotoButtonInIOS16(viewToShare: {
+                .toolbarSavePhotoButtonInIOS16(title: String(localized: "保存\(thisAbyssData.floors.last?.index ?? 12)层的深渊数据"), placement: .navigationBarLeading) {
                     Group {
                         switch abyssDataViewSelection {
                         case .thisTerm:
                             AbyssShareView(data: thisAbyssData, charMap: viewModel.charMap!)
+                                .environment(\.locale, .init(identifier: Locale.current.identifier))
                         case .lastTerm:
                             AbyssShareView(data: lastAbyssData, charMap: viewModel.charMap!)
+                                .environment(\.locale, .init(identifier: Locale.current.identifier))
                         }
                     }
-                }, placement: .navigationBarLeading, title: String(localized: "保存\(thisAbyssData.floors.last?.index ?? 12)层的深渊数据"))
+                }
             }
         } else {
             ProgressView()
@@ -467,6 +502,24 @@ struct ToolsView: View {
     @ViewBuilder
     func toolsSection() -> some View {
         Section {
+            NavigationLink {
+                AbyssDataCollectionView()
+            } label: {
+                Label {
+                    Text("深渊统计榜单")
+                } icon: {
+                    Image("UI_MarkTower_EffigyChallenge_01").resizable().scaledToFit()
+                }
+            }
+        }
+        Section {
+            #if DEBUG
+            Button("send data") {
+                UserDefaults.standard.set([String](), forKey: "hasUploadedAbyssDataAccountAndSeasonMD5")
+                UserDefaults.standard.set([String](), forKey: "hasUploadedAvatarHoldingDataMD5")
+                viewModel.refreshAbyssAndBasicInfo()
+            }
+            #endif
             NavigationLink(destination: GenshinDictionary()) {
                 Text("原神中英日辞典")
             }
@@ -495,17 +548,26 @@ struct ToolsView: View {
             }
             return false
         }
-}
 
-private enum SheetTypes: Identifiable {
-    var id: Int {
-        hashValue
+    func checkIfAllowAbyssDataCollection() {
+        if !UserDefaults.standard.bool(forKey: "hasAskedAllowAbyssDataCollection") && account != nil {
+            askAllowAbyssDataCollectionAlert = true
+        }
     }
 
-    case spiralAbyss
-    case characters
-    case loginAccountAgainView
+    enum SheetTypes: Identifiable {
+        var id: Int {
+            hashValue
+        }
+
+        case spiralAbyss
+        case characters
+        case loginAccountAgainView
+        case allAvatarList
+    }
 }
+
+
 
 private enum AbyssDataType: String, CaseIterable {
     case thisTerm = "本期深渊"
@@ -517,7 +579,7 @@ private enum AbyssDataType: String, CaseIterable {
 @available(iOS 15.0, *)
 private struct LedgerSheetView: View {
     let data: LedgerData
-    @Binding var sheetType: SheetTypes?
+    @Binding var sheetType: ToolsView.SheetTypes?
 
     var body: some View {
         NavigationView {
@@ -535,9 +597,10 @@ private struct LedgerSheetView: View {
                     Text("原石摩拉账簿").bold()
                 }
             }
-            .toolbarSavePhotoButtonInIOS16(viewToShare: {
+            .toolbarSavePhotoButtonInIOS16(title: "保存本月原石账簿图片".localized, placement: .navigationBarLeading) {
                 LedgerShareView(data: data)
-            }, placement: .navigationBarLeading, title: "保存本月原石账簿图片".localized)
+                    .environment(\.locale, .init(identifier: Locale.current.identifier))
+            }
         }
     }
 
@@ -650,17 +713,18 @@ private struct LedgerSheetView: View {
     }
 }
 
+@available(iOS 15.0, *)
 private struct AllAvatarNavigator: View {
     let basicInfo: BasicInfos
     let charMap: [String : ENCharacterMap.Character]
-    @Binding var sheetType: SheetTypes?
+    @Binding var sheetType: ToolsView.SheetTypes?
 
     var body: some View {
         HStack {
-            Text("所有角色（开发中）")
+            Text("所有角色")
                 .padding(.trailing)
                 .font(.footnote)
-                .foregroundColor(.secondary)
+                .foregroundColor(.primary)
             Spacer()
             HStack(spacing: 3) {
                 ForEach(basicInfo.avatars.prefix(5), id: \.id) { avatar in
@@ -677,8 +741,7 @@ private struct AllAvatarNavigator: View {
             .padding(.vertical, 3)
         }
         .onTapGesture {
-            // TODO: Open sheet view
-            // sheetType = .??
+            sheetType = .allAvatarList
         }
     }
 }
@@ -695,6 +758,9 @@ private struct PrimogemTextLabel: View {
                 .frame(maxHeight: labelHeight)
             Text("\(primogem)")
                 .font(.system(.largeTitle, design: .rounded))
+                .lineLimit(1)
+                .fixedSize(horizontal: false, vertical: true)
+                .minimumScaleFactor(0.7)
                 .overlay(
                     GeometryReader(content: { geometry in
                         Color.clear
@@ -743,8 +809,9 @@ private struct AbyssTextLabel: View {
                 .frame(maxHeight: labelHeight)
             Text(text)
                 .font(.system(.largeTitle, design: .rounded))
+                .lineLimit(1)
                 .fixedSize(horizontal: false, vertical: true)
-                .minimumScaleFactor(0.9)
+                .minimumScaleFactor(0.7)
                 .overlay(
                     GeometryReader(content: { geometry in
                         Color.clear

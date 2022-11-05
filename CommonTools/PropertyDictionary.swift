@@ -13,7 +13,7 @@ class PropertyDictionary {
         "FIGHT_PROP_MAX_HP": "生命值上限",
         "FIGHT_PROP_ATTACK": "攻击力",
         "FIGHT_PROP_DEFENSE": "防御力",
-        "FIGHT_PROP_ELEMENT_MASTERY": "元素精通",
+        "FIGHT_PROP_ELEMENT_MASTERY": "元素精通​", // 此处元素精通后添加了一个零宽字符，用于英文缩写
         "FIGHT_PROP_CRITICAL": "暴击率%%",
         "FIGHT_PROP_CRITICAL_HURT": "暴击伤害%%",
         "FIGHT_PROP_HEAL_ADD": "治疗加成%%",

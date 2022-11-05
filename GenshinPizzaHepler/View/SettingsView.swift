@@ -66,19 +66,20 @@ struct SettingsView: View {
                         isLanguageSettingHintShow = true
                     } label: {
                         Label {
-                            HStack {
-                                Text("偏好语言")
-                                    .foregroundColor(.primary)
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(.secondary)
-                            }
+                            Text("偏好语言")
+                                .foregroundColor(.primary)
                         } icon: {
                             Image(systemName: "globe")
                         }
                     }
                 }
-                
+
+                Section {
+                    NavigationLink("隐私设置") {
+                        PrivacySettingsView()
+                    }
+                }
+
                 Section {
                     NavigationLink(destination: WebBroswerView(url: "http://ophelper.top/static/faq.html").navigationTitle("FAQ").navigationBarTitleDisplayMode(.inline)) {
                         Text("常见使用问题（FAQ）")

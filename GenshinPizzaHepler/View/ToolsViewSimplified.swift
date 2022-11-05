@@ -61,6 +61,8 @@ struct ToolsViewSimplified: View {
                                 }
                             }
                     }
+                case .allAvatarList:
+                    allAvatarListView()
                 }
             }
             .onChange(of: account) { newAccount in
@@ -150,6 +152,13 @@ struct ToolsViewSimplified: View {
     }
 
     @ViewBuilder
+    func allAvatarListView() -> some View {
+        NavigationView {
+//            AllAvatarListSheetView(account: account!, sheetType: $sheetType)
+        }
+    }
+
+    @ViewBuilder
     func successView() -> some View {
         let playerDetail: PlayerDetail = try! account!.playerDetailResult!.get()
         Section {
@@ -222,7 +231,7 @@ struct ToolsViewSimplified: View {
                             } else {
                                 ProgressView()
                                     .onTapGesture {
-                                        viewModel.refreshAbyssDetail()
+                                        viewModel.refreshAbyssAndBasicInfo()
                                     }
                             }
                         }
@@ -445,6 +454,17 @@ struct ToolsViewSimplified: View {
     @ViewBuilder
     func toolsSection() -> some View {
         Section {
+            NavigationLink {
+                AbyssDataCollectionView()
+            } label: {
+                Label {
+                    Text("深渊统计")
+                } icon: {
+                    Image("UI_MarkTower_EffigyChallenge_01").resizable().scaledToFit()
+                }
+            }
+        }
+        Section {
             mapNavigationLink()
             Link(destination: isInstallation(urlString: "aliceworkshop://") ? URL(string: "aliceworkshop://app/import?uid=\(account?.config.uid ?? "")")! : URL(string: "https://apps.apple.com/us/app/id1620751192")!) {
                 VStack(alignment: .leading) {
@@ -480,6 +500,7 @@ private enum SheetTypes: Identifiable {
     case spiralAbyss
     case characters
     case loginAccountAgainView
+    case allAvatarList
 }
 
 private enum AbyssDataType: String, CaseIterable {
@@ -626,10 +647,10 @@ private struct AllAvatarNavigator: View {
 
     var body: some View {
         HStack {
-            Text("所有角色（开发中）")
+            Text("所有角色")
                 .padding(.trailing)
                 .font(.footnote)
-                .foregroundColor(.secondary)
+                .foregroundColor(.primary)
             Spacer()
             HStack(spacing: 3) {
                 ForEach(basicInfo.avatars.prefix(5), id: \.id) { avatar in
@@ -646,8 +667,7 @@ private struct AllAvatarNavigator: View {
             .padding(.vertical, 3)
         }
         .onTapGesture {
-            // TODO: Open sheet view
-            // sheetType = .??
+            sheetType = .allAvatarList
         }
     }
 }

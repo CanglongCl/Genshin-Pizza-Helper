@@ -297,16 +297,6 @@ struct PlayerDetail {
         }
     }
 
-    enum RankLevel: Int {
-        case one = 1, two = 2, three = 3, four = 4, five = 5
-        var rectangularBackgroundIconString: String {
-            "UI_QualityBg_\(self.rawValue)"
-        }
-        var squaredBackgroundIconString: String {
-            "UI_QualityBg_\(self.rawValue)s"
-        }
-    }
-
     enum PlayerDetailError: Error {
         case failToGetLocalizedDictionary
         case failToGetCharacterDictionary
@@ -321,5 +311,15 @@ private extension Dictionary where Key == String, Value == String {
     }
     func nameFromHashMap(_ hashID: String) -> String {
         self[hashID] ?? "unknow"
+    }
+}
+
+enum RankLevel: Int {
+    case one = 1, two = 2, three = 3, four = 4, five = 5
+    var rectangularBackgroundIconString: String {
+        "UI_QualityBg_\(self.rawValue)"
+    }
+    var squaredBackgroundIconString: String {
+        "UI_QualityBg_\(self.rawValue)s"
     }
 }

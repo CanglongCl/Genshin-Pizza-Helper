@@ -109,29 +109,32 @@ private struct AccountInfoCards: View {
                 if account.result != nil {
                     switch account.result! {
                     case .success(let userData):
-                        let gameInfoBlock: some View = GameInfoBlock(userData: userData, accountName: account.config.name, accountUUIDString: account.config.uuid!.uuidString, animation: animation, widgetBackground: account.background, fetchComplete: account.fetchComplete)
-                            .padding([.bottom, .horizontal])
-                            .listRowBackground(Color.white.opacity(0))
-                            .onTapGesture {
-                                simpleTaptic(type: .medium)
-                                withAnimation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 0.8)) {
-                                    viewModel.showDetailOfAccount = account
-                                }
-                            }
-                        if #available (iOS 16, *) {
-                            gameInfoBlock
-                                .contextMenu {
-                                    Button("保存图片".localized) {
-                                        let view = GameInfoBlockForSave(userData: userData, accountName: account.config.name ?? "", accountUUIDString: account.config.uuid?.uuidString ?? "", animation: animation, widgetBackground: account.background)
-                                        let renderer = ImageRenderer(content: view)
-                                        renderer.scale = UIScreen.main.scale
-                                        if let image = renderer.uiImage {
-                                            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-                                        }
+                        // 我也不知道为什么如果不检查的话删除账号会崩溃
+                        if account.config.uuid != nil {
+                            let gameInfoBlock: some View = GameInfoBlock(userData: userData, accountName: account.config.name, accountUUIDString: account.config.uuid!.uuidString, animation: animation, widgetBackground: account.background, fetchComplete: account.fetchComplete)
+                                .padding([.bottom, .horizontal])
+                                .listRowBackground(Color.white.opacity(0))
+                                .onTapGesture {
+                                    simpleTaptic(type: .medium)
+                                    withAnimation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 0.8)) {
+                                        viewModel.showDetailOfAccount = account
                                     }
                                 }
-                        } else {
-                            gameInfoBlock
+                            if #available (iOS 16, *) {
+                                gameInfoBlock
+                                    .contextMenu {
+                                        Button("保存图片".localized) {
+                                            let view = GameInfoBlockForSave(userData: userData, accountName: account.config.name ?? "", accountUUIDString: account.config.uuid?.uuidString ?? "", animation: animation, widgetBackground: account.background).environment(\.locale, .init(identifier: Locale.current.identifier))
+                                            let renderer = ImageRenderer(content: view)
+                                            renderer.scale = UIScreen.main.scale
+                                            if let image = renderer.uiImage {
+                                                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                                            }
+                                        }
+                                    }
+                            } else {
+                                gameInfoBlock
+                            }
                         }
                     case .failure( _) :
                         HStack {

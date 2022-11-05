@@ -13,7 +13,7 @@ struct MaterialView: View {
     var weaponMaterialProvider: WeaponMaterialProvider { .init(weekday: today) }
 
     var body: some View {
-        if Calendar.current.dateComponents([.weekday], from: Date()).weekday != 1 {
+        if today != .sunday {
             VStack {
                 HStack(spacing: -5) {
                     ForEach(weaponMaterialProvider.todaysMaterials, id: \.imageString) { material in

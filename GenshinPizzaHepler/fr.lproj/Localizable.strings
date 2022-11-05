@@ -863,3 +863,51 @@
 "暂无本期深渊数据" = "No data of this term";
 "仅统计充值途径以外获取的资源。数据存在延迟。" = "Only includes the resources obtained ouside of top-ups. There are data delay issues.";
 "已回满" = "Full";
+
+// MARK: - 2.5.2 & 2.5.3
+"所有角色" = "All Characters";
+"我的角色" = "My Characters";
+"共拥有%lld名角色，其中五星角色%lld名，四星角色%lld名。" = "There are %lld characters in total, including %lld 5-star characters and %lld 4-star characters.";
+"共获得%lld金，其中角色%lld金，武器%lld金。（未统计旅行者和无人装备的五星武器）" = "Acquired 5-star items %lld times from gacha, including 5-star characters %lld times and 5-star weapons %lld times. (Unequipped star 5 weapons are not counted)";
+"精%lld" = "R%lld";
+"全部角色" = "All Characters";
+"5星角色" = "5-star characters";
+"4星角色" = "4-star characters";
+"的所有角色" = "Owned Characters";
+"生命值上限" = "Max HP";
+"元素精通​" = "EM"; // 此处元素精通后添加了一个零宽字符，用于英文缩写
+"纳西妲" = "Nahida";
+"莱依拉" = "Layla"; 
+"千夜浮梦" = "Mille rêves flottants";
+
+// MARK: - 2.5.4 HOTFIX
+"账号状态异常，请前往米游社-旅行便笺重新验证" = "Account status is abnormal, please go to HoYoLAB to re-verify";
+// MARK: - 2.5.4
+"%lld月原石收入" = "Primogem Income";
+
+// MARK: - 2.6.0
+"深渊统计榜单" = "Spiral Abyss Top Lists";
+"深渊角色使用率" = "Character Usage Rate";
+"深渊队伍使用率" = "Team Usage Rate";
+"满星玩家持有率" = "36-Star Player Owning Rate";
+"全员角色持有率" = "All Player Owning Rate";
+"所有服务器" = "All Server";
+"%lld层" = "F.%lld";
+"深渊统计榜单FAQ" = "Spiral Abyss Top Lists FAQ";
+"隐私设置" = "Privacy";
+"允许收集深渊数据" = "Allow to Collect Spiral Abyss Data";
+"我们希望收集您已拥有的角色和在攻克深渊时使用的角色。如果您同意我们使用您的数据，您将可以在App内查看我们实时汇总的深渊角色使用率、队伍使用率等情况。您的隐私非常重要，我们不会收集包括UID在内的敏感信息。更多相关问题，请查看深渊统计榜单页面右上角的FAQ." = "We are looking forward to collect the characters you owning and the characters you used in the Spiral Abyss. If you allow us to collect the data, you can checkout the real-time Spiral Chacacter Usage Rate, Team Usage Rate, etc. in the App. Your privacy is of great importance and we will not collect any sensitive infomations including your UID. For further details, you can read the FAQ in the top-right corner of the Top Lists View.";
+"共统计%lld用户%@\n%@·生成于%@" = "%lld data counted %@\n%@ · Generated at %@";
+"共统计%lld用户%@" = "%lld data counted %@";
+"·仅包含满星玩家·计算方法：角色使用人数/角色拥有人数" = "· 36-star players only · Percentage = Used Players / Owning Players";
+"·仅包含满星玩家" = "· 36-star players only";
+"上" = "FH";
+"下" = "SH";
+"月" = " ";
+"·仅自%@后提交的数据" = "· Data collected after %@";
+"整层" = "Both";
+
+// MARK: - 2.6.1
+"是否允许我们收集您的深渊数据？" = "Allow us to collect your Spiral Abyss data?";
+"不允许" = "No";
+"允许" = "Yes";

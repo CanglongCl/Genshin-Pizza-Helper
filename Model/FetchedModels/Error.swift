@@ -45,6 +45,13 @@ enum FetchError: Error, Equatable {
     case accountUnbound
 
     case errorWithCode(Int)
+
+    case accountAbnormal(Int) // 1034
+}
+
+enum PSAServerError: Error {
+    case uploadError(String)
+    case getDataError(String)
 }
 
 extension FetchError {
@@ -72,6 +79,8 @@ extension FetchError {
             return "未获取到登录信息，请重试".localized
         case .unknownError(let retcode, _):
             return String(format: NSLocalizedString("未知错误码：%lld", comment: "未知错误码：%lld"), retcode)
+        case .accountAbnormal( _):
+            return "账号状态异常，请前往米游社-旅行便笺重新验证".localized
         default:
             return ""
         }
@@ -107,6 +116,8 @@ extension FetchError {
             default:
                 return "未知错误".localized
             }
+        case .accountAbnormal( _):
+            return "账号状态异常，请前往米游社-旅行便笺重新验证".localized
         case .unknownError(_, let message):
             return message
         default:

@@ -164,6 +164,7 @@ extension WeaponOrTalentMaterial {
                                                              .init(imageString: "UI_EquipIcon_Pole_Deshret_Awaken", localizedName: "赤沙之杖"),
                                                              .init(imageString: "UI_EquipIcon_Catalyst_Pleroma_Awaken", localizedName: "流浪的晚星"),
                                                              .init(imageString: "UI_EquipIcon_Catalyst_Arakalari_Awaken", localizedName: "盈满之实"),
+                                                             .init(imageString: "UI_EquipIcon_Catalyst_Ayus_Awaken", localizedName: "千夜浮梦")
                                                            ]
     )
     static let scorchingMight: WeaponOrTalentMaterial = .init(imageString: "weapon.ScorchingMight", localizedName: "「烈日威权」", weekday: .wednesdayAndSaturday,
@@ -286,7 +287,9 @@ extension WeaponOrTalentMaterial {
     )
     static let ingenuity: WeaponOrTalentMaterial = .init(imageString: "talent.Ingenuity", localizedName: "「巧思」", weekday: .tuesdayAndFriday,
                                                          relatedItem: [
-                                                           .init(imageString: "UI_AvatarIcon_Dori_Card", localizedName: "多莉")
+                                                           .init(imageString: "UI_AvatarIcon_Dori_Card", localizedName: "多莉"),
+                                                           .init(imageString: "UI_AvatarIcon_Nahida_Card", localizedName: "纳西妲"),
+//                                                           .init(imageString: "UI_AvatarIcon_Layla_Card", localizedName: "莱依拉")
                                                          ]
     )
     static let praxis: WeaponOrTalentMaterial = .init(imageString: "talent.Praxis", localizedName: "「笃行」", weekday: .wednesdayAndSaturday,

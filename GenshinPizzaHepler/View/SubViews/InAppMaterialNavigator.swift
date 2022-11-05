@@ -11,6 +11,7 @@ struct InAppMaterialNavigator: View {
     @State var showingWeekday: MaterialWeekday = .today()
     var talentMaterialProvider: TalentMaterialProvider { .init(weekday: showingWeekday) }
     var weaponMaterialProvider: WeaponMaterialProvider { .init(weekday: showingWeekday) }
+    @Environment(\.scenePhase) var scenePhase
 
     let uuid = UUID()
 
@@ -148,6 +149,14 @@ struct InAppMaterialNavigator: View {
                 withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 1.0, blendDuration: 0)) {
                     showRelatedDetailOfMaterial = nil
                 }
+            }
+        }
+        .onChange(of: scenePhase) { newValue in
+            switch newValue {
+            case .active:
+                showingWeekday = .today()
+            default:
+                break
             }
         }
     }

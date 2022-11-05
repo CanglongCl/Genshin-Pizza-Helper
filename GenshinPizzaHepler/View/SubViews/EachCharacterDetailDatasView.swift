@@ -214,7 +214,7 @@ struct EachCharacterDetailDatasView: View {
     func probView() -> some View {
         // Other prob
         let probRows = Group {
-            AttributeLabel(iconString: "UI_Icon_MaxHp", name: "生命值", value: "\(avatar.fightPropMap.HP.rounded(toPlaces: 1))")
+            AttributeLabel(iconString: "UI_Icon_MaxHp", name: "生命值上限", value: "\(avatar.fightPropMap.HP.rounded(toPlaces: 1))")
             AttributeLabel(iconString: "UI_Icon_CurAttack", name: "攻击力", value: "\(avatar.fightPropMap.ATK.rounded(toPlaces: 1))")
             AttributeLabel(iconString: "UI_Icon_CurDefense", name: "防御力", value: "\(avatar.fightPropMap.DEF.rounded(toPlaces: 1))")
             AttributeLabel(iconString: "UI_Icon_Element", name: "元素精通", value: "\(avatar.fightPropMap.elementalMastery.rounded(toPlaces: 1))")

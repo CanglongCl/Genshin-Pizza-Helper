@@ -88,7 +88,7 @@ struct PlayerDetailFetchModel: Codable {
             struct LevelStage: Codable {
                 var type: Int
                 var ival: String
-                var val: String
+                var val: String?
             }
 
             struct Level: Codable {

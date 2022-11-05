@@ -66,6 +66,8 @@ extension API {
                         case -1, 10102:
                             print("fail -1")
                             completion(.failure(.dataNotFound(retcode, message)))
+                        case 1034:
+                            completion(.failure(.accountAbnormal(retcode)))
                         default:
                             print("unknowerror")
                             completion(.failure(.unknownError(retcode, message)))
@@ -73,6 +75,120 @@ extension API {
                         
                     case .failure(let requestError):
                         
+                        switch requestError {
+                        case .decodeError(let message):
+                            completion(.failure(.decodeError(message)))
+                        default:
+                            completion(.failure(.requestError(requestError)))
+                        }
+                    }
+                }
+        }
+
+        // 获取所有角色信息
+        /// - Parameters:
+        ///     - region: 服务器地区
+        ///     - serverID: 服务器ID
+        ///     - uid: 用户UID
+        ///     - cookie: 用户Cookie
+        ///     - completion: 数据
+        static func fetchAllAvatarInfos (
+            region: Region,
+            serverID: String,
+            uid: String,
+            cookie: String,
+            completion: @escaping (
+                AllAvatarDetailFetchResult
+            ) -> ()
+        ) {
+            func get_ds_token(body: String) -> String {
+                let s: String
+                switch region {
+                case .cn:
+                    s = "xV8v4Qu54lUKrEYFZkJhB8cuOh9Asafs"
+                case .global:
+                    s = "okr4obncj8bw5a65hbnn5oo6ixjc3l9w"
+                }
+                let t = String(Int(Date().timeIntervalSince1970))
+                let r = String(Int.random(in: 100000..<200000))
+                let q = ""
+                let c = "salt=\(s)&t=\(t)&r=\(r)&b=\(body)&q=\(q)".md5
+                print(t + "," + r + "," + c)
+                print("salt=\(s)&t=\(t)&r=\(r)&b=\(body)&q=\(q)")
+                return t + "," + r + "," + c
+            }
+
+            struct RequestBody: Codable {
+                let role_id: String
+                let server: String
+                let need_external: Bool?
+            }
+
+            // 请求类别
+            let urlStr = "game_record/app/genshin/api/character"
+            let urlHost: String
+            let body: RequestBody
+            switch region {
+            case .cn:
+                urlHost = "https://api-takumi-record.mihoyo.com/"
+                body = .init(role_id: uid, server: serverID, need_external: nil)
+            case .global:
+                urlHost = "https://bbs-api-os.hoyolab.com/"
+                body = .init(role_id: uid, server: serverID, need_external: nil)
+            }
+
+            if (uid == "") || (cookie == "") {
+                completion(.failure(.noFetchInfo))
+            }
+
+            let encoder = JSONEncoder()
+            let bodyData = try! encoder.encode(body)
+            let bodyString = String(data: bodyData, encoding: .utf8)!
+            print(bodyString)
+            // 请求
+            HttpMethod<AllAvatarDetailRequestDetail>
+                .postRequest(
+                    .post,
+                    baseHost: urlHost,
+                    urlStr: urlStr,
+                    body: bodyData,
+                    region: region,
+                    cookie: cookie,
+                    ds: get_ds_token(body: bodyString)
+                ) { result in
+                    switch result {
+
+                    case .success(let requestResult):
+                        print("request succeed")
+                        let userData = requestResult.data
+                        let retcode = requestResult.retcode
+                        let message = requestResult.message
+
+                        switch requestResult.retcode {
+                        case 0:
+                            print("get data succeed")
+                            completion(.success(userData!))
+                        case 10001:
+                            print("fail 10001")
+                            completion(.failure(.cookieInvalid(retcode, message)))
+                        case 10103, 10104:
+                            print("fail nomatch")
+                            completion(.failure(.unmachedAccountCookie(retcode, message)))
+                        case 1008:
+                            print("fail 1008")
+                            completion(.failure(.accountInvalid(retcode, message)))
+                        case -1, 10102:
+                            print("fail -1")
+                            completion(.failure(.dataNotFound(retcode, message)))
+                        case 1034:
+                            completion(.failure(.accountAbnormal(retcode)))
+                        default:
+                            print("unknownerror")
+                            completion(.failure(.unknownError(retcode, message)))
+                        }
+
+                    case .failure(let requestError):
+
                         switch requestError {
                         case .decodeError(let message):
                             completion(.failure(.decodeError(message)))
@@ -135,6 +251,8 @@ extension API {
                                 case -100:
                                     print("fail -100")
                                     completion(.failure(.notLoginError(retcode, message)))
+                                case 1034:
+                                    completion(.failure(.accountAbnormal(retcode)))
                                 default:
                                     print("unknowerror")
                                     completion(.failure(.unknownError(retcode, message)))
@@ -173,6 +291,8 @@ extension API {
                                     case -100:
                                         print("fail -100")
                                         completion(.failure(.notLoginError(retcode, message)))
+                                    case 1034:
+                                        completion(.failure(.accountAbnormal(retcode)))
                                     default:
                                         print("unknowerror")
                                         completion(.failure(.unknownError(retcode, message)))
@@ -246,6 +366,8 @@ extension API {
                         case -1, 10102:
                             print("fail -1")
                             completion(.failure(.dataNotFound(retcode, message)))
+                        case 1034:
+                            completion(.failure(.accountAbnormal(retcode)))
                         default:
                             print("unknowerror")
                             completion(.failure(.unknownError(retcode, message)))
@@ -331,6 +453,8 @@ extension API {
                             completion(.failure(.dataNotFound(retcode, message)))
                         case -100:
                             completion(.failure(.notLoginError(retcode, message)))
+                        case 1034:
+                            completion(.failure(.accountAbnormal(retcode)))
                         default:
                             print("unknowerror")
                             completion(.failure(.unknownError(retcode, message)))
@@ -408,6 +532,8 @@ extension API {
                         case -1, 10102:
                             print("fail -1")
                             completion(.failure(.dataNotFound(retcode, message)))
+                        case 1034:
+                            completion(.failure(.accountAbnormal(retcode)))
                         default:
                             print("unknowerror")
                             completion(.failure(.unknownError(retcode, message)))

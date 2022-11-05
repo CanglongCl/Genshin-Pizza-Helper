@@ -261,7 +261,17 @@ struct ContactUsView: View {
                 }
             }
             Section(header: Text("特别鸣谢")) {
-                Link(destination: URL(string: "mqqapi://card/show_pslcard?src_type=internal&version=1&uin=2251435011")!) {
+                Menu {
+                    Link(destination: URL(string: "mqqapi://card/show_pslcard?src_type=internal&version=1&uin=2251435011")!) {
+                        Label {
+                            Text("QQ")
+                        } icon: {
+                            Image("qq")
+                                .resizable()
+                                .scaledToFit()
+                        }
+                    }
+                } label: {
                     Label {
                         HStack {
                             Text("郁离居士")

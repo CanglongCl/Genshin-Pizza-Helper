@@ -26,6 +26,12 @@ struct LedgerDataRequestResult: Codable {
     let retcode: Int
 }
 
+struct AllAvatarDetailRequestDetail: Codable {
+    let data: AllAvatarDetailModel?
+    let message: String
+    let retcode: Int
+}
+
 #if !os(watchOS)
 struct SpiralAbyssDetailRequestResult: Codable {
     let data: SpiralAbyssDetail?

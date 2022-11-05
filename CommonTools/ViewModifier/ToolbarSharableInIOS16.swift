@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-@available(iOS 15, *)
+
 extension View {
-    func toolbarSavePhotoButtonInIOS16<ViewToRender: View>(viewToShare: @escaping () -> ViewToRender, placement: ToolbarItemPlacement = .navigationBarTrailing, title: String = "保存") -> some View {
+    func toolbarSavePhotoButtonInIOS16<ViewToRender: View>(title: String = "保存".localized, placement: ToolbarItemPlacement = .navigationBarTrailing, viewToShare: @escaping () -> ViewToRender) -> some View {
         modifier(ToolbarSavePhotoButton(viewToRender: viewToShare, placement: placement, title: title))
     }
 }
 
-@available(iOS 15, *)
+
 struct ToolbarSavePhotoButton<ViewToRender: View>: ViewModifier {
 
     var viewToRender: ViewToRender
@@ -32,16 +32,8 @@ struct ToolbarSavePhotoButton<ViewToRender: View>: ViewModifier {
         self.title = title
     }
 
-//    @MainActor @available(iOS 16.0, *)
-//    func generateSharePhoto() -> UIImage? {
-//        let renderer = ImageRenderer(content: viewToRender)
-//        renderer.scale = UIScreen.main.scale
-//        return renderer.uiImage
-//    }
-
     func body(content: Content) -> some View {
         if #available(iOS 16, *)
-//            , let image = generateSharePhoto()
         {
             content
                 .toolbar {
@@ -59,7 +51,8 @@ struct ToolbarSavePhotoButton<ViewToRender: View>: ViewModifier {
                 }
                 .alert(title, isPresented: $isAlertShow) {
                     Button("OK") {
-                        let renderer = ImageRenderer(content: viewToRender)
+                        let renderer = ImageRenderer(content: viewToRender
+                            .environment(\.locale, .init(identifier: Locale.current.identifier)))
                         renderer.scale = UIScreen.main.scale
                         if let image = renderer.uiImage {
                             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
