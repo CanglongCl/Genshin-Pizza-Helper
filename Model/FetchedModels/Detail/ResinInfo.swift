@@ -7,10 +7,12 @@
 
 import Foundation
 
-struct ResinInfo {
+struct ResinInfo: Codable {
     let currentResin: Int
     let maxResin: Int
     private let resinRecoverySecond: Int
+
+    let updateDate: Date
     
     var isFull: Bool { currentResin == maxResin }
     
@@ -24,6 +26,7 @@ struct ResinInfo {
         self.currentResin = currentResin
         self.maxResin = maxResin
         self.resinRecoverySecond = resinRecoverySecond
+        self.updateDate = Date()
     }
 
     var score: Float {

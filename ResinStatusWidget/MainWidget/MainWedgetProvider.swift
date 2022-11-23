@@ -12,28 +12,30 @@ import WidgetKit
 
 struct ResinEntry: TimelineEntry {
     let date: Date
-    let result: FetchResult
+    let widgetDataKind: WidgetDataKind
     let viewConfig: WidgetViewConfiguration
     var accountName: String? = nil
     var relevance: TimelineEntryRelevance? = .init(score: 0)
+    let accountUUIDString: String?
 }
 
 struct MainWidgetProvider: IntentTimelineProvider {
 
     func placeholder(in context: Context) -> ResinEntry {
-        ResinEntry(date: Date(), result: FetchResult.defaultFetchResult, viewConfig: .defaultConfig, accountName: "荧")
+        ResinEntry(date: Date(), widgetDataKind: .normal(result: .defaultFetchResult), viewConfig: .defaultConfig, accountName: "荧", accountUUIDString: "")
     }
 
     func getSnapshot(for configuration: SelectAccountIntent, in context: Context, completion: @escaping (ResinEntry) -> ()) {
-        let entry = ResinEntry(date: Date(), result: FetchResult.defaultFetchResult, viewConfig: .defaultConfig, accountName: "荧")
+        let entry = ResinEntry(date: Date(), widgetDataKind: .normal(result: .defaultFetchResult), viewConfig: .defaultConfig, accountName: "荧", accountUUIDString: "")
         completion(entry)
     }
 
     func getTimeline(for configuration: SelectAccountIntent, in context: Context, completion: @escaping (Timeline<ResinEntry>) -> ()) {
         
         // Generate a timeline consisting of five entries an hour apart, starting from the current date.
+        let refreshFrequencyInMinute: Int = Int(UserDefaults(suiteName: "group.GenshinPizzaHelper")?.double(forKey: "mainWidgetRefreshFrequencyInMinute") ?? 30)
         let currentDate = Date()
-        let refreshDate = Calendar.current.date(byAdding: .minute, value: 7, to: currentDate)!
+        let refreshDate = Calendar.current.date(byAdding: .minute, value: refreshFrequencyInMinute, to: currentDate)!
         
         let accountConfigurationModel = AccountConfigurationModel.shared
         let configs = accountConfigurationModel.fetchAccountConfigs()
@@ -43,7 +45,7 @@ struct MainWidgetProvider: IntentTimelineProvider {
         guard !configs.isEmpty else {
             // 如果还没设置账号，要求进入App获取账号
             viewConfig.addMessage("请进入App设置帐号信息")
-            let entry = ResinEntry(date: currentDate, result: .failure(.noFetchInfo), viewConfig: viewConfig)
+            let entry = ResinEntry(date: currentDate, widgetDataKind: .normal(result: .failure(.noFetchInfo)), viewConfig: viewConfig, accountUUIDString: nil)
             let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
             completion(timeline)
             print("Config is empty")
@@ -55,17 +57,38 @@ struct MainWidgetProvider: IntentTimelineProvider {
             if configs.count == 1 {
                 viewConfig = WidgetViewConfiguration(configuration, nil)
                 // 如果还未选择账号且只有一个账号，默认获取第一个
-                configs.first!.fetchResult { result in
-                    let relevance: TimelineEntryRelevance = .init(score: MainWidgetProvider.calculateRelevanceScore(result: result))
-                    let entry = ResinEntry(date: currentDate, result: result, viewConfig: viewConfig, accountName: configs.first!.name, relevance: relevance)
-                    let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
-                    completion(timeline)
-                    print("Widget Fetch succeed")
+                switch configs.first!.server.region {
+                case .cn:
+                    if configuration.simplifiedMode?.boolValue ?? true {
+                        configs.first!.fetchSimplifiedResult { simplifiedResult in
+                            let relevance: TimelineEntryRelevance = .init(score: MainWidgetProvider.calculateRelevanceScore(result: simplifiedResult))
+                            let entry = ResinEntry(date: currentDate, widgetDataKind: .simplified(result: simplifiedResult), viewConfig: viewConfig, accountName: configs.first!.name, relevance: relevance, accountUUIDString: configs.first!.uuid?.uuidString)
+                            let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
+                            completion(timeline)
+                            print("Widget Fetch succeed")
+                        }
+                    } else {
+                        configs.first!.fetchResult { result in
+                            let relevance: TimelineEntryRelevance = .init(score: MainWidgetProvider.calculateRelevanceScore(result: result))
+                            let entry = ResinEntry(date: currentDate, widgetDataKind: .normal(result: result), viewConfig: viewConfig, accountName: configs.first!.name, relevance: relevance, accountUUIDString: configs.first?.uuid?.uuidString)
+                            let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
+                            completion(timeline)
+                            print("Widget Fetch succeed")
+                        }
+                    }
+                case .global:
+                    configs.first!.fetchResult { result in
+                        let relevance: TimelineEntryRelevance = .init(score: MainWidgetProvider.calculateRelevanceScore(result: result))
+                        let entry = ResinEntry(date: currentDate, widgetDataKind: .normal(result: result), viewConfig: viewConfig, accountName: configs.first!.name, relevance: relevance, accountUUIDString: configs.first?.uuid?.uuidString)
+                        let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
+                        completion(timeline)
+                        print("Widget Fetch succeed")
+                    }
                 }
             } else {
                 // 如果还没设置账号，要求进入App获取账号
                 viewConfig.addMessage("请长按进入小组件设置帐号信息")
-                let entry = ResinEntry(date: currentDate, result: .failure(.noFetchInfo), viewConfig: viewConfig)
+                let entry = ResinEntry(date: currentDate, widgetDataKind: .normal(result: .failure(.noFetchInfo)), viewConfig: viewConfig, accountUUIDString: nil)
                 let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
                 completion(timeline)
                 print("Need to choose account")
@@ -81,7 +104,7 @@ struct MainWidgetProvider: IntentTimelineProvider {
         guard let config = configs.first(where: { $0.uuid == selectedAccountUUID }) else {
             // 有时候删除账号，Intent没更新就会出现这样的情况
             viewConfig.addMessage("请长按进入小组件重新设置帐号信息")
-            let entry = ResinEntry(date: currentDate, result: .failure(.noFetchInfo), viewConfig: viewConfig)
+            let entry = ResinEntry(date: currentDate, widgetDataKind: .normal(result: .failure(.noFetchInfo)), viewConfig: viewConfig, accountUUIDString: nil)
             let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
             completion(timeline)
             print("Need to choose account")
@@ -89,18 +112,33 @@ struct MainWidgetProvider: IntentTimelineProvider {
         }
         
         // 正常情况
-        config.fetchResult { result in
-            let relevance: TimelineEntryRelevance = .init(score: MainWidgetProvider.calculateRelevanceScore(result: result))
-            let entry = ResinEntry(date: currentDate, result: result, viewConfig: viewConfig, accountName: config.name, relevance: relevance)
-            switch result {
-            case .success(let userData):
-                UserNotificationCenter.shared.createAllNotification(for: config.name ?? "", with: userData, uid: config.uid!)
-            case .failure(_ ):
-                break
+        switch config.server.region {
+        case .cn:
+            if configuration.simplifiedMode?.boolValue ?? true {
+                config.fetchSimplifiedResult { simplifiedResult in
+                    let relevance: TimelineEntryRelevance = .init(score: MainWidgetProvider.calculateRelevanceScore(result: simplifiedResult))
+                    let entry = ResinEntry(date: currentDate, widgetDataKind: .simplified(result: simplifiedResult), viewConfig: viewConfig, accountName: config.name, relevance: relevance, accountUUIDString: config.uuid?.uuidString)
+                    let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
+                    completion(timeline)
+                    print("Widget Fetch succeed")
+                }
+            } else {
+                config.fetchResult { result in
+                    let relevance: TimelineEntryRelevance = .init(score: MainWidgetProvider.calculateRelevanceScore(result: result))
+                    let entry = ResinEntry(date: currentDate, widgetDataKind: .normal(result: result), viewConfig: viewConfig, accountName: config.name, relevance: relevance, accountUUIDString: config.uuid?.uuidString)
+                    let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
+                    completion(timeline)
+                    print("Widget Fetch succeed")
+                }
             }
-            let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
-            completion(timeline)
-            print("Widget Fetch succeed")
+        case .global:
+            config.fetchResult { result in
+                let relevance: TimelineEntryRelevance = .init(score: MainWidgetProvider.calculateRelevanceScore(result: result))
+                let entry = ResinEntry(date: currentDate, widgetDataKind: .normal(result: result), viewConfig: viewConfig, accountName: config.name, relevance: relevance, accountUUIDString: config.uuid?.uuidString)
+                let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
+                completion(timeline)
+                print("Widget Fetch succeed")
+            }
         }
     }
 
@@ -109,6 +147,16 @@ struct MainWidgetProvider: IntentTimelineProvider {
         switch result {
         case .success(let data):
             return [data.resinInfo.score, data.transformerInfo.score, data.homeCoinInfo.score, data.expeditionInfo.score, data.dailyTaskInfo.score].max() ?? 0
+        case .failure(_):
+            return 0
+        }
+    }
+
+    static func calculateRelevanceScore(result: SimplifiedUserDataResult) -> Float {
+        // 结果为0-1
+        switch result {
+        case .success(let data):
+            return [data.resinInfo.score, data.homeCoinInfo.score, data.expeditionInfo.score, data.dailyTaskInfo.score].max() ?? 0
         case .failure(_):
             return 0
         }

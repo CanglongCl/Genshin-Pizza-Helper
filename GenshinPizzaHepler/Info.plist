@@ -17,8 +17,12 @@
 			</array>
 		</dict>
 	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<string>com.miHoYo.mhybbs</string>
+		<string>mihoyobbs</string>
 		<string>bilibili</string>
 		<string>twitter</string>
 		<string>aliceworkshop</string>

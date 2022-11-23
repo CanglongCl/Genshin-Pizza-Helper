@@ -64,14 +64,14 @@ struct AddAccountView: View {
                                 openWebView()
                             }
                         } label: {
-                            Text("登录米游社帐号")
+                            Text(unsavedCookie == "" ? "登录米哈游通行证帐号" : "重新登录米哈游通行证帐号")
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                     }
                 } footer: {
+
                     VStack(alignment: .leading) {
                         HStack {
                             Text("你也可以")
@@ -81,20 +81,22 @@ struct AddAccountView: View {
                                     .font(.footnote)
                             }
                         }
-                        Divider()
-                            .padding(.vertical)
-                        Text("关于我们的工作原理")
-                            .font(.footnote)
-                            .bold()
-                        Text("为了请求您的游戏内的数据，我们需要获取您的UID和Cookie，这是获取数据的必要参数。您在接下来的网页登录后，我们会在您的本地和iCloud存储您的个人数据。然后我们通过类似米游社的方式获取您的游戏内的数据信息。我们承诺，您的个人信息不会发送给任何人，包括我们自己。您的个人信息将会是非常安全的。")
-                            .font(.footnote)
-                        Text("\n")
-                            .font(.footnote)
-                        Text("关于您的帐号安全")
-                            .font(.footnote)
-                            .bold()
-                        Text("本程序不属于外挂等违法程序。本程序遵守米哈游二次创作规则的相关内容。根据中国原神客服的答复，使用本程序不会造成封号等问题。具体内容参见设置 - FAQ.")
-                            .font(.footnote)
+                        if (unsavedUid == "") || (unsavedCookie == "") {
+                            Divider()
+                                .padding(.vertical)
+                            Text("关于我们的工作原理")
+                                .font(.footnote)
+                                .bold()
+                            Text("为了请求您的游戏内的数据，我们需要获取您的UID和Cookie，这是获取数据的必要参数。您在接下来的网页登录后，我们会在您的本地和iCloud存储您的个人数据。然后我们通过类似米游社的方式获取您的游戏内的数据信息。我们承诺，您的个人信息不会发送给任何人，包括我们自己。您的个人信息将会是非常安全的。")
+                                .font(.footnote)
+                            Text("\n")
+                                .font(.footnote)
+                            Text("关于您的帐号安全")
+                                .font(.footnote)
+                                .bold()
+                            Text("本程序不属于外挂等违法程序。本程序遵守米哈游二次创作规则的相关内容。根据中国原神客服的答复，使用本程序不会造成封号等问题。具体内容参见设置 - FAQ.")
+                                .font(.footnote)
+                        }
                     }
                 }
             }
@@ -131,9 +133,9 @@ struct AddAccountView: View {
                 }
             }
             
-            if (connectStatus == .success) || (connectStatus == .testing) {
+            if (unsavedUid != "") && (unsavedCookie != "") {
                 NavigationLink(destination: AddAccountDetailView(unsavedName: $unsavedName, unsavedUid: $unsavedUid, unsavedCookie: $unsavedCookie, unsavedServer: $unsavedServer, connectStatus: $connectStatus)) {
-                    Text("查看帐号详情")
+                    Text("手动设置帐号详情")
                 }
             }
             

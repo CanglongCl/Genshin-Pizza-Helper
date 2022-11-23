@@ -5,6 +5,7 @@
 //  Created by Bill Haku on 2022/9/17.
 //
 
+
 import SwiftUI
 import SwiftPieChart
 
@@ -16,7 +17,7 @@ struct ToolsView: View {
     @AppStorage("toolViewShowingAccountUUIDString") var showingAccountUUIDString: String?
     var account: Account? {
         accounts.first { account in
-            account.config.uuid!.uuidString == showingAccountUUIDString
+            (account.config.uuid?.uuidString ?? "123") == showingAccountUUIDString
         }
     }
 
@@ -66,12 +67,10 @@ struct ToolsView: View {
                 case .spiralAbyss:
                     spiralAbyssSheetView()
                 case .loginAccountAgainView:
-                    NavigationView {
-                        AccountDetailSheet(account: $viewModel.accounts[viewModel.accounts.firstIndex(of: account!)!], sheetType: $sheetType)
-                            .onDisappear {
-                                viewModel.refreshLedgerData()
-                            }
-                    }
+                    GetLedgerCookieWebView(title: String(format: NSLocalizedString("请登录「%@」", comment: ""), viewModel.accounts[viewModel.accounts.firstIndex(of: account!)!].config.name ?? "") , sheetType: $sheetType, cookie: Binding($viewModel.accounts[viewModel.accounts.firstIndex(of: account!)!].config.cookie)!, region: viewModel.accounts[viewModel.accounts.firstIndex(of: account!)!].config.server.region)
+                        .onDisappear {
+                            viewModel.refreshLedgerData()
+                        }
                 case .allAvatarList:
                     allAvatarListView()
                 }
@@ -144,7 +143,7 @@ struct ToolsView: View {
                         }
                     }
                 } footer: {
-                    Text("UID: \(account.config.uid!)")
+                    Text("UID: \(account.config.uid ?? "")")
                 }
             } else {
                 Section {
@@ -154,7 +153,7 @@ struct ToolsView: View {
                         selectAccountManuButton()
                     }
                 } footer: {
-                    Text("UID: \(account.config.uid!)")
+                    Text("UID: \(account.config.uid ?? "")")
                 }
             }
         } else {
@@ -513,13 +512,6 @@ struct ToolsView: View {
             }
         }
         Section {
-            #if DEBUG
-            Button("send data") {
-                UserDefaults.standard.set([String](), forKey: "hasUploadedAbyssDataAccountAndSeasonMD5")
-                UserDefaults.standard.set([String](), forKey: "hasUploadedAvatarHoldingDataMD5")
-                viewModel.refreshAbyssAndBasicInfo()
-            }
-            #endif
             NavigationLink(destination: GenshinDictionary()) {
                 Text("原神中英日辞典")
             }
@@ -539,15 +531,15 @@ struct ToolsView: View {
     }
 
     func isInstallation(urlString:String?) -> Bool {
-            let url = URL(string: urlString!)
-            if url == nil {
-                return false
-            }
-            if UIApplication.shared.canOpenURL(url!) {
-                return true
-            }
+        let url = URL(string: urlString!)
+        if url == nil {
             return false
         }
+        if UIApplication.shared.canOpenURL(url!) {
+            return true
+        }
+        return false
+    }
 
     func checkIfAllowAbyssDataCollection() {
         if !UserDefaults.standard.bool(forKey: "hasAskedAllowAbyssDataCollection") && account != nil {

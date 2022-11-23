@@ -41,3 +41,24 @@ struct LockScreenLoopWidgetCircular: View {
     }
 }
 
+@available(iOSApplicationExtension 16.0, *)
+struct SimplifiedLockScreenLoopWidgetCircular: View {
+    @Environment(\.widgetRenderingMode) var widgetRenderingMode
+    let result: SimplifiedUserDataResult
+
+    let showWeeklyBosses: Bool
+    let showTransformer: Bool
+
+    var body: some View {
+        switch SimplifiedLockScreenLoopWidgetType.autoChoose(result: result) {
+        case .resin:
+            AlternativeLockScreenResinWidgetCircular(result: result)
+        case .dailyTask:
+            LockScreenDailyTaskWidgetCircular(result: result)
+        case .expedition:
+            LockScreenExpeditionWidgetCircular(result: result)
+        case .homeCoin:
+            LockScreenHomeCoinWidgetCircular(result: result)
+        }
+    }
+}

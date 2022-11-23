@@ -11,7 +11,6 @@ import StoreKit
 struct GlobalDonateView: View {
     @StateObject var storeManager: StoreManager
     let locale = Locale.current
-    @State private var isWechatAlipayShow: Bool = Locale.current.identifier == "zh_CN"
     let is_zh_CN: Bool = Locale.current.identifier == "zh_CN"
     var body: some View {
         List {

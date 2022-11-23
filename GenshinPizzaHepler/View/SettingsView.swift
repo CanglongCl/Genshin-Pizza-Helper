@@ -27,7 +27,7 @@ struct SettingsView: View {
                 Section {
                     ForEach($viewModel.accounts, id: \.config.uuid) { $account in
                         NavigationLink(destination: AccountDetailView(account: $account)) {
-                            AccountInfoView(accountConfig: $account.config)
+                            AccountInfoView(account: account)
                         }
                     }
                     .onDelete { indexSet in
@@ -49,8 +49,16 @@ struct SettingsView: View {
                             .font(.footnote)
                     }
                 }
+
+                // 小组件相关设置
+                NavigationLink("小组件设置", destination: { WidgetSettingView() })
+
                 // 通知设置
                 NotificationSettingNavigator()
+
+                #if canImport(ActivityKit)
+                LiveActivitySettingView()
+                #endif
 
                 Section {
                     Button("在App Store评分") {

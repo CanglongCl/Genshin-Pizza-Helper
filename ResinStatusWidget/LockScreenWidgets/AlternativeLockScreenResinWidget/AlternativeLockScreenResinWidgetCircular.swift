@@ -8,10 +8,10 @@
 import SwiftUI
 
 @available(iOSApplicationExtension 16.0, *)
-struct AlternativeLockScreenResinWidgetCircular: View {
+struct AlternativeLockScreenResinWidgetCircular<T>: View where T: SimplifiedUserDataContainer {
     @Environment(\.widgetRenderingMode) var widgetRenderingMode
 
-    let result: FetchResult
+    let result: SimplifiedUserDataContainerResult<T>
 
     var body: some View {
         switch widgetRenderingMode {

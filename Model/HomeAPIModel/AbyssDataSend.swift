@@ -151,6 +151,7 @@ extension AvatarHoldingData {
 
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
+        formatter.calendar = Calendar(identifier: .gregorian)
         updateDate = formatter.string(from: Date())
 
         owningChars = basicInfo.avatars.map { $0.id }

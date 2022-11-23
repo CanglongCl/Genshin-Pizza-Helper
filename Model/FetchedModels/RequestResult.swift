@@ -14,6 +14,12 @@ struct RequestResult: Codable {
     let retcode: Int
 }
 
+struct WidgetRequestResult: Codable {
+    let data: WidgetUserData?
+    let message: String
+    let retcode: Int
+}
+
 struct BasicInfoRequestResult: Codable {
     let data: BasicInfos?
     let message: String

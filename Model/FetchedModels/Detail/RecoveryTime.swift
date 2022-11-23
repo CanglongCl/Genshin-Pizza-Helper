@@ -8,7 +8,7 @@
 import Foundation
 import CryptoKit
 
-struct RecoveryTime {
+struct RecoveryTime: Codable {
     let second: Int
     
     init(second: Int) {

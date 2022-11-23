@@ -53,3 +53,27 @@ struct DetailInfo: View {
         .padding(.trailing)
     }
 }
+
+struct DetailInfoSimplified: View {
+    let userData: SimplifiedUserData
+    let viewConfig: WidgetViewConfiguration
+
+    var body: some View {
+
+        VStack(alignment: .leading, spacing: 13) {
+
+            if userData.homeCoinInfo.maxHomeCoin != 0 {
+                HomeCoinInfoBar(homeCoinInfo: userData.homeCoinInfo)
+            }
+
+            if userData.dailyTaskInfo.totalTaskNum != 0 {
+                DailyTaskInfoBar(dailyTaskInfo: userData.dailyTaskInfo)
+            }
+
+            if userData.expeditionInfo.maxExpedition != 0 {
+                ExpeditionInfoBar(expeditionInfo: userData.expeditionInfo, expeditionViewConfig: .init(noticeExpeditionWhenAllCompleted: true, expeditionShowingMethod: .byNum))
+            }
+        }
+        .padding(.trailing)
+    }
+}

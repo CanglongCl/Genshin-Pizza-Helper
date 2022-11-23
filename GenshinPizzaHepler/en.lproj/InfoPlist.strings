@@ -6,6 +6,6 @@
   
 */
 
-"CFBundleDisplayName" = "Genshin Pizza";
+"CFBundleDisplayName" = "Pizza Helper";
 "NSPhotoLibraryAddUsageDescription" = "Please allow images to be saved";
 "NSCameraUsageDescription" = "If you want use camera in HoYoLAB's web and upload photos, please allow the use of camera";

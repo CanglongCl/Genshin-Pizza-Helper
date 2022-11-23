@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DailyTaskInfo {
+struct DailyTaskInfo: Codable {
     let totalTaskNum: Int
     let finishedTaskNum: Int
     let isTaskRewardReceived: Bool

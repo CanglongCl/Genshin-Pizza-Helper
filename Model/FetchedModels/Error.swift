@@ -47,6 +47,8 @@ enum FetchError: Error, Equatable {
     case errorWithCode(Int)
 
     case accountAbnormal(Int) // 1034
+
+    case noStoken
 }
 
 enum PSAServerError: Error {
@@ -66,7 +68,7 @@ extension FetchError {
         case .cookieInvalid(let retcode, _):
             return String(format: NSLocalizedString("错误码%lld：Cookie失效，请重新登录", comment: "错误码%@：Cookie失效，请重新登录"), retcode)
         case .unmachedAccountCookie(let retcode, _):
-            return String(format: NSLocalizedString("错误码%lld：米游社帐号与UID不匹配", comment: "错误码%@：米游社帐号与UID不匹配"), retcode)
+            return String(format: NSLocalizedString("错误码%lld：米游社帐号与UID不匹配，请手动输入UID", comment: "错误码%@：米游社帐号与UID不匹配"), retcode)
         case .accountInvalid(let retcode, _):
             return String(format: NSLocalizedString("错误码%lld：UID有误", comment: "错误码%@：UID有误"), retcode)
         case .dataNotFound( _, _):
@@ -80,7 +82,9 @@ extension FetchError {
         case .unknownError(let retcode, _):
             return String(format: NSLocalizedString("未知错误码：%lld", comment: "未知错误码：%lld"), retcode)
         case .accountAbnormal( _):
-            return "账号状态异常，请前往米游社-旅行便笺重新验证".localized
+            return "（1034）账号状态异常，建议长按小组件开启简洁模式".localized
+        case .noStoken:
+            return "请重新登录本账号以获取stoken".localized
         default:
             return ""
         }
@@ -117,9 +121,11 @@ extension FetchError {
                 return "未知错误".localized
             }
         case .accountAbnormal( _):
-            return "账号状态异常，请前往米游社-旅行便笺重新验证".localized
+            return "（1034）账号状态异常，请前往「米游社」App-「我的」-「我的角色」进行验证".localized
         case .unknownError(_, let message):
             return message
+        case .noStoken:
+            return "请重新登录本账号以获取stoken".localized
         default:
             return ""
         }

@@ -28,37 +28,58 @@ struct AlternativeWatchCornerResinWidget: Widget {
 struct AlternativeWatchCornerResinWidgetView: View {
     @Environment(\.widgetFamily) var family: WidgetFamily
     let entry: LockScreenWidgetProvider.Entry
-    var result: FetchResult { entry.result }
+    var dataKind: WidgetDataKind { entry.widgetDataKind }
     var accountName: String? { entry.accountName }
 
+    @ViewBuilder
+    func resinView(resinInfo: ResinInfo) -> some View {
+        Image("icon.resin")
+            .resizable()
+            .scaledToFit()
+            .padding(4)
+            .widgetLabel {
+                Gauge(value: Double(resinInfo.currentResin), in: 0...Double(resinInfo.maxResin)) {
+                    Text("原粹树脂")
+                } currentValueLabel: {
+                    Text("\(resinInfo.currentResin)")
+                } minimumValueLabel: {
+                    Text("\(resinInfo.currentResin)")
+                } maximumValueLabel: {
+                    Text("")
+                }
+            }
+    }
+
+    @ViewBuilder
+    func failureView() -> some View {
+        Image("icon.resin")
+            .resizable()
+            .scaledToFit()
+            .padding(6)
+            .widgetLabel {
+                Gauge(value: 0, in: 0...160) {
+                    Text("0")
+                }
+            }
+    }
+
     var body: some View {
-        switch result {
-        case .success(let data):
-            Image("icon.resin")
-                .resizable()
-                .scaledToFit()
-                .padding(4)
-                .widgetLabel {
-                    Gauge(value: Double(data.resinInfo.currentResin), in: 0...Double(data.resinInfo.maxResin)) {
-                        Text("原粹树脂")
-                    } currentValueLabel: {
-                        Text("\(data.resinInfo.currentResin)")
-                    } minimumValueLabel: {
-                        Text("\(data.resinInfo.currentResin)")
-                    } maximumValueLabel: {
-                        Text("")
-                    }
-                }
-        case.failure(_):
-            Image("icon.resin")
-                .resizable()
-                .scaledToFit()
-                .padding(6)
-                .widgetLabel {
-                    Gauge(value: 0, in: 0...160) {
-                        Text("0")
-                    }
-                }
+        switch dataKind {
+        case .normal(let result):
+            switch result {
+            case .success(let data):
+                resinView(resinInfo: data.resinInfo)
+            case.failure(_):
+                failureView()
+            }
+        case .simplified(let result):
+            switch result {
+            case .success(let data):
+                resinView(resinInfo: data.resinInfo)
+            case.failure(_):
+                failureView()
+            }
         }
+
     }
 }

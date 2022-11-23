@@ -8,10 +8,10 @@
 import SwiftUI
 
 @available(iOSApplicationExtension 16.0, *)
-struct LockScreenHomeCoinWidgetCorner: View {
+struct LockScreenHomeCoinWidgetCorner<T>: View where T: SimplifiedUserDataContainer {
     @Environment(\.widgetRenderingMode) var widgetRenderingMode
 
-    let result: FetchResult
+    let result: SimplifiedUserDataContainerResult<T>
     var text: String {
         switch result {
         case .success(let data):

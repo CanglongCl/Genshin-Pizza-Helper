@@ -8,10 +8,10 @@
 import SwiftUI
 
 @available(iOSApplicationExtension 16.0, *)
-struct LockScreenDailyTaskWidgetCircular: View {
+struct LockScreenDailyTaskWidgetCircular<T>: View where T: SimplifiedUserDataContainer {
     @Environment(\.widgetRenderingMode) var widgetRenderingMode
 
-    let result: FetchResult
+    let result: SimplifiedUserDataContainerResult<T>
 
     var body: some View {
         switch widgetRenderingMode {

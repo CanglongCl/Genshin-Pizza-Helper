@@ -192,6 +192,15 @@ class ViewModel: NSObject, ObservableObject {
             }
         }
     }
+
+    func refreshCharLocAndCharMap() {
+        API.HomeAPIs.fetchENCharacterLocDatas {
+            self.charLoc = $0.getLocalizedDictionary()
+        }
+        API.HomeAPIs.fetchENCharacterDetailDatas {
+            self.charMap = $0.characterDetails
+        }
+    }
     #endif
 }
 

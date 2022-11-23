@@ -106,8 +106,8 @@ struct HttpMethod<T: Codable> {
                 switch region {
                 case .cn:
                     baseStr = "https://api-takumi-record.mihoyo.com/"
-                    appVersion = "2.11.1"
-                    userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.11.1"
+                    appVersion = "2.40.1"
+                    userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.40.1"
                     clientType = "5"
                 case .global:
                     baseStr = "https://bbs-api-os.hoyolab.com/"
@@ -172,6 +172,306 @@ struct HttpMethod<T: Codable> {
 //                            let dictionary = try? JSONSerialization.jsonObject(with: data)
 //                            print(dictionary ?? "None")
                             
+                            do {
+                                let requestResult = try decoder.decode(T.self, from: data)
+                                completion(.success(requestResult))
+                            } catch {
+                                print(error)
+                                completion(.failure(.decodeError(error.localizedDescription)))
+                            }
+                        }
+                    }
+                }.resume()
+            }
+        }
+    }
+
+    /// 综合的http 各种方法接口
+    /// - Parameters:
+    ///   - method:Method, http方法的类型
+    ///   - urlStr:String，url的字符串后缀，即request的类型
+    ///   - region:Region，请求的服务器地区类型
+    ///   - serverID: String，服务器ID
+    ///   - uid: String, UID
+    ///   - cookie: String， 用户Cookie
+    ///   - completion:异步返回处理好的data以及报错的类型
+    static func commonWidgetRequest (
+        _ method: Method,
+        _ urlStr: String,
+        _ cookie: String,
+        completion: @escaping(
+            (Result<T, RequestError>) -> ()
+        )
+    ) {
+        let networkReachability = NetworkReachability()
+
+        func getSessionConfiguration() -> URLSessionConfiguration {
+            let sessionConfiguration = URLSessionConfiguration.default
+
+            let sessionUseProxy = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.bool(forKey: "useProxy")
+            let sessionProxyHost = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyHost")
+            let sessionProxyPort = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyPort")
+            let sessionProxyUserName = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyUserName")
+            let sessionProxyPassword = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyUserPassword")
+            if sessionUseProxy {
+                guard let sessionProxyHost = sessionProxyHost else {
+                    print("Proxy host error")
+                    return sessionConfiguration
+                }
+                guard let sessionProxyPort = Int(sessionProxyPort ?? "0") else {
+                    print("Proxy port error")
+                    return sessionConfiguration
+                }
+
+                if sessionProxyUserName != nil && sessionProxyUserName != "" && sessionProxyPassword != nil && sessionProxyPassword != "" {
+                    print("Proxy add authorization")
+                    let userPasswordString = "\(String(describing: sessionProxyUserName)):\(String(describing: sessionProxyPassword))"
+                    let userPasswordData = userPasswordString.data(using: String.Encoding.utf8)
+                    let base64EncodedCredential = userPasswordData!.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+                    let authString = "Basic \(base64EncodedCredential)"
+                    sessionConfiguration.httpAdditionalHeaders = ["Proxy-Authorization": authString]
+                    sessionConfiguration.httpAdditionalHeaders = ["Authorization" : authString]
+                }
+
+                print("Use Proxy \(sessionProxyHost):\(sessionProxyPort)")
+
+                #if !os(watchOS)
+                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPEnable as String] = true
+                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPProxy as String] = sessionProxyHost
+                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPPort as String] = sessionProxyPort
+                sessionConfiguration.connectionProxyDictionary?[kCFProxyTypeHTTP as String] = "\(sessionProxyHost):\(sessionProxyPort)"
+                sessionConfiguration.connectionProxyDictionary?[kCFProxyTypeHTTPS as String] = "\(sessionProxyHost):\(sessionProxyPort)"
+                #endif
+            } else {
+                print("No Proxy")
+            }
+            return sessionConfiguration
+        }
+
+        func get_ds_token() -> String {
+            let s: String = "t0qEgfub6cvueAPgR5m9aQWWVciEer7v"
+            let t = String(Int(Date().timeIntervalSince1970))
+            let r = String(Int.random(in: 100000..<200000))
+            let q = "game_id=2"
+            let c = "salt=\(s)&t=\(t)&r=\(r)&b=&q=\(q)".md5
+            return t + "," + r + "," + c
+        }
+
+        if networkReachability.reachable {
+            DispatchQueue.global(qos: .userInteractive).async {
+
+                // 请求url前缀，后跟request的类型
+                let baseStr: String = "https://api-takumi-record.mihoyo.com/"
+                let appVersion: String = "2.34.1"
+                let userAgent: String = "WidgetExtension/264 CFNetwork/1399 Darwin/22.1.0"
+                let clientType: String = "2"
+//                switch region {
+//                case .cn:
+//                    baseStr = "https://api-takumi-record.mihoyo.com/"
+//                    appVersion = "2.34.1"
+//                    userAgent = "WidgetExtension/264 CFNetwork/1399 Darwin/22.1.0"
+//                    clientType = "2"
+//                case .global:
+//                    baseStr = "https://bbs-api-os.hoyolab.com/"
+//                    appVersion = "2.9.1"
+//                    userAgent = "WidgetExtension/264 CFNetwork/1399 Darwin/22.1.0"
+//                    clientType = "2"
+//                }
+                // 由前缀和后缀共同组成的url
+                var url = URLComponents(string: baseStr + urlStr)!
+                url.queryItems = [
+                    URLQueryItem(name: "game_id", value: "2")
+                ]
+                // 初始化请求
+                var request = URLRequest(url: url.url!)
+                // 设置请求头
+                request.allHTTPHeaderFields = [
+                    "DS": get_ds_token(),
+                    "x-rpc-app_version": appVersion,
+                    "User-Agent": userAgent,
+                    "x-rpc-client_type": clientType,
+                    "Referer": "https://app.mihoyo.com/",
+                    "Cookie": cookie,
+                    "x-rpc-device_id": "",
+                    "x-rpc-channel": "appstore"
+                ]
+                // http方法
+                switch method {
+                case .post:
+                    request.httpMethod = "POST"
+                case .get:
+                    request.httpMethod = "GET"
+                case .put:
+                    request.httpMethod = "PUT"
+                }
+                // 开始请求
+                let session = URLSession.init(configuration: getSessionConfiguration())
+                session.dataTask(
+                    with: request
+                ) { data, response, error in
+                    // 判断有没有错误（这里无论如何都不会抛因为是自己手动返回错误信息的）
+                    print(error ?? "ErrorInfo nil")
+                    if let error = error {
+                        completion(.failure(.dataTaskError(error.localizedDescription)))
+                        print(
+                            "DataTask error in General HttpMethod: " +
+                            error.localizedDescription + "\n"
+                        )
+                    } else {
+                        guard let data = data else {
+                            completion(.failure(.noResponseData))
+                            print("found response data nil")
+                            return
+                        }
+                        guard response is HTTPURLResponse else {
+                            completion(.failure(.responseError))
+                            print("response error")
+                            return
+                        }
+                        DispatchQueue.main.async {
+                            let decoder = JSONDecoder()
+                            decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+                            let dictionary = try? JSONSerialization.jsonObject(with: data)
+                            print(dictionary ?? "None")
+
+                            do {
+                                let requestResult = try decoder.decode(T.self, from: data)
+                                completion(.success(requestResult))
+                            } catch {
+                                print(error)
+                                completion(.failure(.decodeError(error.localizedDescription)))
+                            }
+                        }
+                    }
+                }.resume()
+            }
+        }
+    }
+
+    /// 返回ltoken和stoken
+    /// - Parameters:
+    ///   - login
+    ///   - completion:异步返回处理好的data以及报错的类型
+    static func commonGetToken (
+        _ method: Method,
+        urlStr: String,
+        loginTicket: String,
+        loginUid: String,
+        completion: @escaping(
+            (Result<T, RequestError>) -> ()
+        )
+    ) {
+        let networkReachability = NetworkReachability()
+
+        func getSessionConfiguration() -> URLSessionConfiguration {
+            let sessionConfiguration = URLSessionConfiguration.default
+
+            let sessionUseProxy = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.bool(forKey: "useProxy")
+            let sessionProxyHost = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyHost")
+            let sessionProxyPort = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyPort")
+            let sessionProxyUserName = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyUserName")
+            let sessionProxyPassword = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyUserPassword")
+            if sessionUseProxy {
+                guard let sessionProxyHost = sessionProxyHost else {
+                    print("Proxy host error")
+                    return sessionConfiguration
+                }
+                guard let sessionProxyPort = Int(sessionProxyPort ?? "0") else {
+                    print("Proxy port error")
+                    return sessionConfiguration
+                }
+
+                if sessionProxyUserName != nil && sessionProxyUserName != "" && sessionProxyPassword != nil && sessionProxyPassword != "" {
+                    print("Proxy add authorization")
+                    let userPasswordString = "\(String(describing: sessionProxyUserName)):\(String(describing: sessionProxyPassword))"
+                    let userPasswordData = userPasswordString.data(using: String.Encoding.utf8)
+                    let base64EncodedCredential = userPasswordData!.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+                    let authString = "Basic \(base64EncodedCredential)"
+                    sessionConfiguration.httpAdditionalHeaders = ["Proxy-Authorization": authString]
+                    sessionConfiguration.httpAdditionalHeaders = ["Authorization" : authString]
+                }
+
+                print("Use Proxy \(sessionProxyHost):\(sessionProxyPort)")
+
+                #if !os(watchOS)
+                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPEnable as String] = true
+                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPProxy as String] = sessionProxyHost
+                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPPort as String] = sessionProxyPort
+                sessionConfiguration.connectionProxyDictionary?[kCFProxyTypeHTTP as String] = "\(sessionProxyHost):\(sessionProxyPort)"
+                sessionConfiguration.connectionProxyDictionary?[kCFProxyTypeHTTPS as String] = "\(sessionProxyHost):\(sessionProxyPort)"
+                #endif
+            } else {
+                print("No Proxy")
+            }
+            return sessionConfiguration
+        }
+
+        if networkReachability.reachable {
+            DispatchQueue.global(qos: .userInteractive).async {
+
+                // 请求url前缀，后跟request的类型
+                let baseStr: String = "https://api-takumi.mihoyo.com/"
+//                switch region {
+//                case .cn:
+//                    baseStr = "https://api-takumi-record.mihoyo.com/"
+//                    appVersion = "2.34.1"
+//                    userAgent = "WidgetExtension/264 CFNetwork/1399 Darwin/22.1.0"
+//                    clientType = "2"
+//                case .global:
+//                    baseStr = "https://bbs-api-os.hoyolab.com/"
+//                    appVersion = "2.9.1"
+//                    userAgent = "WidgetExtension/264 CFNetwork/1399 Darwin/22.1.0"
+//                    clientType = "2"
+//                }
+                // 由前缀和后缀共同组成的url
+                var url = URLComponents(string: baseStr + urlStr)!
+                url.queryItems = [
+                    URLQueryItem(name: "login_ticket", value: loginTicket),
+                    URLQueryItem(name: "token_types", value: "3"),
+                    URLQueryItem(name: "uid", value: loginUid),
+                ]
+                var request = URLRequest(url: url.url!)
+                // http方法
+                switch method {
+                case .post:
+                    request.httpMethod = "POST"
+                case .get:
+                    request.httpMethod = "GET"
+                case .put:
+                    request.httpMethod = "PUT"
+                }
+                // 开始请求
+                let session = URLSession.init(configuration: getSessionConfiguration())
+                session.dataTask(
+                    with: request
+                ) { data, response, error in
+                    // 判断有没有错误（这里无论如何都不会抛因为是自己手动返回错误信息的）
+                    print(error ?? "ErrorInfo nil")
+                    if let error = error {
+                        completion(.failure(.dataTaskError(error.localizedDescription)))
+                        print(
+                            "DataTask error in General HttpMethod: " +
+                            error.localizedDescription + "\n"
+                        )
+                    } else {
+                        guard let data = data else {
+                            completion(.failure(.noResponseData))
+                            print("found response data nil")
+                            return
+                        }
+                        guard response is HTTPURLResponse else {
+                            completion(.failure(.responseError))
+                            print("response error")
+                            return
+                        }
+                        DispatchQueue.main.async {
+                            let decoder = JSONDecoder()
+                            decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+                            let dictionary = try? JSONSerialization.jsonObject(with: data)
+                            print(dictionary ?? "None")
+
                             do {
                                 let requestResult = try decoder.decode(T.self, from: data)
                                 completion(.success(requestResult))
@@ -939,8 +1239,8 @@ struct HttpMethod<T: Codable> {
                             let decoder = JSONDecoder()
                             decoder.keyDecodingStrategy = .convertFromSnakeCase
 
-//                            let dictionary = try? JSONSerialization.jsonObject(with: data)
-//                            print(dictionary ?? "None")
+                            let dictionary = try? JSONSerialization.jsonObject(with: data)
+                            print(dictionary ?? "None")
 
                             do {
                                 let requestResult = try decoder.decode(T.self, from: data)

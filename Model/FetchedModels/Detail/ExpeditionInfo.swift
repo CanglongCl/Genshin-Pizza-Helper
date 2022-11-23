@@ -7,22 +7,23 @@
 
 import Foundation
 
-struct ExpeditionInfo {
+struct ExpeditionInfo: Codable {
     let currentExpedition: Int
     let maxExpedition: Int
     
     let expeditions: [Expedition]
     
     var currentOngoingTask: Int {
-        expeditions.filter { expedition in
+        expeditions.isEmpty
+        ? currentExpedition
+        : expeditions.filter { expedition in
             expedition.isComplete == false
         }
         .count
     }
     
     
-    
-    var anyCompleted: Bool { currentOngoingTask < maxExpedition }
+    var anyCompleted: Bool { expeditions.isEmpty ? false : currentOngoingTask < maxExpedition }
     var nextCompleteExpedition: Expedition? {
         expeditions.min {
             $0.recoveryTime.second < $1.recoveryTime.second
@@ -35,7 +36,7 @@ struct ExpeditionInfo {
         nextCompleteExpedition?.percentage ?? 0
     }
     
-    var allCompleted: Bool { currentOngoingTask == 0 }
+    var allCompleted: Bool { expeditions.isEmpty ? false : currentOngoingTask == 0 }
     var allCompleteTime: RecoveryTime {
         RecoveryTime(second: expeditions.max {
             $0.recoveryTime.second < $1.recoveryTime.second

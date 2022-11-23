@@ -25,5 +25,29 @@ struct TransformerData: Codable {
             case minute = "Minute"
             case second = "Second"
         }
+
+        init() {
+            self.day = -1
+            self.hour = -1
+            self.minute = -1
+            self.second = -1
+        }
+
+        init(day: Int, hour: Int, minute: Int, second: Int) {
+            self.day = day
+            self.hour = hour
+            self.minute = minute
+            self.second = second
+        }
+    }
+
+    init() {
+        self.obtained = false
+        self.recoveryTime = TransRecoveryTime()
+    }
+
+    init(recoveryTime: TransRecoveryTime, obtained: Bool) {
+        self.recoveryTime = recoveryTime
+        self.obtained = obtained
     }
 }

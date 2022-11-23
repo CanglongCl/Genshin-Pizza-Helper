@@ -12,7 +12,6 @@ import SafariServices
 struct GetCookieWebView: View {
 
     @State var isAlertShow: Bool = false
-
     @Binding var isShown: Bool
     @Binding var cookie: String
     let region: Region
@@ -23,9 +22,9 @@ struct GetCookieWebView: View {
     var url: String {
         switch region {
         case .cn:
-            return "https://m.bbs.mihoyo.com/ys/#/login"
+            return "https://user.mihoyo.com/#/login/captcha"
         case .global:
-            return "https://m.hoyolab.com/"
+            return "https://account.hoyoverse.com/#/login"
         }
     }
     
@@ -33,21 +32,23 @@ struct GetCookieWebView: View {
         switch region {
         case .cn:
             return [
-                "Host": "m.bbs.mihoyo.com",
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                "Accept-Language": "zh-CN,zh-Hans;q=0.9",
+                "Host": "user.mihoyo.com",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
                 "Connection": "keep-alive",
                 "Accept-Encoding": "gzip, deflate, br",
                 "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.6 Mobile/15E148 Safari/604.1",
-                "Cookie": ""
+                "cache-control": "max-age=0",
+
             ]
         case .global:
             return [
-                "Host": "m.hoyolab.com",
-                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+//                "Host": "m.hoyolab.com",
+                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
                 "accept-language": "zh-CN,zh-Hans;q=0.9",
                 "accept-encoding": "gzip, deflate, br",
-                "user-agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.6 Mobile/15E148 Safari/604.1",
+                "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.52",
+                "cache-control": "max-age=0",
             ]
         }
     }
@@ -61,14 +62,38 @@ struct GetCookieWebView: View {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button("完成") {
                             cookie = ""
-                            DispatchQueue.main.async {
-                                dataStore.httpCookieStore.getAllCookies { cookies in
-                                    cookies.forEach {
-                                        print($0.name, $0.value)
-                                        cookie = cookie + $0.name + "=" + $0.value + "; "
+
+                            switch region {
+                            case .cn:
+                                DispatchQueue.main.async {
+
+                                    dataStore.httpCookieStore.getAllCookies { cookies in
+                                        let loginTicket: String = cookies.first(where: { cookie in
+                                            cookie.name == "login_ticket"
+                                        })?.value ?? ""
+                                        print("loginTicket: \(loginTicket)")
+                                        let loginUid: String = cookies.first(where: { cookie in
+                                            cookie.name == "login_uid"
+                                        })?.value ?? ""
+                                        API.Features.getMultiTokenByLoginTicket(loginTicket: loginTicket, loginUid: loginUid) { result in
+                                            cookie += "stuid=" + loginUid + "; "
+                                            cookie += "stoken=" + ((try? result.get().stoken) ?? "") + "; "
+                                            cookie += "ltuid=" + loginUid + "; "
+                                            cookie += "ltoken=" + ((try? result.get().ltoken) ?? "") + "; "
+                                            isShown.toggle()
+                                        }
                                     }
                                 }
-                                isShown.toggle()
+                            case .global:
+                                DispatchQueue.main.async {
+                                    dataStore.httpCookieStore.getAllCookies { cookies in
+                                        cookies.forEach {
+                                            print($0.name, $0.value)
+                                            cookie = cookie + $0.name + "=" + $0.value + "; "
+                                        }
+                                    }
+                                    isShown.toggle()
+                                }
                             }
                         }
                     }
@@ -110,6 +135,7 @@ struct CookieGetterWebView: UIViewRepresentable {
         request.allHTTPHeaderFields = httpHeaderFields
         let webview = WKWebView()
         webview.configuration.websiteDataStore = dataStore
+        webview.customUserAgent = "Mozilla/5.0 (iPod; U; CPU iPhone OS 4_3_3 like Mac OS X; ja-jp) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5"
         webview.load(request)
         return webview
     }
@@ -121,6 +147,108 @@ struct CookieGetterWebView: UIViewRepresentable {
             request.allHTTPHeaderFields = httpHeaderFields
             print(request.description)
             uiView.load(request)
+        }
+    }
+}
+
+struct GetLedgerCookieWebView<V>: View {
+    @EnvironmentObject var viewModel: ViewModel
+    let title: String
+
+    @State var isAlertShow: Bool = false
+    @Binding var sheetType: V?
+    @Binding var cookie: String
+    let region: Region
+    var dataStore: WKWebsiteDataStore = .default()
+
+    let cookieKeysToSave: [String] = ["ltoken", "ltuid"]
+
+    var url: String {
+        switch region {
+        case .cn:
+            return "https://m.bbs.mihoyo.com/ys/"
+        case .global:
+            return "https://m.hoyolab.com/"
+        }
+    }
+
+    var httpHeaderFields: [ String : String ] {
+        switch region {
+        case .cn:
+            return [
+                "Host": "m.bbs.mihoyo.com",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "Accept-Language": "zh-CN,zh-Hans;q=0.9",
+                "Connection": "keep-alive",
+                "Accept-Encoding": "gzip, deflate, br",
+                "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.6 Mobile/15E148 Safari/604.1",
+                "Cookie": ""
+            ]
+        case .global:
+            return [
+                "Host": "m.hoyolab.com",
+                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "accept-language": "zh-CN,zh-Hans;q=0.9",
+                "accept-encoding": "gzip, deflate, br",
+                "user-agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.6 Mobile/15E148 Safari/604.1",
+            ]
+        }
+    }
+
+    var body: some View {
+
+        NavigationView {
+            CookieGetterWebView(url: url, dataStore: dataStore, httpHeaderFields: httpHeaderFields)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("完成") {
+                            switch region {
+                            case .cn:
+                                DispatchQueue.main.async {
+                                    var cookieDict: [String : String] = .init()
+                                    cookie.components(separatedBy: "; ").forEach { subString in
+                                        if let key = subString.components(separatedBy: "=").first,
+                                           let value = subString.components(separatedBy: "=").last {
+                                            cookieDict[key] = value
+                                        }
+                                    }
+                                    dataStore.httpCookieStore.getAllCookies { cookies in
+                                        cookies.forEach {
+                                            print($0.name, $0.value)
+                                            cookieDict[$0.name] = $0.value
+                                        }
+                                        cookie = cookieDict.map { key, value in
+                                            "\(key)=\(value); "
+                                        }.joined()
+                                        viewModel.saveAccount()
+                                    }
+                                    sheetType = nil
+                                }
+                            case .global:
+                                cookie = ""
+                                DispatchQueue.main.async {
+                                    dataStore.httpCookieStore.getAllCookies { cookies in
+                                        cookies.forEach {
+                                            print($0.name, $0.value)
+                                            cookie = cookie + $0.name + "=" + $0.value + "; "
+                                        }
+                                    }
+                                    viewModel.saveAccount()
+                                    sheetType = nil
+                                }
+                            }
+                        }
+                    }
+                }
+                .navigationTitle(title)
+                .navigationBarTitleDisplayMode(.inline)
+        }
+        .alert(isPresented: $isAlertShow) {
+            Alert(title: Text("提示"), message: Text("请在打开的网页完成登录米游社操作后点击「完成」。\n通过Google，Facebook或Twitter登录HoYoLAB不可使用，请使用帐号密码登录。\n我们承诺：您的登录信息只会保存在您的本地设备和私人iCloud中，仅用于向米游社请求您的原神状态。"), dismissButton: .default(Text("好"))
+                  )
+        }
+        .onAppear {
+            isAlertShow.toggle()
         }
     }
 }

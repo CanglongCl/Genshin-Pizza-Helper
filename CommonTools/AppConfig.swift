@@ -35,7 +35,6 @@ struct AppConfig {
       return .AppStore
     }
   }
-    // OPENSOURCE: 替换以下内容为”Opensource Secret“
     static let homeAPISalt: String = "Opensource Secret"
     static let uidSalt: String = "Opensource Secret"
 }

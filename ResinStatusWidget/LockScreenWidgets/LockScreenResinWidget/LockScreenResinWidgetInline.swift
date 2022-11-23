@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct LockScreenResinWidgetInline: View {
-    let result: FetchResult
+struct LockScreenResinWidgetInline<T>: View where T: SimplifiedUserDataContainer {
+    let result: SimplifiedUserDataContainerResult<T>
     
     var body: some View {
         switch result {

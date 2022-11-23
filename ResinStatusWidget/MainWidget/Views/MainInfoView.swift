@@ -88,3 +88,81 @@ struct MainInfo: View {
         }
     }
 }
+
+struct MainInfoSimplified: View {
+    let userData: SimplifiedUserData
+    let viewConfig: WidgetViewConfiguration
+    let accountName: String?
+    let accountNameTest = "我的帐号"
+
+
+    var condensedResin: Int { userData.resinInfo.currentResin / 40 }
+
+    var body: some View {
+        let expeditionCompleted: Bool = viewConfig.expeditionViewConfig.noticeExpeditionWhenAllCompleted ? userData.expeditionInfo.allCompleted : userData.expeditionInfo.anyCompleted
+        let dailyTaskNotice: Bool = !userData.dailyTaskInfo.isTaskRewardReceived && (userData.dailyTaskInfo.finishedTaskNum == userData.dailyTaskInfo.totalTaskNum)
+
+        // 需要马上上号
+        let needToLoginImediately: Bool = (userData.resinInfo.isFull || userData.homeCoinInfo.isFull || expeditionCompleted || dailyTaskNotice)
+        // 可以晚些再上号，包括每日任务和周本
+        let needToLoginSoon: Bool = !userData.dailyTaskInfo.isTaskRewardReceived
+
+
+
+        VStack(alignment: .leading, spacing: 0) {
+            if let accountName = accountName {
+
+                HStack(alignment: .lastTextBaseline, spacing: 2) {
+                    Image(systemName: "person.fill")
+                    Text(accountName)
+
+                }
+                .font(.footnote)
+                .foregroundColor(Color("textColor3"))
+                Spacer()
+
+            }
+
+            HStack(alignment: .firstTextBaseline, spacing: 2) {
+
+                Text("\(userData.resinInfo.currentResin)")
+                    .font(.system(size: 50 , design: .rounded))
+                    .fontWeight(.medium)
+                    .minimumScaleFactor(0.8)
+                    .foregroundColor(Color("textColor3"))
+                    .shadow(radius: 1)
+                Image("树脂")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxHeight: 30)
+                    .alignmentGuide(.firstTextBaseline) { context in
+                        context[.bottom] - 0.17 * context.height
+                    }
+                    .shadow(radius: 0.8)
+            }
+            Spacer()
+            HStack {
+                if needToLoginImediately {
+                    if needToLoginSoon {
+                        Image("exclamationmark.circle.questionmark")
+                            .foregroundColor(Color("textColor3"))
+                            .font(.title3)
+                    } else {
+                        Image(systemName: "exclamationmark.circle")
+                            .foregroundColor(Color("textColor3"))
+                            .font(.title3)
+                    }
+                } else if needToLoginSoon {
+                    Image("hourglass.circle.questionmark")
+                        .foregroundColor(Color("textColor3"))
+                        .font(.title3)
+                } else {
+                    Image("hourglass.circle")
+                        .foregroundColor(Color("textColor3"))
+                        .font(.title3)
+                }
+                RecoveryTimeText(resinInfo: userData.resinInfo)
+            }
+        }
+    }
+}

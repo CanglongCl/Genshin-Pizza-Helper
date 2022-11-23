@@ -25,28 +25,60 @@ struct MainWidget: Widget {
 struct WidgetViewEntryView : View {
     @Environment(\.widgetFamily) var family: WidgetFamily
     let entry: MainWidgetProvider.Entry
-    var result: FetchResult { entry.result }
+    var dataKind: WidgetDataKind { entry.widgetDataKind }
     var viewConfig: WidgetViewConfiguration { entry.viewConfig }
     var accountName: String? { entry.accountName }
+
+    var url: URL? {
+        let errorURL: URL = {
+            var components = URLComponents()
+            components.scheme = "ophelperwidget"
+            components.host = "accountSetting"
+            components.queryItems = [
+                .init(name: "accountUUIDString", value: entry.accountUUIDString)
+            ]
+            return components.url!
+        }()
+
+        switch dataKind {
+        case .normal(let result):
+            switch result {
+            case .success(_):
+                return nil
+            case .failure(_):
+                return errorURL
+            }
+        case .simplified(let result):
+            switch result {
+            case .success(_):
+                return nil
+            case .failure(_):
+                return errorURL
+            }
+        }
+    }
     
     @ViewBuilder
     var body: some View {
         ZStack {
-            if #available(iOSApplicationExtension 16.0, *) {
-                if family != .accessoryCircular {
-                    WidgetBackgroundView(background: viewConfig.background, darkModeOn: viewConfig.isDarkModeOn)
+            WidgetBackgroundView(background: viewConfig.background, darkModeOn: viewConfig.isDarkModeOn)
+            switch dataKind {
+            case .normal(let result):
+                switch result {
+                case .success(let userData):
+                    WidgetMainView(userData: userData, viewConfig: viewConfig, accountName: accountName)
+                case .failure(let error):
+                    WidgetErrorView(error: error, message: viewConfig.noticeMessage ?? "")
                 }
-            } else {
-                // Fallback on earlier versions
-                WidgetBackgroundView(background: viewConfig.background, darkModeOn: viewConfig.isDarkModeOn)
-            }
-            
-            switch result {
-            case .success(let userData):
-                WidgetMainView(userData: userData, viewConfig: viewConfig, accountName: accountName)
-            case .failure(let error):
-                WidgetErrorView(error: error, message: viewConfig.noticeMessage ?? "")
+            case .simplified(let result):
+                switch result {
+                case .success(let userData):
+                    MainWidgetSimplifiedView(userData: userData, viewConfig: viewConfig, accountName: accountName)
+                case .failure(let error):
+                    WidgetErrorView(error: error, message: viewConfig.noticeMessage ?? "")
+                }
             }
         }
+        .widgetURL(url)
     }
 }

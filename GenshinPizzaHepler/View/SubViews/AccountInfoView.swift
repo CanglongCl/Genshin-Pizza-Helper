@@ -8,17 +8,31 @@
 import SwiftUI
 
 struct AccountInfoView: View {
-    @Binding var accountConfig: AccountConfiguration
+    var account: Account
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(accountConfig.name!)
-                .bold()
-                .padding(.vertical)
             HStack {
-                Text("UID: \(accountConfig.uid!)")
+                Text(account.config.name!)
+                    .bold()
+                    .padding(.vertical)
+                if let result = account.result {
+                    Spacer()
+                    switch result {
+                    case .failure(_):
+                        Image(systemName: "exclamationmark.arrow.triangle.2.circlepath")
+                            .padding()
+                            .foregroundColor(.red)
+                    case .success(_):
+                        EmptyView()
+                    }
+                }
+            }
+
+            HStack {
+                Text("UID: \(account.config.uid!)")
                 Spacer()
-                Text("服务器: \(accountConfig.server.rawValue)")
+                Text("服务器: \(account.config.server.rawValue)")
             }
             .font(.caption)
         }

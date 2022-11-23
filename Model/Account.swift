@@ -41,13 +41,48 @@ struct Account: Equatable, Hashable {
 
 extension AccountConfiguration {
     func fetchResult(_ completion: @escaping (FetchResult) -> ()) {
-        guard (uid != nil) || (cookie != nil) else { return }
+        guard (uid != nil) || (cookie != nil) else { completion(.failure(.noFetchInfo)); return  }
         
         API.Features.fetchInfos(region: self.server.region,
                                 serverID: self.server.id,
                                 uid: self.uid!,
-                                cookie: self.cookie!)
-        { completion($0) }
+                                cookie: self.cookie!) { result in
+            completion(result)
+            #if !os(watchOS)
+            switch result {
+            case .success(let data):
+                UserNotificationCenter.shared.createAllNotification(
+                    for: self.name!,
+                    with: data,
+                    uid: self.uid!
+                )
+            case .failure(_):
+                break
+            }
+            #endif
+        }
+
+
+    }
+
+    func fetchSimplifiedResult(_ completion: @escaping (SimplifiedUserDataResult) -> ()) {
+        guard let cookie = cookie else { completion(.failure(.noFetchInfo)); return }
+        guard cookie.contains("stoken") else { completion(.failure(.noStoken)); return }
+        API.Features.fetchSimplifiedInfos(cookie: cookie) { result in
+            completion(result)
+            #if !os(watchOS)
+            switch result {
+            case .success(let data):
+                UserNotificationCenter.shared.createAllNotification(
+                    for: self.name!,
+                    with: data,
+                    uid: self.uid!
+                )
+            case .failure(_):
+                break
+            }
+            #endif
+        }
     }
 
     func fetchBasicInfo(_ completion: @escaping (BasicInfos) -> ()) {

@@ -8,13 +8,13 @@
 import SwiftUI
 
 @available(iOSApplicationExtension 16.0, *)
-struct LockScreenLoopWidgetCorner: View {
+struct LockScreenLoopWidgetCorner<T>: View where T: SimplifiedUserDataContainer {
     @Environment(\.widgetRenderingMode) var widgetRenderingMode
 
-    let result: FetchResult
+    let result: SimplifiedUserDataContainerResult<T>
 
     var body: some View {
-        switch LockScreenLoopWidgetType.autoChoose(result: result) {
+        switch SimplifiedLockScreenLoopWidgetType.autoChoose(result: result) {
         case .resin:
             LockScreenResinWidgetCorner(result: result)
         case .dailyTask:
@@ -23,9 +23,6 @@ struct LockScreenLoopWidgetCorner: View {
             LockScreenExpeditionWidgetCorner(result: result)
         case .homeCoin:
             LockScreenHomeCoinWidgetCorner(result: result)
-
-        default:
-            LockScreenResinWidgetCorner(result: result)
         }
     }
 }

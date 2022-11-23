@@ -368,7 +368,15 @@ class UserNotificationCenter {
         createTransformerNotification(for: accountName, with: userData.transformerInfo, uid: uid)
         createDailyTaskNotification(for: accountName, with: userData.dailyTaskInfo, uid: uid)
     }
-    
+
+    func createAllNotification(for accountName: String, with simplifiedUserData: SimplifiedUserData, uid: String) {
+        print("Creating all notification")
+        guard !ignoreUids.contains(uid) else { return }
+        createResinNotification(for: accountName, with: simplifiedUserData.resinInfo, uid: uid)
+        createHomeCoinNotification(for: accountName, with: simplifiedUserData.homeCoinInfo, uid: uid)
+        createDailyTaskNotification(for: accountName, with: simplifiedUserData.dailyTaskInfo, uid: uid)
+    }
+
     enum Object: String, CaseIterable {
         case resin = "resin"
         case homeCoin = "homeCoin"

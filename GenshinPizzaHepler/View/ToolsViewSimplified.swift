@@ -14,7 +14,7 @@ struct ToolsViewSimplified: View {
     @AppStorage("toolViewShowingAccountUUIDString") var showingAccountUUIDString: String?
     var account: Account? {
         accounts.first { account in
-            account.config.uuid!.uuidString == showingAccountUUIDString
+            (account.config.uuid?.uuidString ?? "123") == showingAccountUUIDString
         }
     }
 
@@ -50,17 +50,10 @@ struct ToolsViewSimplified: View {
                 case .spiralAbyss:
                     spiralAbyssSheetView()
                 case .loginAccountAgainView:
-                    NavigationView {
-                        AccountDetailView(account: $viewModel.accounts[viewModel.accounts.firstIndex(of: account!)!], isWebShown: true)
-                            .toolbar {
-                                ToolbarItem(placement: .navigationBarTrailing) {
-                                    Button("完成") {
-                                        sheetType = nil
-                                        viewModel.refreshLedgerData()
-                                    }
-                                }
-                            }
-                    }
+                    GetLedgerCookieWebView(title: String(format: NSLocalizedString("请登录「%@」", comment: ""), viewModel.accounts[viewModel.accounts.firstIndex(of: account!)!].config.name ?? "") , sheetType: $sheetType, cookie: Binding($viewModel.accounts[viewModel.accounts.firstIndex(of: account!)!].config.cookie)!, region: viewModel.accounts[viewModel.accounts.firstIndex(of: account!)!].config.server.region)
+                        .onDisappear {
+                            viewModel.refreshLedgerData()
+                        }
                 case .allAvatarList:
                     allAvatarListView()
                 }
@@ -68,7 +61,9 @@ struct ToolsViewSimplified: View {
             .onChange(of: account) { newAccount in
                 withAnimation {
                     DispatchQueue.main.async {
-                        viewModel.refreshPlayerDetail(for: newAccount!)
+                        if let newAccount = newAccount {
+                            viewModel.refreshPlayerDetail(for: newAccount)
+                        }
                     }
                 }
             }
@@ -104,7 +99,7 @@ struct ToolsViewSimplified: View {
                         }
                     }
                 } footer: {
-                    Text("UID: \(account.config.uid!)")
+                    Text("UID: \(account.config.uid ?? "")")
                 }
             } else {
                 Section {
@@ -114,7 +109,7 @@ struct ToolsViewSimplified: View {
                         selectAccountManuButton()
                     }
                 } footer: {
-                    Text("UID: \(account.config.uid!)")
+                    Text("UID: \(account.config.uid ?? "")")
                 }
             }
         } else {
@@ -458,7 +453,7 @@ struct ToolsViewSimplified: View {
                 AbyssDataCollectionView()
             } label: {
                 Label {
-                    Text("深渊统计")
+                    Text("深渊统计榜单")
                 } icon: {
                     Image("UI_MarkTower_EffigyChallenge_01").resizable().scaledToFit()
                 }

@@ -39,6 +39,11 @@ struct HomeView: View {
                                     break
                                 }
                             })
+                            .onAppear {
+                                if eventContents.isEmpty {
+                                    getCurrentEvent()
+                                }
+                            }
                             .padding(.bottom)
 
                         // MARK: - 当前活动
@@ -50,7 +55,7 @@ struct HomeView: View {
                     }
                 }
             }
-            .navigationTitle("原神披萨小助手")
+            .navigationTitle("披萨小助手")
             .navigationBarTitleDisplayMode(.large)
             
         }
@@ -99,19 +104,137 @@ extension View {
     }
 }
 
+private struct PinedAccountInfoCard: View {
+    @EnvironmentObject var viewModel: ViewModel
+    var animation: Namespace.ID
+    @AppStorage("pinToTopAccountUUIDString") var pinToTopAccountUUIDString: String = ""
+    var accountIndex: Int? {
+        viewModel.accounts.firstIndex(where: { $0.config.uuid?.uuidString ?? "1" == pinToTopAccountUUIDString })
+    }
+
+    @Binding var isErrorAlertShow: Bool
+    @Binding var errorMessage: String
+
+    @Binding var isSucceedAlertShow: Bool
+
+    var bindingAccount: Binding<Account>? {
+        if let accountIndex = accountIndex {
+            return $viewModel.accounts[accountIndex]
+        } else {
+            return nil
+        }
+    }
+
+    var body: some View {
+        VStack {
+            if let accountIndex = accountIndex {
+                let account: Account = viewModel.accounts[accountIndex]
+                if account != viewModel.showDetailOfAccount {
+                    if account.result != nil {
+                        switch account.result! {
+                        case .success(let userData):
+                            // 我也不知道为什么如果不检查的话删除账号会崩溃
+                            if account.config.uuid != nil {
+                                GameInfoBlock(userData: userData, accountName: account.config.name, accountUUIDString: account.config.uuid!.uuidString, animation: animation, widgetBackground: account.background, fetchComplete: account.fetchComplete)
+                                    .padding([.bottom, .horizontal])
+                                    .listRowBackground(Color.white.opacity(0))
+                                    .onTapGesture {
+                                        simpleTaptic(type: .medium)
+                                        withAnimation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 0.8)) {
+                                            viewModel.showDetailOfAccount = account
+                                        }
+                                    }
+                                    .contextMenu {
+                                        if #available (iOS 16, *) {
+                                            Button("保存图片".localized) {
+                                                let view = GameInfoBlockForSave(userData: userData, accountName: account.config.name ?? "", accountUUIDString: account.config.uuid?.uuidString ?? "", animation: animation, widgetBackground: account.background).environment(\.locale, .init(identifier: Locale.current.identifier))
+                                                let renderer = ImageRenderer(content: view)
+                                                renderer.scale = UIScreen.main.scale
+                                                if let image = renderer.uiImage {
+                                                    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                                                }
+                                            }
+                                        }
+                                        #if canImport(ActivityKit)
+                                        if #available (iOS 16.1, *) {
+                                            Button("为该帐号开启树脂计时器") {
+                                                do {
+                                                    try ResinRecoveryActivityController.shared.createResinRecoveryTimerActivity(for: account)
+                                                    isSucceedAlertShow.toggle()
+                                                } catch let error {
+                                                    errorMessage = error.localizedDescription
+                                                    isErrorAlertShow.toggle()
+                                                }
+                                            }
+                                        }
+                                        #endif
+                                    }
+                            }
+                        case .failure( _) :
+                            HStack {
+                                NavigationLink {
+                                    AccountDetailView(account: bindingAccount!)
+                                } label: {
+                                    ZStack {
+                                        Image(systemName: "exclamationmark.arrow.triangle.2.circlepath")
+                                            .padding()
+                                            .foregroundColor(.red)
+                                        HStack {
+                                            Spacer()
+                                            Text(account.config.name ?? "")
+                                                .foregroundColor(Color(UIColor.systemGray4))
+                                                .font(.caption2)
+                                                .padding(.horizontal)
+                                        }
+                                    }
+                                    .padding([.bottom, .horizontal])
+                                }
+                            }
+                        }
+                    } else {
+                        ProgressView()
+                            .padding([.bottom, .horizontal])
+                    }
+                }
+            } else {
+                EmptyView()
+            }
+        }
+    }
+}
+
 private struct AccountInfoCards: View {
     @EnvironmentObject var viewModel: ViewModel
     var animation: Namespace.ID
 
+    @AppStorage("pinToTopAccountUUIDString") var pinToTopAccountUUIDString: String = ""
+
+    @State var isErrorAlertShow: Bool = false
+    @State var errorMessage: String = ""
+    @State var isSucceedAlertShow: Bool = false
+
     var body: some View {
+        PinedAccountInfoCard(animation: animation, isErrorAlertShow: $isErrorAlertShow, errorMessage: $errorMessage, isSucceedAlertShow: $isSucceedAlertShow)
+            .overlay(
+                EmptyView()
+                    .alert(isPresented: $isSucceedAlertShow) {
+                        Alert(title: Text("创建树脂计时器成功".localized))
+                    }
+            )
+            .overlay(
+                EmptyView()
+                    .alert(isPresented: $isErrorAlertShow) {
+                        Alert(title: Text("ERROR \(errorMessage)"))
+                    }
+            )
         ForEach($viewModel.accounts, id: \.config.uuid) { $account in
-            if account != viewModel.showDetailOfAccount {
+            if account != viewModel.showDetailOfAccount && account != viewModel.accounts.first(where: { $0.config.uuid?.uuidString ?? "1" == pinToTopAccountUUIDString }) {
                 if account.result != nil {
                     switch account.result! {
                     case .success(let userData):
                         // 我也不知道为什么如果不检查的话删除账号会崩溃
                         if account.config.uuid != nil {
-                            let gameInfoBlock: some View = GameInfoBlock(userData: userData, accountName: account.config.name, accountUUIDString: account.config.uuid!.uuidString, animation: animation, widgetBackground: account.background, fetchComplete: account.fetchComplete)
+                            GameInfoBlock(userData: userData, accountName: account.config.name, accountUUIDString: account.config.uuid!.uuidString, animation: animation, widgetBackground: account.background, fetchComplete: account.fetchComplete)
                                 .padding([.bottom, .horizontal])
                                 .listRowBackground(Color.white.opacity(0))
                                 .onTapGesture {
@@ -120,9 +243,13 @@ private struct AccountInfoCards: View {
                                         viewModel.showDetailOfAccount = account
                                     }
                                 }
-                            if #available (iOS 16, *) {
-                                gameInfoBlock
-                                    .contextMenu {
+                                .contextMenu {
+                                    Button("顶置".localized) {
+                                        withAnimation {
+                                            pinToTopAccountUUIDString = account.config.uuid!.uuidString
+                                        }
+                                    }
+                                    if #available (iOS 16, *) {
                                         Button("保存图片".localized) {
                                             let view = GameInfoBlockForSave(userData: userData, accountName: account.config.name ?? "", accountUUIDString: account.config.uuid?.uuidString ?? "", animation: animation, widgetBackground: account.background).environment(\.locale, .init(identifier: Locale.current.identifier))
                                             let renderer = ImageRenderer(content: view)
@@ -132,9 +259,20 @@ private struct AccountInfoCards: View {
                                             }
                                         }
                                     }
-                            } else {
-                                gameInfoBlock
-                            }
+                                    #if canImport(ActivityKit)
+                                    if #available (iOS 16.1, *) {
+                                        Button("为该帐号开启树脂计时器") {
+                                            do {
+                                                try ResinRecoveryActivityController.shared.createResinRecoveryTimerActivity(for: account)
+                                                isSucceedAlertShow.toggle()
+                                            } catch let error {
+                                                errorMessage = error.localizedDescription
+                                                isErrorAlertShow.toggle()
+                                            }
+                                        }
+                                    }
+                                    #endif
+                                }
                         }
                     case .failure( _) :
                         HStack {
@@ -147,7 +285,7 @@ private struct AccountInfoCards: View {
                                         .foregroundColor(.red)
                                     HStack {
                                         Spacer()
-                                        Text(account.config.name!)
+                                        Text(account.config.name ?? "")
                                             .foregroundColor(Color(UIColor.systemGray4))
                                             .font(.caption2)
                                             .padding(.horizontal)
@@ -162,6 +300,7 @@ private struct AccountInfoCards: View {
                         .padding([.bottom, .horizontal])
                 }
             }
+
 
 
         }

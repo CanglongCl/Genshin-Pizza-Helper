@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct HomeCoinInfo {
+struct HomeCoinInfo: Codable {
     
     let currentHomeCoin: Int
     let maxHomeCoin: Int

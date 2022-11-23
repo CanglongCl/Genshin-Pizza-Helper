@@ -8,10 +8,10 @@
 import SwiftUI
 
 @available(iOSApplicationExtension 16.0, *)
-struct LockScreenExpeditionWidgetCorner: View {
+struct LockScreenExpeditionWidgetCorner<T>: View where T: SimplifiedUserDataContainer {
     @Environment(\.widgetRenderingMode) var widgetRenderingMode
 
-    let result: FetchResult
+    let result: SimplifiedUserDataContainerResult<T>
 
     var text: String {
         switch result {
@@ -30,3 +30,4 @@ struct LockScreenExpeditionWidgetCorner: View {
             .widgetLabel(text)
     }
 }
+

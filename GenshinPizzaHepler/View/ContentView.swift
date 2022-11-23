@@ -13,15 +13,13 @@ struct ContentView: View {
 
     @Environment(\.scenePhase) var scenePhase
 
-    #if DEBUG
-    @State var selection: Int = 1
-    #else
-    @State var selection: Int = 0
-    #endif
+    @State var selection: Int = UserDefaults.standard.integer(forKey: "AppTabIndex") == 3 ? 0 : UserDefaults.standard.integer(forKey: "AppTabIndex")
 
     @State var sheetType: ContentViewSheetType? = nil
     @State var newestVersionInfos: NewestVersion? = nil
     @State var isJustUpdated: Bool = false
+
+    @AppStorage("autoDeliveryResinTimerLiveActivity") var autoDeliveryResinTimerLiveActivity: Bool = true
 
     var index: Binding<Int> { Binding(
         get: { self.selection },
@@ -30,6 +28,8 @@ struct ContentView: View {
                 simpleTaptic(type: .medium)
             }
             self.selection = $0
+            UserDefaults.standard.setValue($0, forKey: "AppTabIndex")
+            UserDefaults.standard.synchronize()
         }
     )}
 
@@ -41,6 +41,8 @@ struct ContentView: View {
 
     let appVersion = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
     let buildVersion = Int(Bundle.main.infoDictionary!["CFBundleVersion"] as! String)!
+
+    @State var settingForAccountIndex: Int?
 
     var body: some View {
         ZStack {
@@ -103,8 +105,35 @@ struct ContentView: View {
                     // 检查最新版本
                     checkNewestVersion()
                 }
+                #if canImport(ActivityKit)
+                if #available(iOS 16.1, *) {
+                    ResinRecoveryActivityController.shared.updateAllResinRecoveryTimerActivity(for: viewModel.accounts)
+                }
+                #endif
             case .inactive:
                 WidgetCenter.shared.reloadAllTimelines()
+                #if canImport(ActivityKit)
+                if autoDeliveryResinTimerLiveActivity {
+                    let pinToTopAccountUUIDString = UserDefaults.standard.string(forKey: "pinToTopAccountUUIDString")
+                    if #available(iOS 16.1, *) {
+                        if let account = viewModel.accounts.first(where: {
+                            $0.config.uuid!.uuidString == pinToTopAccountUUIDString
+                        }) {
+                            try? ResinRecoveryActivityController.shared.createResinRecoveryTimerActivity(for: account)
+                        } else {
+                            if let account = viewModel.accounts.filter({ account in
+                                (try? account.result?.get()) != nil
+                            }).min(by: { lhs, rhs in
+                                (try! lhs.result!.get().resinInfo.recoveryTime.second) < (try! rhs.result!.get().resinInfo.recoveryTime.second)
+                            }) {
+                                try? ResinRecoveryActivityController.shared.createResinRecoveryTimerActivity(for: account)
+                            }
+                        }
+                    }
+                } else {
+                    print("not allow autoDeliveryResinTimerLiveActivity")
+                }
+                #endif
             default:
                 break
             }
@@ -116,6 +145,11 @@ struct ContentView: View {
                     .allowAutoDismiss(false)
             case .foundNewestVersion:
                 LatestVersionInfoView(sheetType: $sheetType, newestVersionInfos: $newestVersionInfos, isJustUpdated: $isJustUpdated)
+            case .accountSetting:
+                NavigationView {
+                    AccountDetailView(account: $viewModel.accounts[settingForAccountIndex!])
+                        .dismissableSheet(sheet: $sheetType)
+                }
             }
         }
         .onOpenURL { url in
@@ -124,6 +158,13 @@ struct ContentView: View {
                 print("jump to settings")
                 isJumpToSettingsView.toggle()
                 self.selection = 1
+            case "accountSetting":
+                self.selection = 2
+                if let accountUUIDString = URLComponents(url: url, resolvingAgainstBaseURL: true)?.queryItems?.first(where: { $0.name == "accountUUIDString" })?.value,
+                   let accountIndex = viewModel.accounts.firstIndex(where: { ($0.config.uuid?.uuidString ?? "") == accountUUIDString }) {
+                    settingForAccountIndex = accountIndex
+                    sheetType = .accountSetting
+                }
             default:
                 return
             }
@@ -201,4 +242,5 @@ enum ContentViewSheetType: Identifiable {
 
     case userPolicy
     case foundNewestVersion
+    case accountSetting
 }

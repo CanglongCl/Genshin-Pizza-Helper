@@ -26,3 +26,22 @@ struct MainInfoWithDetail: View {
         }
     }
 }
+
+struct MainInfoWithDetailSimplified: View {
+    let userData: SimplifiedUserData
+    let viewConfig: WidgetViewConfiguration
+    let accountName: String?
+
+    var body: some View {
+        HStack {
+            Spacer()
+            MainInfoSimplified(userData: userData, viewConfig: viewConfig, accountName: accountName)
+                .padding()
+            Spacer()
+            DetailInfoSimplified(userData: userData, viewConfig: viewConfig)
+                .padding([.vertical])
+                .frame(maxWidth: UIScreen.main.bounds.width / 8 * 3)
+            Spacer()
+        }
+    }
+}

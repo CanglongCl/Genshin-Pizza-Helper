@@ -213,7 +213,7 @@ struct ContactUsView: View {
                         .clipShape(Circle())
                 }
                 Menu {
-                    Link(destination: isInstallation(urlString: "twitter://") ? URL(string: "twitter://user?id=1298207652300730373")! : URL(string: "https://twitter.com/hutao_taotao")!) {
+                    Link(destination: isInstallation(urlString: "twitter://") ? URL(string: "twitter://user?id=1593423596545724416")! : URL(string: "https://twitter.com/hutao_hati")!) {
                         Label {
                             Text("Twitter主页")
                         } icon: {
@@ -240,7 +240,7 @@ struct ContactUsView: View {
                                 .foregroundColor(.gray)
                         }
                     } icon: {
-                        Image("avatar.tao")
+                        Image("avatar.tao.2")
                             .resizable()
                             .scaledToFit()
                             .clipShape(Circle())

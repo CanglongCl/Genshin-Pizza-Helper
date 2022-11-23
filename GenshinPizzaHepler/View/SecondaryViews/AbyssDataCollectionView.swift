@@ -146,6 +146,11 @@ struct AbyssDataCollectionView: View {
                 ShowTeamPercentageView()
             }
         }
+        .onAppear {
+            if viewModel.charLoc == nil || viewModel.charMap == nil {
+                viewModel.refreshCharLocAndCharMap()
+            }
+        }
         .environmentObject(abyssDataCollectionViewModel)
         .listStyle(.insetGrouped)
         .hideTabBar()
@@ -238,11 +243,11 @@ struct AbyssDataCollectionView: View {
                             let teams: [TeamUtilizationData.Team] = {
                                 switch abyssDataCollectionViewModel.teamUtilizationParams.half {
                                 case .all:
-                                    return data.teams
+                                    return data.teams.sorted(by: { $0.percentage > $1.percentage })
                                 case .firstHalf:
-                                    return data.teamsFH
+                                    return data.teamsFH.sorted(by: { $0.percentage > $1.percentage })
                                 case .secondHalf:
-                                    return data.teamsSH
+                                    return data.teamsSH.sorted(by: { $0.percentage > $1.percentage })
                                 }
                             }()
                             ShowTeamPercentageShare(teams: teams.prefix(32).sorted(by: { $0.percentage > $1.percentage }),
@@ -661,7 +666,7 @@ struct UtilizationAPIParameters {
     }
 
     func detail() -> String {
-        "\(serverChoice.describe())·\(season.describe())·\(floor)层"
+        return String(format: NSLocalizedString("%@·%@·%lld层", comment: "detail"), serverChoice.describe(), season.describe(), floor)
     }
 }
 
@@ -725,7 +730,7 @@ struct TeamUtilizationAPIParameters {
     var floor: Int = 12
 
     func describe() -> String {
-        "·仅包含满星玩家".localized
+        "·仅包含满星玩家·包含旅行者的队伍已合并".localized
     }
     var half: Half = .all
 
@@ -736,7 +741,7 @@ struct TeamUtilizationAPIParameters {
     }
 
     func detail() -> String {
-        "\(serverChoice.describe())·\(season.describe())·\(floor)层·\(half.rawValue.localized)"
+        return String(format: NSLocalizedString("%@·%@·%lld层·%@", comment: "detail"), serverChoice.describe(), season.describe(), floor, half.rawValue.localized)
     }
 }
 

@@ -95,6 +95,7 @@ struct CurrentEventNavigator: View {
     func getRemainDays(_ endAt: String) -> IntervalDate? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatter.locale = NSLocale.current
         let endDate = dateFormatter.date(from: endAt)
         guard let endDate = endDate else {
             return nil
