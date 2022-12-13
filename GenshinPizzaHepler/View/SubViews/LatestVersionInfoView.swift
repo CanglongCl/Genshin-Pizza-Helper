@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import StoreKit
 
 struct LatestVersionInfoView: View {
     @Binding var sheetType: ContentViewSheetType?
@@ -72,11 +73,19 @@ struct LatestVersionInfoView: View {
             .navigationTitle(isJustUpdated ? "感谢您更新到最新版本" : "发现新版本")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("完成") {
+                    Button("我知道了") {
                         var checkedUpdateVersions = UserDefaults.standard.object(forKey: "checkedUpdateVersions") as? [Int] ?? []
                         checkedUpdateVersions.append(newestVersionInfos!.buildVersion)
                         UserDefaults.standard.set(checkedUpdateVersions, forKey: "checkedUpdateVersions")
                         UserDefaults.standard.synchronize()
+                        if isJustUpdated {
+                            let showRate = Bool.random()
+                            if showRate {
+                                DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
+                                    ReviewHandler.requestReview()
+                                }
+                            }
+                        }
                         sheetType = nil
                     }
                 }

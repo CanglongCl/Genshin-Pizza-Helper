@@ -24,7 +24,7 @@ struct HomeCoinInfo: Codable {
     }
 
     var score: Float {
-        if percentage > 0.7 {
+        if percentage > 0.7 && maxHomeCoin != 300 {
             return Float(percentage)
         } else { return 0 }
     }

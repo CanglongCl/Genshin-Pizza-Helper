@@ -46,14 +46,14 @@ extension API {
 
                     case .success(let requestResult):
                         print("request succeed")
-                        let userData = requestResult.data
+                        let fetchData = requestResult.data
                         let retcode = requestResult.retcode
                         let message = requestResult.message
 
                         switch requestResult.retcode {
                         case 0:
                             print("get data succeed")
-                            completion(.success(userData!))
+                            completion(.success(UserData(fetchData: fetchData!)))
                         case 10001:
                             print("fail 10001")
                             completion(.failure(.cookieInvalid(retcode, message)))

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct RequestResult: Codable {
-    let data: UserData?
+    let data: FetchData?
     let message: String
     let retcode: Int
 }

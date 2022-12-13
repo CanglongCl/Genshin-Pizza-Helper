@@ -24,7 +24,8 @@ struct LockScreenWidgetProvider: IntentTimelineProvider {
         let configs = AccountConfigurationModel.shared.fetchAccountConfigs()
         return configs.map { config in
             let intent = SelectOnlyAccountIntent()
-            intent.simplifiedMode = true
+            let useSimplifiedMode = UserDefaults(suiteName: "group.GenshinPizzaHelper")?.bool(forKey: "watchWidgetUseSimplifiedMode") ?? false
+            intent.simplifiedMode = useSimplifiedMode as NSNumber
             intent.account = .init(identifier: config.uuid!.uuidString, display: config.name!+"(\(config.server.rawValue))")
             return IntentRecommendation(intent: intent, description: config.name!+recommendationsTag.localized)
         }
@@ -43,14 +44,15 @@ struct LockScreenWidgetProvider: IntentTimelineProvider {
 
         // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         let currentDate = Date()
-        let refreshMinute: Int = Int(UserDefaults(suiteName: "group.GenshinPizzaHelper")?.double(forKey: "lockscreenWidgetRefreshFrequencyInMinute") ?? 30)
+        var refreshMinute: Int = Int(UserDefaults(suiteName: "group.GenshinPizzaHelper")?.double(forKey: "lockscreenWidgetSyncFrequencyInMinute") ?? 60)
+        if refreshMinute == 0 { refreshMinute = 60 }
         var refreshDate: Date {
             Calendar.current.date(byAdding: .minute, value: refreshMinute, to: currentDate)!
         }
 
         let accountConfigurationModel = AccountConfigurationModel.shared
         let configs = accountConfigurationModel.fetchAccountConfigs()
-
+        
         guard !configs.isEmpty else {
             let entry = AccountOnlyEntry(date: currentDate, widgetDataKind: .normal(result: .failure(.noFetchInfo)), accountUUIDString: nil)
             let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
@@ -59,31 +61,8 @@ struct LockScreenWidgetProvider: IntentTimelineProvider {
         }
 
         guard configuration.account != nil else {
-            // 如果还未选择账号，默认获取第一个
-            switch configs.first!.server.region {
-            case .cn:
-                if configuration.simplifiedMode?.boolValue ?? true {
-                    configs.first!.fetchSimplifiedResult { simplifiedResult in
-                        let entry = AccountOnlyEntry(date: currentDate, widgetDataKind: .simplified(result: simplifiedResult), accountName: configs.first!.name, accountUUIDString: configs.first!.uuid?.uuidString)
-                        let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
-                        completion(timeline)
-                        print("Widget Fetch succeed")
-                    }
-                } else {
-                    configs.first!.fetchResult { result in
-                        let entry = AccountOnlyEntry(date: currentDate, widgetDataKind: .normal(result: result), accountName: configs.first!.name, accountUUIDString: configs.first?.uuid?.uuidString)
-                        let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
-                        completion(timeline)
-                        print("Widget Fetch succeed")
-                    }
-                }
-            case .global:
-                configs.first!.fetchResult { result in
-                    let entry = AccountOnlyEntry(date: currentDate, widgetDataKind: .normal(result: result), accountName: configs.first!.name, accountUUIDString: configs.first?.uuid?.uuidString)
-                    let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
-                    completion(timeline)
-                    print("Widget Fetch succeed")
-                }
+            getTimelineEntries(config: configs.first!) { entries in
+                completion(.init(entries: entries, policy: .after(refreshDate)))
             }
             return
         }
@@ -101,31 +80,67 @@ struct LockScreenWidgetProvider: IntentTimelineProvider {
         }
 
         // 正常情况
-        switch config.server.region {
-        case .cn:
-            if configuration.simplifiedMode?.boolValue ?? true {
-                config.fetchSimplifiedResult { result in
-                    let entry = AccountOnlyEntry(date: currentDate, widgetDataKind: .simplified(result: result), accountName: config.name, accountUUIDString: config.uuid?.uuidString)
-                    let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
-                    completion(timeline)
-                    print("Widget Fetch succeed")
+        getTimelineEntries(config: config) { entries in
+            completion(.init(entries: entries, policy: .after(refreshDate)))
+        }
+
+        func getTimelineEntries(config: AccountConfiguration, completion: @escaping ([AccountOnlyEntry]) -> ()) {
+            switch config.server.region {
+            case .cn:
+                if configuration.simplifiedMode?.boolValue ?? true {
+                    getSimplifiedTimelineEntries(config: config) { entries in
+                        completion(entries)
+                    }
+                } else {
+                    getNormalTimelineEntries(config: config) { entries in
+                        completion(entries)
+                    }
                 }
-            } else {
-                config.fetchResult { result in
-                    let entry = AccountOnlyEntry(date: currentDate, widgetDataKind: .normal(result: result), accountName: config.name, accountUUIDString: config.uuid?.uuidString)
-                    let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
-                    completion(timeline)
-                    print("Widget Fetch succeed")
+            case .global:
+                getNormalTimelineEntries(config: config) { entries in
+                    completion(entries)
                 }
             }
-        case .global:
-            config.fetchResult { result in
-                let entry = AccountOnlyEntry(date: currentDate, widgetDataKind: .normal(result: result), accountName: config.name, accountUUIDString: config.uuid?.uuidString)
-                let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
-                completion(timeline)
+        }
+
+        func getSimplifiedTimelineEntries(config: AccountConfiguration, completion: @escaping ([AccountOnlyEntry]) -> ()) {
+            config.fetchSimplifiedResult { result in
+                switch result {
+                case .success(let data):
+                    completion(
+                        (0...40).map({ index in
+                            let timeInterval = TimeInterval(index * 8 * 60)
+                            let entryDate = Date(timeIntervalSinceNow: timeInterval)
+                            let entryData = data.dataAfter(timeInterval)
+                            return .init(date: entryDate, widgetDataKind: .simplified(result: .success(entryData)), accountName: config.name, accountUUIDString: config.uuid?.uuidString)
+                        })
+                    )
+                case .failure(_):
+                    let entry = AccountOnlyEntry(date: currentDate, widgetDataKind: .simplified(result: result), accountName: config.name, accountUUIDString: config.uuid?.uuidString)
+                    completion([entry])
+                }
                 print("Widget Fetch succeed")
             }
         }
 
+        func getNormalTimelineEntries(config: AccountConfiguration, completion: @escaping ([AccountOnlyEntry]) -> ()) {
+            config.fetchResult { result in
+                switch result {
+                case .success(let data):
+                    completion(
+                        (0...40).map({ index in
+                            let timeInterval = TimeInterval(index * 8 * 60)
+                            let entryDate = Date(timeIntervalSinceNow: timeInterval)
+                            let entryData = data.dataAfter(timeInterval)
+                            return .init(date: entryDate, widgetDataKind: .normal(result: .success(entryData)), accountName: config.name, accountUUIDString: config.uuid?.uuidString)
+                        })
+                    )
+                case .failure(_):
+                    let entry = AccountOnlyEntry(date: currentDate, widgetDataKind: .normal(result: result), accountName: config.name, accountUUIDString: config.uuid?.uuidString)
+                    completion([entry])
+                }
+                print("Widget Fetch succeed")
+            }
+        }
     }
 }

@@ -19,7 +19,7 @@ struct ContentView: View {
     @State var newestVersionInfos: NewestVersion? = nil
     @State var isJustUpdated: Bool = false
 
-    @AppStorage("autoDeliveryResinTimerLiveActivity") var autoDeliveryResinTimerLiveActivity: Bool = true
+    @AppStorage("autoDeliveryResinTimerLiveActivity") var autoDeliveryResinTimerLiveActivity: Bool = false
 
     var index: Binding<Int> { Binding(
         get: { self.selection },
@@ -78,10 +78,14 @@ struct ContentView: View {
             .zIndex(0)
 
             if let showDetailOfAccount = viewModel.showDetailOfAccount {
+                Color.black
+                    .ignoresSafeArea()
                 AccountDisplayView(account: showDetailOfAccount, animation: animation)
                     .zIndex(1)
             }
             if let account = viewModel.showCharacterDetailOfAccount {
+                Color.black
+                    .ignoresSafeArea()
                 CharacterDetailView(account: account, showingCharacterName: viewModel.showingCharacterName!, animation: animation)
                     .environment(\.colorScheme, .dark)
                     .zIndex(2)
@@ -105,11 +109,6 @@ struct ContentView: View {
                     // 检查最新版本
                     checkNewestVersion()
                 }
-                #if canImport(ActivityKit)
-                if #available(iOS 16.1, *) {
-                    ResinRecoveryActivityController.shared.updateAllResinRecoveryTimerActivity(for: viewModel.accounts)
-                }
-                #endif
             case .inactive:
                 WidgetCenter.shared.reloadAllTimelines()
                 #if canImport(ActivityKit)
@@ -145,6 +144,7 @@ struct ContentView: View {
                     .allowAutoDismiss(false)
             case .foundNewestVersion:
                 LatestVersionInfoView(sheetType: $sheetType, newestVersionInfos: $newestVersionInfos, isJustUpdated: $isJustUpdated)
+                    .allowAutoDismiss(false)
             case .accountSetting:
                 NavigationView {
                     AccountDetailView(account: $viewModel.accounts[settingForAccountIndex!])
@@ -168,6 +168,17 @@ struct ContentView: View {
             default:
                 return
             }
+        }
+        .onAppear {
+            print("Locale: \(Bundle.main.preferredLocalizations.first ?? "Unknown")")
+        }
+        .onAppear {
+            UserDefaults(suiteName: "group.GenshinPizzaHelper")?.register(defaults: [
+                "lockscreenWidgetSyncFrequencyInMinute" : 60,
+                "mainWidgetSyncFrequencyInMinute": 60,
+                "homeCoinRefreshFrequencyInHour": 30,
+                "watchWidgetUseSimplifiedMode": true
+            ])
         }
         .navigate(to: NotificationSettingView().environmentObject(viewModel), when: $isJumpToSettingsView)
     }

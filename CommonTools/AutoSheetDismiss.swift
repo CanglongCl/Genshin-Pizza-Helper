@@ -75,14 +75,26 @@ extension UIViewController {
 extension View {
     /// Control if allow to dismiss the sheet by the user actions
     public func allowAutoDismiss(_ dismissable: @escaping () -> Bool) -> some View {
-        self
-            .background(MbModalHackView(dismissable: dismissable))
+        if #available(iOS 15.0, *) {
+            return self
+                .interactiveDismissDisabled()
+        } else {
+            // Fallback on earlier versions
+            return self
+                .background(MbModalHackView(dismissable: dismissable))
+        }
     }
 
     /// Control if allow to dismiss the sheet by the user actions
     public func allowAutoDismiss(_ dismissable: Bool) -> some View {
-        self
-            .background(MbModalHackView(dismissable: { dismissable }))
+        if #available(iOS 15.0, *) {
+            return self
+                .interactiveDismissDisabled()
+        } else {
+            // Fallback on earlier versions
+            return self
+                .background(MbModalHackView(dismissable: { dismissable }))
+        }
     }
 }
 

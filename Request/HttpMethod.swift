@@ -1574,7 +1574,9 @@ struct HttpMethod<T: Codable> {
                             return
                         }
                         DispatchQueue.main.async {
-                            let stringData = String(data: data, encoding: .utf8)!
+                            guard let stringData = String(data: data, encoding: .utf8) else {
+                                completion(.failure(.decodeError("fail convert data to .utf8 string"))); return
+                            }
                             print(stringData)
                             let data = stringData.replacingOccurrences(of: "\"NaN\"", with: "0").data(using: .utf8)!
                             let decoder = JSONDecoder()

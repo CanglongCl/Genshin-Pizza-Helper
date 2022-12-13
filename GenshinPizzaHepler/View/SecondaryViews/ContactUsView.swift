@@ -149,23 +149,36 @@ struct ContactUsView: View {
                 Link(destination: URL(string: "http://ophelper.top")!) {
                     Text("原神披萨小助手官方网站")
                 }
+                Link(destination: URL(string: "http://abyss.ophelper.top")!) {
+                    Text("原神披萨深渊榜网页版")
+                }
             }
 
             // app contact
             Section(header: Text("用户交流群")) {
-                Link(destination: URL(string: "mqqapi://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=813912474")!) {
-                    Label {
-                        Text("QQ群1: 813912474")
-                    } icon: {
-                        Image("qq")
-                            .resizable()
-                            .scaledToFit()
+                Menu {
+                    Link(destination: URL(string: "mqqapi://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=813912474")!) {
+                        Label {
+                            Text("1群: 813912474")
+                        } icon: {
+                            Image("qq")
+                                .resizable()
+                                .scaledToFit()
+                        }
                     }
-                }
 
-                Link(destination: URL(string: "mqqapi://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=829996515")!) {
+                    Link(destination: URL(string: "mqqapi://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=829996515")!) {
+                        Label {
+                            Text("2群: 829996515")
+                        } icon: {
+                            Image("qq")
+                                .resizable()
+                                .scaledToFit()
+                        }
+                    }
+                } label: {
                     Label {
-                        Text("QQ群2: 829996515")
+                        Text("加入QQ群")
                     } icon: {
                         Image("qq")
                             .resizable()
@@ -175,7 +188,7 @@ struct ContactUsView: View {
 
                 Link(destination: URL(string: "https://discord.gg/g8nCgKsaMe")!) {
                     Label {
-                        Text("Discord频道: Genshin Pizza Helper")
+                        Text("加入Discord服务器")
                     } icon: {
                         Image("discord")
                             .resizable()
@@ -190,7 +203,7 @@ struct ContactUsView: View {
                     HStack {
                         Text("Lava")
                         Spacer()
-                        Text("英语")
+                        Text("英语 繁体中文")
                             .foregroundColor(.gray)
                     }
                 } icon: {

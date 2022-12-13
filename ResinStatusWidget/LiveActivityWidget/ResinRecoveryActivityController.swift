@@ -16,12 +16,15 @@ class ResinRecoveryActivityController {
     }
 
     private init() {
-        UserDefaults.standard.register(
-            defaults: [
-                "resinRecoveryLiveActivityShowExpedition" : true,
-                "resinRecoveryLiveActivityBackgroundOptions" : "[]"
-            ]
-        )
+        if let userDefault = UserDefaults(suiteName: "group.GenshinPizzaHelper") {
+            userDefault.register(
+                defaults: [
+                    "resinRecoveryLiveActivityShowExpedition" : true,
+                    "resinRecoveryLiveActivityBackgroundOptions" : "[]",
+                    "autoUpdateResinRecoveryTimerUsingReFetchData": true,
+                ]
+            )
+        }
     }
 
     static let shared: ResinRecoveryActivityController = .init()
@@ -31,9 +34,9 @@ class ResinRecoveryActivityController {
     }
 
     var background: ResinRecoveryActivityBackground {
-        if UserDefaults.standard.bool(forKey: "resinRecoveryLiveActivityUseEmptyBackground") {
+        if UserDefaults(suiteName: "group.GenshinPizzaHelper")?.bool(forKey: "resinRecoveryLiveActivityUseEmptyBackground") ?? false {
             return .noBackground
-        } else if !UserDefaults.standard.bool(forKey: "resinRecoveryLiveActivityUseCustomizeBackground") {
+        } else if !(UserDefaults(suiteName: "group.GenshinPizzaHelper")?.bool(forKey: "resinRecoveryLiveActivityUseCustomizeBackground") ?? false) {
             return .ramdom
         } else {
             let backgrounds: [String] = .init(rawValue: UserDefaults.standard.string(forKey: "resinRecoveryLiveActivityBackgroundOptions") ?? "[]") ?? []
@@ -46,7 +49,7 @@ class ResinRecoveryActivityController {
     }
 
     var showExpedition: Bool {
-        UserDefaults.standard.bool(forKey: "resinRecoveryLiveActivityShowExpedition")
+        UserDefaults(suiteName: "group.GenshinPizzaHelper")?.bool(forKey: "resinRecoveryLiveActivityShowExpedition") ?? true
     }
 
     func createResinRecoveryTimerActivity(for account: Account) throws {
@@ -112,6 +115,42 @@ class ResinRecoveryActivityController {
             Task {
                 await activity.end()
             }
+        }
+    }
+
+    func updateAllResinRecoveryTimerActivityUsingReFetchData() {
+        let configs = AccountConfigurationModel.shared.fetchAccountConfigs()
+        configs.forEach { config in
+            updateResinRecoveryTimerActivityUsingReFetchData(for: config)
+        }
+    }
+
+    private func updateResinRecoveryTimerActivityUsingReFetchData(for config: AccountConfiguration) {
+        guard UserDefaults(suiteName: "group.GenshinPizzaHelper")?.bool(forKey: "autoUpdateResinRecoveryTimerUsingReFetchData") ?? false else { return }
+        guard let activity = currentActivities.first(where: { activity in
+            activity.attributes.accountUUID == config.uuid
+        }) else { return }
+        guard Date() > activity.contentState.next20ResinRecoveryTime
+                || Date() > activity.contentState.resinFullTime
+                || Date() > activity.contentState.allExpeditionCompleteTime
+        else { return }
+        config.fetchResult { result in
+            guard let data = try? result.get() else { return }
+            let status: ResinRecoveryAttributes.ResinRecoveryState = .init(resinInfo: data.resinInfo, expeditionInfo: data.expeditionInfo, showExpedition: self.showExpedition, background: self.background)
+            Task {
+                await activity.update(using: status)
+            }
+        }
+    }
+
+    func updateResinRecoveryTimerActivity(for config: AccountConfiguration, using result: FetchResult) {
+        guard let activity = currentActivities.first(where: { activity in
+            activity.attributes.accountUUID == config.uuid
+        }) else { return }
+        guard let data = try? result.get() else { return }
+        let status: ResinRecoveryAttributes.ResinRecoveryState = .init(resinInfo: data.resinInfo, expeditionInfo: data.expeditionInfo, showExpedition: self.showExpedition, background: self.background)
+        Task {
+            await activity.update(using: status)
         }
     }
 }

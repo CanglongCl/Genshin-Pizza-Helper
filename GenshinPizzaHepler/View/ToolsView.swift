@@ -525,6 +525,9 @@ struct ToolsView: View {
                         .foregroundColor(.secondary)
                 }
             }
+            NavigationLink(destination: BackgroundsPreviewView()) {
+                Text("背景名片预览")
+            }
         } header: {
             Text("小工具")
         }

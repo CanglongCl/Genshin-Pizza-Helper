@@ -34,6 +34,7 @@ struct LockScreenLoopWidgetView: View {
     var accountName: String? { entry.accountName }
     var showWeeklyBosses: Bool { entry.showWeeklyBosses }
     var showTransformer: Bool { entry.showTransformer }
+    var resinStyle: AutoRotationUsingResinWidgetStyle { entry.usingResinStyle }
 
     var url: URL? {
         let errorURL: URL = {
@@ -74,7 +75,7 @@ struct LockScreenLoopWidgetView: View {
                     LockScreenLoopWidgetCorner(result: result)
                 #endif
                 case .accessoryCircular:
-                    LockScreenLoopWidgetCircular(result: result, showWeeklyBosses: showWeeklyBosses, showTransformer: showTransformer)
+                    LockScreenLoopWidgetCircular(result: result, showWeeklyBosses: showWeeklyBosses, showTransformer: showTransformer, resinStyle: resinStyle)
                 default:
                     EmptyView()
                 }
@@ -85,7 +86,7 @@ struct LockScreenLoopWidgetView: View {
                     LockScreenLoopWidgetCorner(result: result)
                 #endif
                 case .accessoryCircular:
-                    SimplifiedLockScreenLoopWidgetCircular(result: result, showWeeklyBosses: showWeeklyBosses, showTransformer: showTransformer)
+                    SimplifiedLockScreenLoopWidgetCircular(result: result, showWeeklyBosses: showWeeklyBosses, showTransformer: showTransformer, resinStyle: resinStyle)
                 default:
                     EmptyView()
                 }

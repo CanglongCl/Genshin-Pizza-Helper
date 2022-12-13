@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "EABD7DB52886B2D200B7F0FD"
-               BuildableName = "&#x539f;&#x795e;&#x62ab;&#x8428;&#x5c0f;&#x52a9;&#x624b;.app"
+               BuildableName = "&#x62ab;&#x8428;&#x5c0f;&#x52a9;&#x624b;.app"
                BlueprintName = "GenshinPizzaHepler"
                ReferencedContainer = "container:GenshinPizzaHelper.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "EABD7DB52886B2D200B7F0FD"
-            BuildableName = "&#x539f;&#x795e;&#x62ab;&#x8428;&#x5c0f;&#x52a9;&#x624b;.app"
+            BuildableName = "&#x62ab;&#x8428;&#x5c0f;&#x52a9;&#x624b;.app"
             BlueprintName = "GenshinPizzaHepler"
             ReferencedContainer = "container:GenshinPizzaHelper.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "EABD7DB52886B2D200B7F0FD"
-            BuildableName = "&#x539f;&#x795e;&#x62ab;&#x8428;&#x5c0f;&#x52a9;&#x624b;.app"
+            BuildableName = "&#x62ab;&#x8428;&#x5c0f;&#x52a9;&#x624b;.app"
             BlueprintName = "GenshinPizzaHepler"
             ReferencedContainer = "container:GenshinPizzaHelper.xcodeproj">
          </BuildableReference>

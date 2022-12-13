@@ -6,6 +6,7 @@
   
 */
 
-"CFBundleDisplayName" = "Pizza Helper";
+"CFBundleDisplayName" = "GI Pizza";
 "NSPhotoLibraryAddUsageDescription" = "Please allow images to be saved";
 "NSCameraUsageDescription" = "If you want use camera in HoYoLAB's web and upload photos, please allow the use of camera";
+"CFBundleName" = "GI Pizza";

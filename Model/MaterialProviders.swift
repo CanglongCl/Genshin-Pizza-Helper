@@ -7,7 +7,11 @@
 
 import Foundation
 
-struct WeaponOrTalentMaterial {
+struct WeaponOrTalentMaterial: Equatable {
+    static func == (lhs: WeaponOrTalentMaterial, rhs: WeaponOrTalentMaterial) -> Bool {
+        lhs.imageString == rhs.imageString
+    }
+
     let imageString: String
     let localizedName: String
     let weekday: MaterialWeekday

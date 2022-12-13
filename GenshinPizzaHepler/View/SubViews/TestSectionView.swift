@@ -48,12 +48,33 @@ struct TestSectionView: View {
                     switch error {
                     case .accountAbnormal(_):
                         Section {
-                            Link(destination: isInstallation(urlString: "mihoyobbs://") ? URL(string: "mihoyobbs://")! : URL(string: "https://apps.apple.com/cn/app/id1470182559")!) {
-                                Text("点击打开米游社App")
+                            let mihoyobbsURLString: String = "mihoyobbs://"
+                            if isInstallation(urlString: mihoyobbsURLString) {
+                                if let url = URL(string: mihoyobbsURLString) {
+                                    Link(destination: url) {
+                                        Text("点击打开米游社App")
+                                    }
+                                }
+                            } else {
+                                if let url = URL(string: "https://apps.apple.com/cn/app/id1470182559") {
+                                    Link(destination: url) {
+                                        Text("点击打开米游社App")
+                                    }
+                                }
                             }
                         }
                     default:
                         EmptyView()
+                    }
+                }
+            }
+            if connectStatus == .success {
+                if !cookie.contains("stoken") && server.region == .cn {
+                    Label {
+                        Text("本账号无stoken，可能影响简洁模式下小组件使用。建议重新登陆以获取stoken。")
+                    } icon: {
+                        Image(systemName: "checkmark.circle.trianglebadge.exclamationmark")
+                            .foregroundColor(.red)
                     }
                 }
             }
@@ -114,15 +135,12 @@ struct TestSectionView: View {
         }
     }
 
-    func isInstallation(urlString:String?) -> Bool {
-        let url = URL(string: urlString!)
-        if url == nil {
+    func isInstallation(urlString: String) -> Bool {
+        if let url = URL(string: urlString) {
+            return UIApplication.shared.canOpenURL(url)
+        } else {
             return false
         }
-        if UIApplication.shared.canOpenURL(url!) {
-            return true
-        }
-        return false
     }
 }
 

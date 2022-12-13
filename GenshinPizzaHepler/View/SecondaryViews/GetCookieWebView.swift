@@ -24,7 +24,7 @@ struct GetCookieWebView: View {
         case .cn:
             return "https://user.mihoyo.com/#/login/captcha"
         case .global:
-            return "https://account.hoyoverse.com/#/login"
+            return "https://www.hoyolab.com/"
         }
     }
     
@@ -135,7 +135,8 @@ struct CookieGetterWebView: UIViewRepresentable {
         request.allHTTPHeaderFields = httpHeaderFields
         let webview = WKWebView()
         webview.configuration.websiteDataStore = dataStore
-        webview.customUserAgent = "Mozilla/5.0 (iPod; U; CPU iPhone OS 4_3_3 like Mac OS X; ja-jp) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5"
+//        webview.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15"
+        webview.navigationDelegate = context.coordinator
         webview.load(request)
         return webview
     }
@@ -147,6 +148,29 @@ struct CookieGetterWebView: UIViewRepresentable {
             request.allHTTPHeaderFields = httpHeaderFields
             print(request.description)
             uiView.load(request)
+        }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    class Coordinator: NSObject, WKNavigationDelegate {
+        var parent: CookieGetterWebView
+
+        init(_ parent: CookieGetterWebView) {
+            self.parent = parent
+        }
+
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            let js = """
+let timer = setInterval(() => {
+var m = document.getElementById("driver-page-overlay");
+m.parentNode.removeChild(m);
+}, 300);
+setTimeout(() => {clearInterval(timer);timer = null}, 10000);
+"""
+            webView.evaluateJavaScript(js)
         }
     }
 }
@@ -166,7 +190,7 @@ struct GetLedgerCookieWebView<V>: View {
     var url: String {
         switch region {
         case .cn:
-            return "https://m.bbs.mihoyo.com/ys/"
+            return "https://m.miyoushe.com/ys/#/home/0"
         case .global:
             return "https://m.hoyolab.com/"
         }
@@ -176,7 +200,6 @@ struct GetLedgerCookieWebView<V>: View {
         switch region {
         case .cn:
             return [
-                "Host": "m.bbs.mihoyo.com",
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                 "Accept-Language": "zh-CN,zh-Hans;q=0.9",
                 "Connection": "keep-alive",

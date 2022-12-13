@@ -37,6 +37,9 @@ struct ContentView: View {
                                 .padding()
                         }
                     }
+                    NavigationLink("设置") {
+                        WatchWidgetSettingView()
+                    }
                 }
                 .listStyle(.carousel)
             }
@@ -59,11 +62,12 @@ struct ContentView: View {
                 break
             }
         })
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+        .onAppear {
+            UserDefaults(suiteName: "group.GenshinPizzaHelper")?.register(defaults: [
+                "lockscreenWidgetSyncFrequencyInMinute" : 60,
+                "homeCoinRefreshFrequencyInHour": 30,
+                "watchWidgetUseSimplifiedMode": true
+            ])
+        }
     }
 }

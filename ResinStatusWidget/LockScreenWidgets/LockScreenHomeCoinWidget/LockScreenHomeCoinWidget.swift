@@ -19,9 +19,9 @@ struct LockScreenHomeCoinWidget: Widget {
         .configurationDisplayName("洞天宝钱")
         .description("洞天宝钱数量")
         #if os(watchOS)
-        .supportedFamilies([.accessoryCircular, .accessoryCorner])
+        .supportedFamilies([.accessoryCircular, .accessoryCorner, .accessoryRectangular])
         #else
-        .supportedFamilies([.accessoryCircular])
+        .supportedFamilies([.accessoryCircular, .accessoryRectangular])
         #endif
     }
 }
@@ -74,6 +74,8 @@ struct LockScreenHomeCoinWidgetView: View {
                 #endif
                 case .accessoryCircular:
                     LockScreenHomeCoinWidgetCircular(result: result)
+                case .accessoryRectangular:
+                    LockScreenHomeCoinWidgetRectangular(result: result)
                 default:
                     EmptyView()
                 }
@@ -85,6 +87,8 @@ struct LockScreenHomeCoinWidgetView: View {
                 #endif
                 case .accessoryCircular:
                     LockScreenHomeCoinWidgetCircular(result: result)
+                case .accessoryRectangular:
+                    LockScreenHomeCoinWidgetRectangular(result: result)
                 default:
                     EmptyView()
                 }

@@ -7,115 +7,37 @@
 
 import Foundation
 
-struct UserData: Codable, Equatable, SimplifiedUserDataContainer {
-    static func == (lhs: UserData, rhs: UserData) -> Bool {
-        return lhs.accountName == rhs.accountName
+struct UserData: SimplifiedUserDataContainer {
+
+    init(fetchData: FetchData) {
+        resinInfo = ResinInfo(fetchData.currentResin, fetchData.maxResin, Int(fetchData.resinRecoveryTime)!)
+        dailyTaskInfo = DailyTaskInfo(totalTaskNum: fetchData.totalTaskNum, finishedTaskNum: fetchData.finishedTaskNum, isTaskRewardReceived: fetchData.isExtraTaskRewardReceived)
+        weeklyBossesInfo = WeeklyBossesInfo(remainResinDiscountNum: fetchData.remainResinDiscountNum, resinDiscountNumLimit: fetchData.resinDiscountNumLimit)
+        expeditionInfo = ExpeditionInfo(currentExpedition: fetchData.currentExpeditionNum, maxExpedition: fetchData.maxExpeditionNum, expeditions: fetchData.expeditions)
+        homeCoinInfo = HomeCoinInfo(fetchData.currentHomeCoin, fetchData.maxHomeCoin, Int(fetchData.homeCoinRecoveryTime)!)
+        transformerInfo = TransformerInfo(fetchData.transformer)
     }
 
-    init(
-        accountName: String,
-
-        // 用于测试和提供小组件预览视图的默认数据
-        currentResin: Int,
-        maxResin: Int,
-        resinRecoveryTime: String,
-
-        finishedTaskNum: Int,
-        totalTaskNum: Int,
-        isExtraTaskRewardReceived: Bool,
-
-        remainResinDiscountNum: Int,
-        resinDiscountNumLimit: Int,
-
-        currentExpeditionNum: Int,
-        maxExpeditionNum: Int,
-        expeditions: [Expedition],
-
-        currentHomeCoin: Int,
-        maxHomeCoin: Int,
-        homeCoinRecoveryTime: String,
-
-        transformer: TransformerData
-    ) {
-        self.accountName = accountName
-
-        self.currentResin = currentResin
-        self.maxResin = maxResin
-        self.resinRecoveryTime = resinRecoveryTime
-
-        self.finishedTaskNum = finishedTaskNum
-        self.totalTaskNum = totalTaskNum
-        self.isExtraTaskRewardReceived = isExtraTaskRewardReceived
-
-        self.remainResinDiscountNum = remainResinDiscountNum
-        self.resinDiscountNumLimit = resinDiscountNumLimit
-
-        self.currentExpeditionNum = currentExpeditionNum
-        self.maxExpeditionNum = maxExpeditionNum
-        self.expeditions = expeditions
-
-        self.currentHomeCoin = currentHomeCoin
-        self.maxHomeCoin = maxResin
-        self.homeCoinRecoveryTime = homeCoinRecoveryTime
-
-        self.transformer = transformer
+    init(resinInfo: ResinInfo, dailyTaskInfo: DailyTaskInfo, weeklyBossesInfo: WeeklyBossesInfo, expeditionInfo: ExpeditionInfo, homeCoinInfo: HomeCoinInfo, transformerInfo: TransformerInfo) {
+        self.resinInfo = resinInfo
+        self.dailyTaskInfo = dailyTaskInfo
+        self.weeklyBossesInfo = weeklyBossesInfo
+        self.expeditionInfo = expeditionInfo
+        self.homeCoinInfo = homeCoinInfo
+        self.transformerInfo = transformerInfo
     }
 
-    var accountName: String?
+    let resinInfo: ResinInfo
     
-    mutating func addName(_ name: String) { accountName = name }
+    let dailyTaskInfo: DailyTaskInfo
+
+    let weeklyBossesInfo: WeeklyBossesInfo
     
-    // 树脂
-    // decode
-    private let currentResin: Int
-    private let maxResin: Int
-    private let resinRecoveryTime: String
+    let expeditionInfo: ExpeditionInfo
+
+    let homeCoinInfo: HomeCoinInfo
     
-    var resinInfo: ResinInfo {
-        ResinInfo(currentResin, maxResin, Int(resinRecoveryTime)!)
-    }
-    
-    // 每日任务
-    private let finishedTaskNum: Int
-    private let totalTaskNum: Int
-    private let isExtraTaskRewardReceived: Bool
-    
-    var dailyTaskInfo: DailyTaskInfo {
-        DailyTaskInfo(totalTaskNum: totalTaskNum, finishedTaskNum: finishedTaskNum, isTaskRewardReceived: isExtraTaskRewardReceived)
-    }
-    
-    // 周本
-    private let remainResinDiscountNum: Int
-    private let resinDiscountNumLimit: Int
-    
-    var weeklyBossesInfo: WeeklyBossesInfo {
-        WeeklyBossesInfo(remainResinDiscountNum: remainResinDiscountNum, resinDiscountNumLimit: resinDiscountNumLimit)
-    }
-    
-    // 派遣探索
-    private let currentExpeditionNum: Int
-    private let maxExpeditionNum: Int
-    private let expeditions: [Expedition]
-    
-    var expeditionInfo: ExpeditionInfo {
-        ExpeditionInfo(currentExpedition: currentExpeditionNum, maxExpedition: maxExpeditionNum, expeditions: expeditions)
-    }
-    
-    // 洞天宝钱
-    private let currentHomeCoin: Int
-    private let maxHomeCoin: Int
-    private let homeCoinRecoveryTime: String
-    
-    var homeCoinInfo: HomeCoinInfo {
-        HomeCoinInfo(currentHomeCoin, maxHomeCoin, Int(homeCoinRecoveryTime)!)
-    }
-    
-    // 参量质变仪
-    private let transformer: TransformerData
-    
-    var transformerInfo: TransformerInfo {
-        TransformerInfo(transformer)
-    }
+    let transformerInfo: TransformerInfo
 }
 
 typealias SimplifiedUserDataResult = Result<SimplifiedUserData, FetchError>
@@ -126,6 +48,13 @@ struct SimplifiedUserData: Codable, SimplifiedUserDataContainer {
     let dailyTaskInfo: DailyTaskInfo
     let expeditionInfo: ExpeditionInfo
     let homeCoinInfo: HomeCoinInfo
+
+    init(resinInfo: ResinInfo, dailyTaskInfo: DailyTaskInfo, expeditionInfo: ExpeditionInfo, homeCoinInfo: HomeCoinInfo) {
+        self.resinInfo = resinInfo
+        self.dailyTaskInfo = dailyTaskInfo
+        self.expeditionInfo = expeditionInfo
+        self.homeCoinInfo = homeCoinInfo
+    }
 
     init?(widgetUserData: WidgetUserData) {
         guard let resin: String = widgetUserData.data.data.first(where: { $0.name == "原粹树脂" })?.value,
@@ -182,29 +111,28 @@ struct SimplifiedUserData: Codable, SimplifiedUserDataContainer {
 
 extension UserData {
     static let defaultData = UserData(
-        accountName: "荧",
-        
-        // 用于测试和提供小组件预览视图的默认数据
-        currentResin: 90,
-        maxResin: 160,
-        resinRecoveryTime: "\((160-90)*8)",
+        fetchData: FetchData(
+            currentResin: 90,
+            maxResin: 160,
+            resinRecoveryTime: "\((160-90)*8)",
 
-        finishedTaskNum: 3,
-        totalTaskNum: 4,
-        isExtraTaskRewardReceived: false,
+            finishedTaskNum: 3,
+            totalTaskNum: 4,
+            isExtraTaskRewardReceived: false,
 
-        remainResinDiscountNum: 2,
-        resinDiscountNumLimit: 3,
+            remainResinDiscountNum: 2,
+            resinDiscountNumLimit: 3,
 
-        currentExpeditionNum: 2,
-        maxExpeditionNum: 5,
-        expeditions: Expedition.defaultExpeditions,
+            currentExpeditionNum: 2,
+            maxExpeditionNum: 5,
+            expeditions: Expedition.defaultExpeditions,
 
-        currentHomeCoin: 1200,
-        maxHomeCoin: 2400,
-        homeCoinRecoveryTime: "123",
-        
-        transformer: TransformerData(recoveryTime: TransformerData.TransRecoveryTime(day: 4, hour: 3, minute: 0, second: 0), obtained: true)
+            currentHomeCoin: 1200,
+            maxHomeCoin: 2400,
+            homeCoinRecoveryTime: "123",
+
+            transformer: TransformerData(recoveryTime: TransformerData.TransRecoveryTime(day: 4, hour: 3, minute: 0, second: 0), obtained: true)
+        )
     )
 }
 
@@ -223,4 +151,165 @@ protocol SimplifiedUserDataContainer {
     var homeCoinInfo: HomeCoinInfo { get }
     var expeditionInfo: ExpeditionInfo { get }
     var dailyTaskInfo: DailyTaskInfo { get }
+
+    func dataAfter(_ second: TimeInterval) -> Self
+}
+
+extension UserData {
+    func dataAfter(_ second: TimeInterval) -> UserData {
+        guard second != 0 else {
+            return self
+        }
+        var resinRecoveryTime = self.resinInfo.recoveryTime.second - Int(second)
+        if resinRecoveryTime < 0 { resinRecoveryTime = 0 }
+        var currentResin = 160 - Int(ceil(Double(resinRecoveryTime) / (8.0 * 60.0)))
+        if currentResin < 0 { currentResin = 0 }
+
+
+        let currentExpeditionNum: Int = self.expeditionInfo.expeditions.filter { expedition in
+            Double(expedition.remainedTimeStr)! - second > 0
+        }.count
+        let expeditions: [Expedition] = self.expeditionInfo.expeditions.map { expedition in
+            var remainTime: Int = expedition.recoveryTime.second - Int(second)
+            if remainTime < 0 { remainTime = 0 }
+            return .init(avatarSideIcon: expedition.avatarSideIcon, remainedTimeStr: String(remainTime), statusStr: expedition.statusStr)
+        }
+
+        let totalTime: Double
+        if self.homeCoinInfo.recoveryTime.second == 0 {
+            totalTime = 0
+        } else {
+            totalTime = Double(self.homeCoinInfo.recoveryTime.second) / (1.0 - self.homeCoinInfo.percentage)
+        }
+        var remainHomeCoinTimeToFull = Double(self.homeCoinInfo.recoveryTime.second) - second
+        if remainHomeCoinTimeToFull < 0 { remainHomeCoinTimeToFull = 0 }
+        var currentHomeCoinPercentage: Double
+        if totalTime != 0 {
+            currentHomeCoinPercentage = 1 - ( remainHomeCoinTimeToFull / totalTime )
+        } else {
+            currentHomeCoinPercentage = 1
+        }
+        let currentHomeCoin: Int = Int(Double(self.homeCoinInfo.maxHomeCoin) * currentHomeCoinPercentage)
+        let homeCoinRecoveryTime: Int = Int(totalTime * ( 1 - currentHomeCoinPercentage ))
+
+        return .init(
+            resinInfo: .init(currentResin, self.resinInfo.maxResin, resinRecoveryTime),
+            dailyTaskInfo: self.dailyTaskInfo,
+            weeklyBossesInfo: self.weeklyBossesInfo,
+            expeditionInfo: .init(currentExpedition: currentExpeditionNum, maxExpedition: self.expeditionInfo.maxExpedition, expeditions: expeditions),
+            homeCoinInfo: .init(currentHomeCoin, self.homeCoinInfo.maxHomeCoin, homeCoinRecoveryTime),
+            transformerInfo: self.transformerInfo
+        )
+    }
+}
+
+extension SimplifiedUserData {
+    func dataAfter(_ second: TimeInterval) -> SimplifiedUserData {
+        guard second != 0 else {
+            return self
+        }
+        var resinRecoveryTime = self.resinInfo.recoveryTime.second - Int(second)
+        if resinRecoveryTime < 0 { resinRecoveryTime = 0 }
+        var currentResin = 160 - Int(ceil(Double(resinRecoveryTime) / (8.0 * 60.0)))
+        if currentResin < 0 { currentResin = 0 }
+
+        let totalTime: Double
+        if self.homeCoinInfo.recoveryTime.second == 0 {
+            totalTime = 0
+        } else {
+            totalTime = Double(self.homeCoinInfo.recoveryTime.second) / (1.0 - self.homeCoinInfo.percentage)
+        }
+        var remainHomeCoinTimeToFull = Double(self.homeCoinInfo.recoveryTime.second) - second
+        if remainHomeCoinTimeToFull < 0 { remainHomeCoinTimeToFull = 0 }
+        var currentHomeCoinPercentage: Double
+        if totalTime != 0 {
+            currentHomeCoinPercentage = 1 - ( remainHomeCoinTimeToFull / totalTime )
+        } else {
+            currentHomeCoinPercentage = 1
+        }
+        let currentHomeCoin: Int = Int(Double(self.homeCoinInfo.maxHomeCoin) * currentHomeCoinPercentage)
+        let homeCoinRecoveryTime: Int = Int(totalTime * ( 1 - currentHomeCoinPercentage ))
+
+        return .init(
+            resinInfo: .init(currentResin, self.resinInfo.maxResin, resinRecoveryTime),
+            dailyTaskInfo: self.dailyTaskInfo,
+            expeditionInfo: self.expeditionInfo,
+            homeCoinInfo: .init(currentHomeCoin, self.homeCoinInfo.maxHomeCoin, homeCoinRecoveryTime)
+        )
+    }
+}
+
+struct FetchData: Codable {
+    init(
+        // 用于测试和提供小组件预览视图的默认数据
+        currentResin: Int,
+        maxResin: Int,
+        resinRecoveryTime: String,
+
+        finishedTaskNum: Int,
+        totalTaskNum: Int,
+        isExtraTaskRewardReceived: Bool,
+
+        remainResinDiscountNum: Int,
+        resinDiscountNumLimit: Int,
+
+        currentExpeditionNum: Int,
+        maxExpeditionNum: Int,
+        expeditions: [Expedition],
+
+        currentHomeCoin: Int,
+        maxHomeCoin: Int,
+        homeCoinRecoveryTime: String,
+
+        transformer: TransformerData
+    ) {
+        self.currentResin = currentResin
+        self.maxResin = maxResin
+        self.resinRecoveryTime = resinRecoveryTime
+
+        self.finishedTaskNum = finishedTaskNum
+        self.totalTaskNum = totalTaskNum
+        self.isExtraTaskRewardReceived = isExtraTaskRewardReceived
+
+        self.remainResinDiscountNum = remainResinDiscountNum
+        self.resinDiscountNumLimit = resinDiscountNumLimit
+
+        self.currentExpeditionNum = currentExpeditionNum
+        self.maxExpeditionNum = maxExpeditionNum
+        self.expeditions = expeditions
+
+        self.currentHomeCoin = currentHomeCoin
+        self.maxHomeCoin = maxHomeCoin
+        self.homeCoinRecoveryTime = homeCoinRecoveryTime
+
+        self.transformer = transformer
+    }
+
+    // 树脂
+    // decode
+    let currentResin: Int
+    let maxResin: Int
+    let resinRecoveryTime: String
+
+    // 每日任务
+    let finishedTaskNum: Int
+    let totalTaskNum: Int
+    let isExtraTaskRewardReceived: Bool
+
+    // 周本
+    let remainResinDiscountNum: Int
+    let resinDiscountNumLimit: Int
+
+    // 派遣探索
+    let currentExpeditionNum: Int
+    let maxExpeditionNum: Int
+    let expeditions: [Expedition]
+
+    // 洞天宝钱
+    let currentHomeCoin: Int
+    let maxHomeCoin: Int
+    let homeCoinRecoveryTime: String
+
+    // 参量质变仪
+    let transformer: TransformerData
 }

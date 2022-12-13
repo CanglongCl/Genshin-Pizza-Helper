@@ -56,6 +56,11 @@ extension AccountConfiguration {
                     with: data,
                     uid: self.uid!
                 )
+                #if canImport(ActivityKit)
+                if #available(iOS 16.1, *) {
+                    ResinRecoveryActivityController.shared.updateResinRecoveryTimerActivity(for: self, using: result)
+                }
+                #endif
             case .failure(_):
                 break
             }

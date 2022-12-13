@@ -15,6 +15,7 @@ struct NotificationSettingNavigator: View {
     @AppStorage("allowWeeklyBossesNotification", store: UserDefaults(suiteName: "group.GenshinPizzaHelper")) var allowWeeklyBossesNotification: Bool = true
     @AppStorage("allowTransformerNotification", store: UserDefaults(suiteName: "group.GenshinPizzaHelper")) var allowTransformerNotification: Bool = true
     @AppStorage("allowDailyTaskNotification", store: UserDefaults(suiteName: "group.GenshinPizzaHelper")) var allowDailyTaskNotification: Bool = true
+    @AppStorage("allowFullResinNotification", store: UserDefaults(suiteName: "group.GenshinPizzaHelper")) var allowFullResinNotification: Bool = true
 
     @State var isNotificationHintShow: Bool = false
 
@@ -22,7 +23,7 @@ struct NotificationSettingNavigator: View {
     
     var masterSwitch: Binding<Bool> {
         .init(get: {
-            return (allowResinNotification || allowHomeCoinNotification || allowExpeditionNotification || allowWeeklyBossesNotification || allowDailyTaskNotification || allowTransformerNotification)
+            return (allowResinNotification || allowHomeCoinNotification || allowExpeditionNotification || allowWeeklyBossesNotification || allowDailyTaskNotification || allowTransformerNotification || allowFullResinNotification)
         }, set: { newValue in
             withAnimation {
                 allowResinNotification = newValue
@@ -31,6 +32,7 @@ struct NotificationSettingNavigator: View {
                 allowWeeklyBossesNotification = newValue
                 allowDailyTaskNotification = newValue
                 allowTransformerNotification = newValue
+                allowFullResinNotification = newValue
             }
         })
     }
@@ -69,13 +71,17 @@ struct NotificationSettingNavigator: View {
         }
         .onAppear {
             UNUserNotificationCenter.current().getNotificationSettings { settings in
-                allowNotification = settings.authorizationStatus == .provisional || settings.authorizationStatus == .authorized
+                withAnimation {
+                    allowNotification = settings.authorizationStatus == .provisional || settings.authorizationStatus == .authorized
+                }
             }
         }
         .onChange(of: scenePhase) { newValue in
             if newValue == .active {
                 UNUserNotificationCenter.current().getNotificationSettings { settings in
-                    allowNotification = settings.authorizationStatus == .provisional || settings.authorizationStatus == .authorized
+                    withAnimation {
+                        allowNotification = settings.authorizationStatus == .provisional || settings.authorizationStatus == .authorized
+                    }
                 }
             }
         }

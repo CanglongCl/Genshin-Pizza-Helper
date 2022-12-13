@@ -52,7 +52,7 @@ struct ResinRecoveryActivityWidget: Widget {
                             VStack(alignment: .leading) {
                                 Text("距离\(context.state.next20ResinCount)树脂")
                                     .font(.caption2)
-                                Text(timerInterval: Date()...context.state.next20ResinRecoveryTime!, countsDown: true)
+                                Text(timerInterval: Date()...context.state.next20ResinRecoveryTime, countsDown: true)
                                     .multilineTextAlignment(.leading)
                                     .font(.system(.title2, design: .rounded))
                                     .foregroundColor(Color("textColor.originResin"))
@@ -84,7 +84,7 @@ struct ResinRecoveryActivityWidget: Widget {
             } compactLeading: {
                 Image("树脂").resizable().scaledToFit()
             } compactTrailing: {
-                Text(timerInterval: Date()...context.state.next20ResinRecoveryTime!, countsDown: true, showsHours: false)
+                Text(timerInterval: Date()...context.state.next20ResinRecoveryTime, countsDown: true, showsHours: false)
                     .monospacedDigit()
                     .multilineTextAlignment(.center)
                     .frame(width: 60)
@@ -115,7 +115,7 @@ struct ResinRecoveryActivityWidgetLockScreenView: View {
                         VStack(alignment: .leading) {
                             Text("距离\(context.state.next20ResinCount)树脂")
                                 .font(.caption2)
-                            Text(timerInterval: Date()...context.state.next20ResinRecoveryTime!, countsDown: true)
+                            Text(timerInterval: Date()...context.state.next20ResinRecoveryTime, countsDown: true)
                                 .multilineTextAlignment(.leading)
                                 .font(.system(.title2, design: .rounded))
                         }

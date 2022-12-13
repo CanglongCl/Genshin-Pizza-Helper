@@ -25,11 +25,10 @@ struct MainInfo: View {
         let dailyTaskNotice: Bool = !userData.dailyTaskInfo.isTaskRewardReceived && (userData.dailyTaskInfo.finishedTaskNum == userData.dailyTaskInfo.totalTaskNum)
         
         // 需要马上上号
-        let needToLoginImediately: Bool = (userData.resinInfo.isFull || userData.homeCoinInfo.isFull || expeditionCompleted || transformerCompleted || dailyTaskNotice)
+        let needToLoginImediately: Bool = (userData.resinInfo.isFull || (userData.homeCoinInfo.isFull && userData.homeCoinInfo.maxHomeCoin != 300) || expeditionCompleted || transformerCompleted || dailyTaskNotice)
         // 可以晚些再上号，包括每日任务和周本
         let needToLoginSoon: Bool = !userData.dailyTaskInfo.isTaskRewardReceived || weeklyBossesNotice
-        
-        
+
         
         VStack(alignment: .leading, spacing: 0) {
             if let accountName = accountName {

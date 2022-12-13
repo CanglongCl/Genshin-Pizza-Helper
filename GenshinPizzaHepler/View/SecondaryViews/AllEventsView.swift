@@ -93,10 +93,12 @@ struct AllEventsView: View {
     }
 
     func getLocalizedContent(_ content: EventModel.MultiLanguageContents) -> String {
-        let locale = Locale.current.languageCode
+        let locale = Bundle.main.preferredLocalizations.first
         switch locale {
-        case "zh":
+        case "zh-Hans":
             return content.CHS
+        case "zh-Hant", "zh-HK":
+            return content.CHT
         case "en":
             return content.EN
         case "ja":
@@ -109,7 +111,7 @@ struct AllEventsView: View {
     func getRemainDays(_ endAt: String) -> IntervalDate? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        dateFormatter.locale = NSLocale.current
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         let endDate = dateFormatter.date(from: endAt)
         guard let endDate = endDate else {
             return nil

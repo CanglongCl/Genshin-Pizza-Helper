@@ -8,32 +8,19 @@
 import SwiftUI
 #if canImport(ActivityKit)
 struct LiveActivitySettingView: View {
-    @AppStorage("autoDeliveryResinTimerLiveActivity") var autoDeliveryResinTimerLiveActivity: Bool = true
-
     @State var isAlertShow: Bool = false
+
     var body: some View {
         if #available(iOS 16.1, *) {
             Section {
-                Toggle("自动启用树脂计时器", isOn: $autoDeliveryResinTimerLiveActivity.animation())
-                    .disabled(!ResinRecoveryActivityController.shared.allowLiveActivity)
-                if !ResinRecoveryActivityController.shared.allowLiveActivity {
-                    Button("前往设置开启实时活动功能") {
-                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
-                    }
-                } else {
-                    NavigationLink("树脂计时器设置") {
-                        LiveActivitySettingDetailView()
-                    }
+                NavigationLink("树脂计时器设置") {
+                    LiveActivitySettingDetailView()
                 }
             } footer: {
-                if !ResinRecoveryActivityController.shared.allowLiveActivity {
-                    Text("实时活动功能未开启，请前往设置开启。")
-                } else {
-                    Button("树脂计时器是什么？") {
-                        isAlertShow.toggle()
-                    }
-                    .font(.footnote)
+                Button("树脂计时器是什么？") {
+                    isAlertShow.toggle()
                 }
+                .font(.footnote)
             }
             .alert("若开启，在退出本App时会自动启用一个“实时活动”树脂计时器。默认为顶置的账号，或树脂最少的账号开启计时器。您也可以在“概览”页长按某个账号的卡片手动开启，或启用多个计时器。", isPresented: $isAlertShow) {
                 Button("OK") {
@@ -46,9 +33,10 @@ struct LiveActivitySettingView: View {
 
 @available(iOS 16.1, *)
 struct LiveActivitySettingDetailView: View {
-    @AppStorage("resinRecoveryLiveActivityUseEmptyBackground") var resinRecoveryLiveActivityUseEmptyBackground: Bool = false
+    @Environment(\.scenePhase) var scenePhase
+    @AppStorage("resinRecoveryLiveActivityUseEmptyBackground", store: UserDefaults(suiteName: "group.GenshinPizzaHelper")) var resinRecoveryLiveActivityUseEmptyBackground: Bool = false
 
-    @AppStorage("resinRecoveryLiveActivityUseCustomizeBackground") var resinRecoveryLiveActivityUseCustomizeBackground: Bool = false
+    @AppStorage("resinRecoveryLiveActivityUseCustomizeBackground", store: UserDefaults(suiteName: "group.GenshinPizzaHelper")) var resinRecoveryLiveActivityUseCustomizeBackground: Bool = false
     var useRandomBackground: Binding<Bool> {
         .init {
             !resinRecoveryLiveActivityUseCustomizeBackground
@@ -57,30 +45,101 @@ struct LiveActivitySettingDetailView: View {
         }
     }
 
+    @AppStorage("autoDeliveryResinTimerLiveActivity") var autoDeliveryResinTimerLiveActivity: Bool = false
 
-    @AppStorage("resinRecoveryLiveActivityShowExpedition") var resinRecoveryLiveActivityShowExpedition: Bool = true
+    @AppStorage("resinRecoveryLiveActivityShowExpedition", store: UserDefaults(suiteName: "group.GenshinPizzaHelper")) var resinRecoveryLiveActivityShowExpedition: Bool = true
+
+    @AppStorage("autoUpdateResinRecoveryTimerUsingReFetchData", store: UserDefaults(suiteName: "group.GenshinPizzaHelper")) var autoUpdateResinRecoveryTimerUsingReFetchData: Bool = true
+
+    @State private var isHelpSheetShow: Bool = false
+
+    @State private var isHowToCloseDynamicIslandAlertShow: Bool = false
+
+    @State private var allowLiveActivity: Bool = ResinRecoveryActivityController.shared.allowLiveActivity
 
     var body: some View {
         List {
-            Section {
-                Toggle("展示派遣探索", isOn: $resinRecoveryLiveActivityShowExpedition)
-            }
-            Section {
-                Toggle("使用透明背景", isOn: $resinRecoveryLiveActivityUseEmptyBackground.animation())
-                if !resinRecoveryLiveActivityUseEmptyBackground {
-                    Toggle("随机背景", isOn: useRandomBackground.animation())
-                    if resinRecoveryLiveActivityUseCustomizeBackground {
-                        NavigationLink("选择背景") {
-                            LiveActivityBackgroundPicker()
-                        }
+            if !allowLiveActivity {
+                Section {
+                    Label {
+                        Text("实时活动功能未开启")
+                    } icon: {
+                        Image(systemName: "exclamationmark.circle")
+                            .foregroundColor(.red)
+                    }
+                    Button("前往设置开启实时活动功能") {
+                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                     }
                 }
-            } header: {
-                Text("树脂计时器背景")
+            }
+
+            Group {
+                Section {
+                    Toggle("自动启用树脂计时器", isOn: $autoDeliveryResinTimerLiveActivity.animation())
+                }
+                Section {
+                    Button("如何隐藏灵动岛？如何关闭树脂计时器？") {
+                        isHowToCloseDynamicIslandAlertShow.toggle()
+                    }
+                }
+                Section {
+                    Toggle("展示派遣探索", isOn: $resinRecoveryLiveActivityShowExpedition)
+                }
+                Section {
+                    Toggle("使用透明背景", isOn: $resinRecoveryLiveActivityUseEmptyBackground.animation())
+                    if !resinRecoveryLiveActivityUseEmptyBackground {
+                        Toggle("随机背景", isOn: useRandomBackground.animation())
+                        if resinRecoveryLiveActivityUseCustomizeBackground {
+                            NavigationLink("选择背景") {
+                                LiveActivityBackgroundPicker()
+                            }
+                        }
+                    }
+                } header: {
+                    Text("树脂计时器背景")
+                }
+            }
+            .disabled(!allowLiveActivity)
+        }
+        .toolbar {
+            ToolbarItem {
+                Button {
+                    isHelpSheetShow.toggle()
+                } label: {
+                    Image(systemName: "questionmark.circle")
+                }
+
             }
         }
         .navigationTitle("树脂计时器设置")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $isHelpSheetShow) {
+            NavigationView {
+                WebBroswerView(url: "http://ophelper.top/static/resin_timer_help.html")
+                    .dismissableSheet(isSheetShow: $isHelpSheetShow)
+            }
+        }
+        .alert("隐藏灵动岛 / 关闭树脂计时器", isPresented: $isHowToCloseDynamicIslandAlertShow) {
+            Button("OK") {
+                isHowToCloseDynamicIslandAlertShow.toggle()
+            }
+        } message: {
+            Text("您可以从左右向中间滑动灵动岛，即可隐藏灵动岛。\n在锁定屏幕上左滑树脂计时器，即可关闭树脂计时器和灵动岛。")
+        }
+        .onAppear {
+            withAnimation {
+                allowLiveActivity = ResinRecoveryActivityController.shared.allowLiveActivity
+            }
+        }
+        .onChange(of: scenePhase) { newValue in
+            if newValue == .active {
+                UNUserNotificationCenter.current().getNotificationSettings { settings in
+                    withAnimation {
+                        allowLiveActivity = ResinRecoveryActivityController.shared.allowLiveActivity
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -138,30 +197,6 @@ struct LiveActivityBackgroundPicker: View {
             return backgroundOptions
         } else {
             return backgroundOptions.filter { "\(NSLocalizedString($0, comment: ""))".lowercased().contains(searchText.lowercased()) }
-        }
-    }
-}
-
-
-
-extension [String]: RawRepresentable {
-    public typealias RawValue = String
-    public var rawValue: RawValue {
-        let encoder = JSONEncoder()
-        if let data = try? encoder.encode(self) {
-            return String(data: data, encoding: .utf8)!
-        } else {
-            return String(data: try! encoder.encode([String].init()), encoding: .utf8)!
-        }
-    }
-
-    public init?(rawValue: RawValue) {
-        let decoder = JSONDecoder()
-        if let data = rawValue.data(using: .utf8),
-            let result = try? decoder.decode([String].self, from: data) {
-            self = result
-        } else {
-            self = []
         }
     }
 }

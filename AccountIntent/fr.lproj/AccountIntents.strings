@@ -209,3 +209,31 @@
 "tBnBc9" = "false";
 
 "vVnBDJ" = "Simplified mode (only for China mainland service users)";
+
+"9ahsDT-B46RDD" = "There are ${count} options matching ‘回满时间’.";
+
+"9ahsDT-KNNnPc" = "There are ${count} options matching ‘环状’.";
+
+"9ahsDT-dM0PI2" = "There are ${count} options matching ‘倒计时’.";
+
+"9ahsDT-tQcha2" = "There are ${count} options matching ‘默认’.";
+
+"B46RDD" = "Time when full";
+
+"J4NStK" = "Resin display style";
+
+"KNNnPc" = "Circle";
+
+"dM0PI2" = "Timer";
+
+"fvGuTG" = "Auto Rotation Using Resin Widget Style";
+
+"q86NGe-B46RDD" = "Just to confirm, you wanted ‘回满时间’?";
+
+"q86NGe-KNNnPc" = "Just to confirm, you wanted ‘环状’?";
+
+"q86NGe-dM0PI2" = "Just to confirm, you wanted ‘倒计时’?";
+
+"q86NGe-tQcha2" = "Just to confirm, you wanted ‘默认’?";
+
+"tQcha2" = "Default style";

@@ -27,6 +27,8 @@
 		<string>twitter</string>
 		<string>aliceworkshop</string>
 	</array>
+	<key>LSHasLocalizedDisplayName</key>
+	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

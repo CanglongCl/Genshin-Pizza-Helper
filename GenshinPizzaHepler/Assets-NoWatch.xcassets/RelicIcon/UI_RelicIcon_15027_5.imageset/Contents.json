@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "UI_RelicIcon_15027_5.heic",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -9,7 +10,6 @@
       "scale" : "2x"
     },
     {
-      "filename" : "wechat.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

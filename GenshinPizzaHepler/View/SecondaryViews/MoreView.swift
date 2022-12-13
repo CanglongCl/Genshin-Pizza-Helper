@@ -17,15 +17,13 @@ struct MoreView: View {
                 #if DEBUG
                 Button("清空已检查的版本号") {
                     UserDefaults.standard.set([], forKey: "checkedUpdateVersions")
+                    UserDefaults.standard.set(0, forKey: "checkedNewestVersion")
                     UserDefaults.standard.synchronize()
                 }
                 #endif
             }
             Section {
                 Link("获取Cookie的脚本", destination: URL(string: "https://www.icloud.com/shortcuts/fe68f22c624949c9ad8959993239e19c")!)
-                NavigationLink(destination: BackgroundsPreviewView()) {
-                    Text("背景名片预览")
-                }
             }
             // FIXME: Proxy not implenmented
 //            Section {

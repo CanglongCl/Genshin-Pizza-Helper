@@ -11,11 +11,16 @@ struct HomeCoinInfoBar: View {
     let homeCoinInfo: HomeCoinInfo
     
     var isHomeCoinFullImage: some View {
-        (homeCoinInfo.isFull)
-        ? Image(systemName: "exclamationmark")
-            .overlayImageWithRingProgressBar(homeCoinInfo.percentage, scaler: 0.78)
-        : Image(systemName: "leaf.fill")
+        homeCoinInfo.maxHomeCoin == 300
+        ? Image(systemName: "leaf.fill")
             .overlayImageWithRingProgressBar(homeCoinInfo.percentage)
+        : (
+            (homeCoinInfo.isFull)
+            ? Image(systemName: "exclamationmark")
+                .overlayImageWithRingProgressBar(homeCoinInfo.percentage, scaler: 0.78)
+            : Image(systemName: "leaf.fill")
+                .overlayImageWithRingProgressBar(homeCoinInfo.percentage)
+        )
     }
     
     var body: some View {
@@ -26,7 +31,6 @@ struct HomeCoinInfoBar: View {
                 .frame(width: 25)
                 .shadow(color: .white, radius: 1)
             isHomeCoinFullImage
-                
                 .frame(maxWidth: 13, maxHeight: 13)
                 .foregroundColor(Color("textColor3"))
             HStack(alignment: .lastTextBaseline, spacing:1) {

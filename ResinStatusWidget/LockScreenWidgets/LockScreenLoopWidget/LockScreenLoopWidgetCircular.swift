@@ -15,10 +15,21 @@ struct LockScreenLoopWidgetCircular: View {
     let showWeeklyBosses: Bool
     let showTransformer: Bool
 
+    let resinStyle: AutoRotationUsingResinWidgetStyle
+
     var body: some View {
         switch LockScreenLoopWidgetType.autoChoose(result: result) {
         case .resin:
-            AlternativeLockScreenResinWidgetCircular(result: result)
+            switch resinStyle {
+            case .default_, .unknown:
+                AlternativeLockScreenResinWidgetCircular(result: result)
+            case .timer:
+                LockScreenResinTimerWidgetCircular(result: result)
+            case .time:
+                LockScreenResinFullTimeWidgetCircular(result: result)
+            case .circle:
+                LockScreenResinWidgetCircular(result: result)
+            }
         case .dailyTask:
             LockScreenDailyTaskWidgetCircular(result: result)
         case .expedition:
@@ -49,10 +60,21 @@ struct SimplifiedLockScreenLoopWidgetCircular: View {
     let showWeeklyBosses: Bool
     let showTransformer: Bool
 
+    let resinStyle: AutoRotationUsingResinWidgetStyle
+
     var body: some View {
         switch SimplifiedLockScreenLoopWidgetType.autoChoose(result: result) {
         case .resin:
-            AlternativeLockScreenResinWidgetCircular(result: result)
+            switch resinStyle {
+            case .default_, .unknown:
+                AlternativeLockScreenResinWidgetCircular(result: result)
+            case .timer:
+                LockScreenResinTimerWidgetCircular(result: result)
+            case .time:
+                LockScreenResinFullTimeWidgetCircular(result: result)
+            case .circle:
+                LockScreenResinWidgetCircular(result: result)
+            }
         case .dailyTask:
             LockScreenDailyTaskWidgetCircular(result: result)
         case .expedition:

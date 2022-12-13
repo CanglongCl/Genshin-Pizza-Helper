@@ -10,8 +10,9 @@ import SwiftUI
 struct NotificationSettingView: View {
     @EnvironmentObject var viewModel: ViewModel
     @AppStorage("allowResinNotification", store: UserDefaults(suiteName: "group.GenshinPizzaHelper")) var allowResinNotification: Bool = true
-    @AppStorage("resinNotificationNum", store: UserDefaults(suiteName: "group.GenshinPizzaHelper")) var resinNotificationNum: Double = 150
+    @AppStorage("resinNotificationNum", store: UserDefaults(suiteName: "group.GenshinPizzaHelper")) var resinNotificationNum: Double = 140
     @State var showResinSlider: Bool = false
+    @AppStorage("allowFullResinNotification", store: UserDefaults(suiteName: "group.GenshinPizzaHelper")) var allowFullResinNotification: Bool = true
     
     @AppStorage("allowHomeCoinNotification", store: UserDefaults(suiteName: "group.GenshinPizzaHelper")) var allowHomeCoinNotification: Bool = true
     @AppStorage("homeCoinNotificationHourBeforeFull", store: UserDefaults(suiteName: "group.GenshinPizzaHelper")) var homeCoinNotificationHourBeforeFull: Double = 8
@@ -103,9 +104,12 @@ struct NotificationSettingView: View {
                     }
                     if showResinSlider {
                         Slider(value: $resinNotificationNum,
-                               in: 10...160,
+                               in: 10...150,
                                step: 5.0,
                                label: {Text("提醒阈值：\(resinNotificationNum)")})
+                    }
+                    Toggle(isOn: $allowFullResinNotification) {
+                        Text("树脂溢出提醒")
                     }
                 }
             }

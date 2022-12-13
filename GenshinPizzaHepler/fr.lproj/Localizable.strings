@@ -942,7 +942,7 @@
 "您的通知均在本地创建，并在小组件自动刷新时，或您主动打开App时自动更新。\n长时间未打开App或未使用小组件可能会导致通知不准确。\n小组件若处于简洁模式下，部分通知可能仅能通过打开App刷新。" = "Notifications are created locally and are automatically updated when the widget refreshes, or when you open the App. \nLong periods of time without opening the App or without using the widget may result in inaccurate notifications. \nSome notifications may only be refreshed by opening the App if the widget is in clean mode.";
 
 "顶置" = "Pin to top";
-"（1034）账号状态异常，建议长按小组件开启简洁模式" = "(1034) The account status is abnormal, it is recommended to long press the widget to open the simplified mode";
+"（1034）账号状态异常，建议降低小组件请求频率，或长按小组件开启简洁模式" = "(1034) The account status is abnormal. It is recommended to reduce the widget request frequency, or long press the widget to open the simple mode";
 "请重新登录本账号以获取stoken" = "Please re-login this account to get stoken";
 "请登录「%@」" = "Log in to \"%@\"";
 
@@ -972,8 +972,64 @@
 "距离派遣探索全部完成" = "All Expeditions Completion";
 "树脂计时器背景" = "Resin Timer Background";
 
-
 // Real-time activity error
 "未知错误：%@" = "Unknown Error: %@";
 "账号未获取信息" = "No info with account";
 "系统设置不允许本软件开启实时活动，请前往开启" = "The system settings are not allowed to start the real-time activity, please go to open";
+
+// MARK: - 2.7.1
+"加入QQ群" = "Join QQ Group";
+"加入Discord服务器" = "Join Discord Server";
+"1群: 813912474" = "Group 1: 813912474";
+"2群: 829996515" = "Group 2: 829996515";
+"原神披萨深渊榜网页版" = "Genshin Pizza Abyss Rank Webpage";
+"英语 繁体中文" = "English Traditional Chinese";
+
+"隐藏灵动岛 / 关闭树脂计时器" = "Hide the Dynamic Island / Turn off Resin Timer";
+"如何隐藏灵动岛？如何关闭树脂计时器？" = "How to hide the Dynamic Island? How to turn off the resin timer?";
+"您可以从左右向中间滑动灵动岛，即可隐藏灵动岛。\n在锁定屏幕上左滑树脂计时器，即可关闭树脂计时器和灵动岛。" = "You can slide the Dynamic Island from left / right to the middle to hide it. \nSwipe left on the resin timer on the lock screen to turn off the resin timer and the Dynamic Island.";
+"简洁模式下自动刷新树脂计时器" = "Auto-refresh resin timer (only for Simplified Mode)";
+"如出现1034问题，请关闭本选项。" = "If a 1034 problem occurs, please turn off this option.";
+
+// MARK: - 2.7.2
+"使用简洁模式" = "Use Simplified Mode";
+"仅国服用户。更改该项需要重新添加小组件。" = "China mainland users only. Re-adding the widget after edit this configuration.";
+"（仅简洁模式）未正确设置可能导致洞天宝钱通知无法正确触发，洞天宝钱数量不正确。" = "(Simplified mode only) Not properly set may result in the Realm Currency notification not being triggered correctly and the quantity being incorrect.";
+"（仅简洁模式）未正确设置可能导致洞天宝钱数量不准确。" = "(Simplified mode only) Not set correctly may result in an inaccurate amount of Realm Currency.";
+// 下方左侧尾部有零宽字符
+"%@ 回满​" = "%@";
+"的原粹树脂回满时间" = "'s resin fully refilled time";
+"原粹树脂回满时间" = "Resin Fully Refilled Time";
+"展示原粹树脂与恢复到160树脂的时间" = "Show the original resin and the time to full.";
+"的原粹树脂回满倒计时" = "'s countdown to 160 resin";
+"原粹树脂回满倒计时" = "Timer of the Oringinal Resin";
+"展示原粹树脂与恢复到160树脂的倒计时" = "Showing the original resin and the countdown to 160 resin.";
+"树脂溢出提醒" = "Resin back to full notification";
+"本账号无stoken，可能影响简洁模式下小组件使用。建议重新登陆以获取stoken。" = "No stoken found in cookies, which may affect the use of the widget in simplified mode. It is recommended to re-login to get stoken.";
+
+"今天 " = "Tdy ";
+"明天 " = "Tmw ";
+"实时活动功能未开启" = "\"Real-time activity\" disabled. ";
+"Events and Materials" = "";
+"展示近日活动和今天可以获取的武器和天赋材料。" = "Show the recent events and the weapons' or talents' materials that can be obtained today.";
+"LockScreenHomeCoinWidgetRectangular.resin" = "Resin";
+"LockScreenHomeCoinWidgetRectangular.homeCoin" = "Realm";
+"每小时%@个" = "%@ per hour";
+"每%@" = "Every %@";
+
+"（1034）账号状态异常，建议降低小组件同步频率，或长按小组件开启简洁模式" = "(1034) Account status is abnormal, suggest to reduce the widget sync frequency, or long press the widget to open simplified mode";
+"小组件固定每8分钟刷新一次，同步频率不会影响小组件刷新。建议您尽可能设置更长的同步频率，并在每次游玩后打开App自动同步一次。" = "The widget is fixed to refresh every 8 minutes, the sync frequency will not affect the widget refresh. It is recommended that you set a longer sync frequency if possible and open the app to sync once after each tour.";
+"小组件同步频率" = "Widget Sync Frequency";
+"主屏幕小组件同步频率" = "Home screen widget sync frequency";
+"锁定屏幕小组件同步频率" = "Lock screen widget sync frequency";
+"我知道了" = "Got it";
+
+// MARK: -2.7.3
+// Genshin v 3.2 new assets
+"珐露珊" = "Faruzan";
+"流浪者" = "Wanderer";
+"图莱杜拉的回忆" = "Tulaytullah's Remembrance";
+"东花坊时雨" = "Toukabou Shigure";
+
+// MARK: -2.7.4
+"「%@」的原粹树脂已回满。" = "%@'s origin resin is full. ";

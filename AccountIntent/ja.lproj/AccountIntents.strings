@@ -188,7 +188,7 @@
 
 "QGKioO" = "簡潔モード(中国大陸サーバのユーザーのみ有効)";
 
-"TlVSDK" = "false"; 
+"TlVSDK" = "false";
 
 "dA3Ajr" = "true";
 
@@ -199,4 +199,33 @@
 "tBnBc9" = "false";
 
 "vVnBDJ" = "簡潔モード(中国大陸サーバのユーザーのみ有効)";
+
+"9ahsDT-B46RDD" = "There are ${count} options matching ‘回满时间’.";
+
+"9ahsDT-KNNnPc" = "There are ${count} options matching ‘环状’.";
+
+"9ahsDT-dM0PI2" = "There are ${count} options matching ‘倒计时’.";
+
+"9ahsDT-tQcha2" = "There are ${count} options matching ‘默认’.";
+
+"B46RDD" = "回復時間";
+
+"J4NStK" = "樹脂表示スタイル";
+
+"KNNnPc" = "リングスタイル";
+
+"dM0PI2" = "カウントダウン";
+
+"fvGuTG" = "自動ローテーションはレジンウィジェットスタイルを使用";
+
+"q86NGe-B46RDD" = "Just to confirm, you wanted ‘回满时间’?";
+
+"q86NGe-KNNnPc" = "Just to confirm, you wanted ‘环状’?";
+
+"q86NGe-dM0PI2" = "Just to confirm, you wanted ‘倒计时’?";
+
+"q86NGe-tQcha2" = "Just to confirm, you wanted ‘默认’?";
+
+"tQcha2" = "デフォルト";
+
 

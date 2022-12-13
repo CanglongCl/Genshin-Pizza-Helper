@@ -39,11 +39,6 @@ class AccountConfigurationModel {
         
         container.viewContext.refreshAllObjects()
         
-        // 尝试从UserDefault迁移数据
-        if fetchAccountConfigs().isEmpty {
-            migrateDataFromUserDefault()
-        }
-        
     }
     
     func fetchAccountConfigs() -> [AccountConfiguration] {
@@ -85,28 +80,4 @@ class AccountConfigurationModel {
             print("ERROR SAVING. \(error.localizedDescription)")
         }
     }
-    
-    fileprivate func migrateDataFromUserDefault() {
-        // 迁移数据UserDefault
-        if let userDefaults = UserDefaults(suiteName: "group.GenshinPizzaHelper") {
-            if let name = userDefaults.string(forKey: "accountName"),
-               let uid = userDefaults.string(forKey: "uid"),
-               let cookie = userDefaults.string(forKey: "cookie"),
-               var serverName = userDefaults.string(forKey: "server") {
-                // 以上：如果UserDefault有存账号
-                
-                if serverName == "国服" { serverName = "天空岛"}
-                if serverName == "B服" { serverName = "世界树" }
-                
-                addAccount(name: name, uid: uid, cookie: cookie, server: Server(rawValue: serverName)!)
-                
-                userDefaults.removeObject(forKey: "accountName")
-                userDefaults.removeObject(forKey: "uid")
-                userDefaults.removeObject(forKey: "cookie")
-                userDefaults.removeObject(forKey: "server")
-            }
-        }
-    }
-
-    
 }

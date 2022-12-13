@@ -1,0 +1,193 @@
+"1Ev2Th-7Mpxy7" = "Just to confirm, you wanted 『（未知）』?";
+
+"1Ev2Th-Az9Qxm" = "Just to confirm, you wanted 『完成後不顯示』?";
+
+"1Ev2Th-TDccRa" = "Just to confirm, you wanted 『始終不顯示』?";
+
+"1Ev2Th-lMTFKb" = "Just to confirm, you wanted 『始終顯示』?";
+
+"2yWIH0" = "（未知）";
+
+"3m73ML" = "（未知）";
+
+"6LTnsO" = "false";
+
+"7Mpxy7" = "（未知）";
+
+"811dFy" = "true";
+
+"81ss5Y" = "全部完成時";
+
+"9W1NzG" = "true";
+
+"Az9Qxm" = "完成後不顯示";
+
+"DKesAN" = "完成所需時間";
+
+"DQpiCm" = "展示周本折扣";
+
+"EnqoJ9" = "帳號";
+
+"Jbahdk" = "false";
+
+"K2iJCd" = "顯示今日材料（僅大尺寸）";
+
+"MVmO5f" = "顯示參量質變儀";
+
+"NEV35Z" = "正在探索人數";
+
+"NI3XnI" = "為你的小組件選擇顯示的帳號";
+
+"P3fcKK" = "為你的小組件選擇顯示的帳號";
+
+"P9Zjkv" = "true";
+
+"PLml4M" = "Weekly Bosses Showing Method";
+
+"PS8etl" = "是";
+
+"QGKioO" = "簡潔模式（僅國服用户）";
+
+"TDccRa" = "始終不顯示";
+
+"TYuPZZ" = "帳號";
+
+"TlVSDK" = "false";
+
+"XXexIV" = "展示參量質變儀";
+
+"a0FhAC-9W1NzG" = "There are ${count} options matching 『true』.";
+
+"a0FhAC-Jbahdk" = "There are ${count} options matching 『false』.";
+
+"a0FhAC-i8VQT9" = "There are ${count} options matching 『true』.";
+
+"a0FhAC-vl1bDD" = "There are ${count} options matching 『false』.";
+
+"a5PB3w" = "下一個完成時";
+
+"cjQ7ix-3m73ML" = "Just to confirm, you wanted 『（未知）』?";
+
+"cjQ7ix-DKesAN" = "Just to confirm, you wanted 『完成所需時間』?";
+
+"cjQ7ix-NEV35Z" = "Just to confirm, you wanted 『正在探索人數』?";
+
+"cjQ7ix-vFlGnC" = "Just to confirm, you wanted 『完成時間點』?";
+
+"d0PsaK" = "true";
+
+"d7jH4f-7Mpxy7" = "There are ${count} options matching 『（未知）』.";
+
+"d7jH4f-Az9Qxm" = "There are ${count} options matching 『完成後不顯示』.";
+
+"d7jH4f-TDccRa" = "There are ${count} options matching 『始終不顯示』.";
+
+"d7jH4f-lMTFKb" = "There are ${count} options matching 『始終顯示』.";
+
+"dA3Ajr" = "true";
+
+"dUyzRX" = "派遣探索展示方式";
+
+"e0kZEQ-2yWIH0" = "Just to confirm, you wanted 『（未知）』?";
+
+"e0kZEQ-81ss5Y" = "Just to confirm, you wanted 『全部完成時』?";
+
+"e0kZEQ-a5PB3w" = "Just to confirm, you wanted 『下一個完成時』?";
+
+"enBbLR" = "帳號";
+
+"f8OJzI" = "小組件背景";
+
+"fYQAf4" = "Expedition Notice Method";
+
+"gknWkx" = "隨機背景";
+
+"gxv19W" = "是";
+
+"hT68r4" = "周本信息展示方式";
+
+"i8VQT9" = "true";
+
+"k2M7XL" = "Expedition Showing Method";
+
+"ktBsgM" = "true";
+
+"kvvRzi" = "簡潔模式（僅國服用户）";
+
+"l4a3No-2yWIH0" = "There are ${count} options matching 『（未知）』.";
+
+"l4a3No-81ss5Y" = "There are ${count} options matching 『全部完成時』.";
+
+"l4a3No-a5PB3w" = "There are ${count} options matching 『下一個完成時』.";
+
+"l8vjWP" = "false";
+
+"lMTFKb" = "始終顯示";
+
+"lbRsap" = "探索派遣提醒於";
+
+"ll3vKn" = "false";
+
+"mKzz1P" = "使用深色模式（跟隨系統）";
+
+"mRXrdK" = "否";
+
+"ppnCJD" = "否";
+
+"qijLJm" = "帳號名稱";
+
+"rfBAEx-3m73ML" = "There are ${count} options matching 『（未知）』.";
+
+"rfBAEx-DKesAN" = "There are ${count} options matching 『完成所需時間』.";
+
+"rfBAEx-NEV35Z" = "There are ${count} options matching 『正在探索人數』.";
+
+"rfBAEx-vFlGnC" = "There are ${count} options matching 『完成時間點』.";
+
+"sWpemX" = "選擇帳號";
+
+"tBnBc9" = "false";
+
+"vAR6GW" = "選擇帳號";
+
+"vFlGnC" = "完成時間點";
+
+"vK3j6C" = "背景";
+
+"vVnBDJ" = "簡潔模式（僅國服用户）";
+
+"vl1bDD" = "false";
+
+"yjs09O" = "選擇賬號及其他配置";
+
+"zQrKVi" = "為你的小組件選擇顯示的帳號";
+
+"9ahsDT-B46RDD" = "There are ${count} options matching ‘回满时间’.";
+
+"9ahsDT-KNNnPc" = "There are ${count} options matching ‘环状’.";
+
+"9ahsDT-dM0PI2" = "There are ${count} options matching ‘倒计时’.";
+
+"9ahsDT-tQcha2" = "There are ${count} options matching ‘默认’.";
+
+"B46RDD" = "回滿時間";
+
+"J4NStK" = "樹脂展示樣式";
+
+"KNNnPc" = "環狀";
+
+"dM0PI2" = "倒計時";
+
+"fvGuTG" = "Auto Rotation Using Resin Widget Style";
+
+"q86NGe-B46RDD" = "Just to confirm, you wanted ‘回满时间’?";
+
+"q86NGe-KNNnPc" = "Just to confirm, you wanted ‘环状’?";
+
+"q86NGe-dM0PI2" = "Just to confirm, you wanted ‘倒计时’?";
+
+"q86NGe-tQcha2" = "Just to confirm, you wanted ‘默认’?";
+
+"tQcha2" = "默認";
+
+

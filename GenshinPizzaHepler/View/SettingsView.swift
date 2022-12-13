@@ -19,8 +19,6 @@ struct SettingsView: View {
 
     @State var isWidgetTipsSheetShow: Bool = false
 
-    @State var isLanguageSettingHintShow: Bool = false
-
     var body: some View {
         NavigationView {
             List {
@@ -50,6 +48,25 @@ struct SettingsView: View {
                     }
                 }
 
+                Section {
+                    let url: String = {
+                        switch Bundle.main.preferredLocalizations.first {
+                        case "zh-Hans", "zh-Hant", "zh-HK":
+                            return "http://ophelper.top/static/faq.html"
+                        default:
+                            return "http://ophelper.top/static/faq_en.html"
+                        }
+                    }()
+                    NavigationLink(destination: WebBroswerView(url: url).navigationTitle("FAQ").navigationBarTitleDisplayMode(.inline)) {
+                        Label("常见使用问题（FAQ）", systemImage: "person.fill.questionmark")
+                    }
+                    #if DEBUG
+                    Button("debug") {
+                        UserNotificationCenter.shared.printAllNotificationRequest()
+                    }
+                    #endif
+                }
+
                 // 小组件相关设置
                 NavigationLink("小组件设置", destination: { WidgetSettingView() })
 
@@ -71,7 +88,7 @@ struct SettingsView: View {
 
                 Section {
                     Button {
-                        isLanguageSettingHintShow = true
+                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                     } label: {
                         Label {
                             Text("偏好语言")
@@ -89,9 +106,6 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    NavigationLink(destination: WebBroswerView(url: "http://ophelper.top/static/faq.html").navigationTitle("FAQ").navigationBarTitleDisplayMode(.inline)) {
-                        Text("常见使用问题（FAQ）")
-                    }
                     NavigationLink(destination: GuideVideoLinkView()) {
                         Text("App介绍视频")
                     }
@@ -110,16 +124,6 @@ struct SettingsView: View {
         .navigationViewStyle(.stack)
         .sheet(isPresented: $isWidgetTipsSheetShow) {
             WidgetTipsView(isSheetShow: $isWidgetTipsSheetShow)
-        }
-        .alert(isPresented: $isLanguageSettingHintShow) {
-            // 这部分不需要本地化
-            Alert(
-                title: Text("Before set the language..."),
-                message: Text("If you cannot find \"PREFERRED LANGUAGE\" in the destination, add one of supported languages in your phone's [Setting] -> [General] -> [Language & Region] first. \nSupported Languages: Simplified Chinese, English, Japanese, French"),
-                primaryButton: .default(Text("OK"), action: {
-                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
-                }),
-                secondaryButton: .cancel())
         }
     }
 }

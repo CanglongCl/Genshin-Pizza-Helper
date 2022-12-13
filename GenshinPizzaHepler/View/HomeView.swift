@@ -20,6 +20,26 @@ struct HomeView: View {
         NavigationView {
             ScrollView {
                 VStack {
+                    // MARK: - 今日材料
+                    InAppMaterialNavigator()
+                        .onChange(of: scenePhase, perform: { newPhase in
+                            switch newPhase {
+                            case .active:
+                                getCurrentEvent()
+                            default:
+                                break
+                            }
+                        })
+                        .onAppear {
+                            if eventContents.isEmpty {
+                                getCurrentEvent()
+                            }
+                        }
+                        .padding(.bottom)
+
+                    // MARK: - 当前活动
+                    CurrentEventNavigator(eventContents: $eventContents)
+                        .padding(.bottom)
                     if viewModel.accounts.isEmpty {
                         NavigationLink(destination: AddAccountView()) {
                             Label("请先添加帐号", systemImage: "plus.circle")
@@ -29,27 +49,6 @@ struct HomeView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                         .padding(.top, 30)
                     } else {
-                        // MARK: - 今日材料
-                        InAppMaterialNavigator()
-                            .onChange(of: scenePhase, perform: { newPhase in
-                                switch newPhase {
-                                case .active:
-                                    getCurrentEvent()
-                                default:
-                                    break
-                                }
-                            })
-                            .onAppear {
-                                if eventContents.isEmpty {
-                                    getCurrentEvent()
-                                }
-                            }
-                            .padding(.bottom)
-
-                        // MARK: - 当前活动
-                        CurrentEventNavigator(eventContents: $eventContents)
-                            .padding(.bottom)
-
                         // MARK: - 账号信息
                         AccountInfoCards(animation: animation)
                     }
