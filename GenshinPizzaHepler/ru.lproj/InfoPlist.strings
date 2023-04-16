@@ -1,0 +1,12 @@
+/*
+  InfoPlist.strings
+  GenshinPizzaHelper
+
+  Created by Bill Haku on 2022/8/23.
+
+*/
+
+"CFBundleDisplayName" = "GI Pizza";
+"NSPhotoLibraryAddUsageDescription" = "Пожалуйста, разрешите сохранять скриншоты";
+"NSCameraUsageDescription" = "Если вы хотите использовать камеру на сайте HoYoLAB и загружать фотографии, пожалуйста, разрешите использовать камеру";
+"CFBundleName" = "GI Pizza";

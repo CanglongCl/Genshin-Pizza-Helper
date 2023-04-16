@@ -11,8 +11,11 @@ import SwiftUI
 import WidgetKit
 #endif
 
+// MARK: - AppBlockBackgroundView
+
 struct AppBlockBackgroundView: View {
-    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    @Environment(\.colorScheme)
+    var colorScheme: ColorScheme
     let background: WidgetBackground
     let darkModeOn: Bool
 
@@ -21,9 +24,13 @@ struct AppBlockBackgroundView: View {
     var backgroundImageName: String? { background.imageName }
 
     var body: some View {
-        ZStack{
+        ZStack {
             if !backgroundColors.isEmpty {
-                LinearGradient(colors: backgroundColors, startPoint: .topLeading, endPoint: .bottomTrailing)
+                LinearGradient(
+                    colors: backgroundColors,
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
             }
 
             if let backgroundIconName = backgroundIconName {
@@ -43,11 +50,10 @@ struct AppBlockBackgroundView: View {
                     .scaledToFill()
             }
 
-            if colorScheme == .dark && darkModeOn {
+            if colorScheme == .dark, darkModeOn {
                 Color.black
                     .opacity(0.3)
             }
         }
     }
 }
-

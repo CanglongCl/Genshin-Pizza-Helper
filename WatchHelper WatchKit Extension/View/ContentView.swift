@@ -8,10 +8,15 @@
 import SwiftUI
 import WidgetKit
 
+
+// MARK: - ContentView
+
 struct ContentView: View {
-    @EnvironmentObject var viewModel: ViewModel
-    @Environment(\.scenePhase) var scenePhase
-    
+    @EnvironmentObject
+    var viewModel: ViewModel
+    @Environment(\.scenePhase)
+    var scenePhase
+
     var body: some View {
         NavigationView {
             if viewModel.accounts.isEmpty {
@@ -24,13 +29,34 @@ struct ContentView: View {
                 }
             } else {
                 List {
-                    ForEach($viewModel.accounts, id: \.config.uuid) { $account in
+                    ForEach(
+                        $viewModel.accounts,
+                        id: \.config.uuid
+                    ) { $account in
                         if account.result != nil {
-                            NavigationLink(destination: WatchAccountDetailView(userData: account.result!, accountName: account.config.name, uid: account.config.uid)) {
-                                WatchGameInfoBlock(userData: account.result!, accountName: account.config.name, uid: account.config.uid, fetchComplete: account.fetchComplete, background: account.background)
+                            NavigationLink(destination: WatchAccountDetailView(
+                                userData: account.result!,
+                                accountName: account.config.name,
+                                uid: account.config.uid
+                            )) {
+                                WatchGameInfoBlock(
+                                    userData: account.result!,
+                                    accountName: account.config.name,
+                                    uid: account.config.uid,
+                                    fetchComplete: account.fetchComplete,
+                                    background: account.background
+                                )
                             }
-                            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                            .listRowInsets(.init(
+                                top: 0,
+                                leading: 0,
+                                bottom: 0,
+                                trailing: 0
+                            ))
+                            .clipShape(RoundedRectangle(
+                                cornerRadius: 10,
+                                style: .continuous
+                            ))
                             .listRowBackground(Color.white.opacity(0))
                         } else {
                             ProgressView()
@@ -63,11 +89,12 @@ struct ContentView: View {
             }
         })
         .onAppear {
-            UserDefaults(suiteName: "group.GenshinPizzaHelper")?.register(defaults: [
-                "lockscreenWidgetSyncFrequencyInMinute" : 60,
-                "homeCoinRefreshFrequencyInHour": 30,
-                "watchWidgetUseSimplifiedMode": true
-            ])
+            UserDefaults(suiteName: "group.GenshinPizzaHelper")?
+                .register(defaults: [
+                    "lockscreenWidgetSyncFrequencyInMinute": 60,
+                    "homeCoinRefreshFrequencyInHour": 30,
+                    "watchWidgetUseSimplifiedMode": true,
+                ])
         }
     }
 }

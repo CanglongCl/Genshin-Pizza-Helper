@@ -7,9 +7,13 @@
 
 import SwiftUI
 
-
 struct ShareSheet: UIViewControllerRepresentable {
-    typealias Callback = (_ activityType: UIActivity.ActivityType?, _ completed: Bool, _ returnedItems: [Any]?, _ error: Error?) -> Void
+    typealias Callback = (
+        _ activityType: UIActivity.ActivityType?,
+        _ completed: Bool,
+        _ returnedItems: [Any]?,
+        _ error: Error?
+    ) -> ()
 
     let activityItems: [Any]
     let applicationActivities: [UIActivity]? = nil
@@ -19,14 +23,17 @@ struct ShareSheet: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIActivityViewController {
         let controller = UIActivityViewController(
             activityItems: activityItems,
-            applicationActivities: applicationActivities)
+            applicationActivities: applicationActivities
+        )
         controller.excludedActivityTypes = excludedActivityTypes
         controller.completionWithItemsHandler = callback
         return controller
     }
 
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
+    func updateUIViewController(
+        _ uiViewController: UIActivityViewController,
+        context: Context
+    ) {
         // nothing to do here
     }
 }
-

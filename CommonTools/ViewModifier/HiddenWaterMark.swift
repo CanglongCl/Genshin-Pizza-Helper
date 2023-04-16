@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - HiddenWaterMark
+
 @available(iOS 15.0, *)
 struct HiddenWaterMark: ViewModifier {
     func body(content: Content) -> some View {
@@ -14,7 +16,10 @@ struct HiddenWaterMark: ViewModifier {
             Image("AppIconHD")
                 .resizable()
                 .scaledToFit()
-                .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
+                .clipShape(RoundedRectangle(
+                    cornerRadius: 5,
+                    style: .continuous
+                ))
             Text("披萨小助手").font(.footnote).bold()
         }
         .frame(maxWidth: 270, maxHeight: 20)

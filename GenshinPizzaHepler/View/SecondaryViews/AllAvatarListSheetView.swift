@@ -5,26 +5,34 @@
 //  Created by 戴藏龙 on 2022/10/22.
 //
 
+import HBMihoyoAPI
+import HBPizzaHelperAPI
 import SwiftUI
+
+// MARK: - AllAvatarListSheetView
 
 @available(iOS 15.0, *)
 struct AllAvatarListSheetView: View {
-    @EnvironmentObject var viewModel: ViewModel
-    @State var allAvatarInfo: AllAvatarDetailModel? = nil
-    @State private var allAvatarListDisplayType: AllAvatarListDisplayType = .all
+    @EnvironmentObject
+    var viewModel: ViewModel
+    @State
+    var allAvatarInfo: AllAvatarDetailModel?
+    @State
+    private var allAvatarListDisplayType: AllAvatarListDisplayType = .all
 
     let account: Account
 
-    @Binding var sheetType: ToolsView.SheetTypes?
+    @Binding
+    var sheetType: ToolsView.SheetTypes?
 
     var showingAvatars: [AllAvatarDetailModel.Avatar] {
         switch allAvatarListDisplayType {
         case .all:
             return allAvatarInfo?.avatars ?? []
         case ._4star:
-            return allAvatarInfo?.avatars.filter({$0.rarity == 4}) ?? []
+            return allAvatarInfo?.avatars.filter { $0.rarity == 4 } ?? []
         case ._5star:
-            return allAvatarInfo?.avatars.filter({$0.rarity == 5}) ?? []
+            return allAvatarInfo?.avatars.filter { $0.rarity == 5 } ?? []
         }
     }
 
@@ -33,12 +41,19 @@ struct AllAvatarListSheetView: View {
             List {
                 Section {
                     ForEach(showingAvatars, id: \.id) { avatar in
-                        AvatarListItem(avatar: avatar, charMap: viewModel.charMap)
+                        AvatarListItem(
+                            avatar: avatar,
+                            charMap: viewModel.charMap
+                        )
                     }
                 } header: {
                     VStack(alignment: .leading) {
-                        Text("共拥有\(allAvatarInfo.avatars.count)名角色，其中五星角色\(allAvatarInfo.avatars.filter{ $0.rarity == 5 }.count)名，四星角色\(allAvatarInfo.avatars.filter{ $0.rarity == 4 }.count)名。")
-                        Text("共获得\(goldNum(data: allAvatarInfo).allGold)金，其中角色\(goldNum(data: allAvatarInfo).charGold)金，武器\(goldNum(data: allAvatarInfo).weaponGold)金。（未统计旅行者和无人装备的五星武器）")
+                        Text(
+                            "共拥有\(allAvatarInfo.avatars.count)名角色，其中五星角色\(allAvatarInfo.avatars.filter { $0.rarity == 5 }.count)名，四星角色\(allAvatarInfo.avatars.filter { $0.rarity == 4 }.count)名。"
+                        )
+                        Text(
+                            "共获得\(goldNum(data: allAvatarInfo).allGold)金，其中角色\(goldNum(data: allAvatarInfo).charGold)金，武器\(goldNum(data: allAvatarInfo).weaponGold)金。（未统计旅行者和无人装备的五星武器）"
+                        )
                     }
                 }
                 .textCase(.none)
@@ -53,7 +68,10 @@ struct AllAvatarListSheetView: View {
                 }
                 ToolbarItemGroup(placement: .navigationBarLeading) {
                     Menu {
-                        ForEach(AllAvatarListDisplayType.allCases, id: \.rawValue) { choice in
+                        ForEach(
+                            AllAvatarListDisplayType.allCases,
+                            id: \.rawValue
+                        ) { choice in
                             Button(choice.rawValue.localized) {
                                 withAnimation {
                                     allAvatarListDisplayType = choice
@@ -65,18 +83,33 @@ struct AllAvatarListSheetView: View {
                     }
                 }
             }
-            .toolbarSavePhotoButtonInIOS16(title: "保存".localized, placement: .navigationBarLeading) {
-                AllAvatarListShareView(accountName: account.config.name!, showingAvatars: showingAvatars, charMap: viewModel.charMap)
-                    .environment(\.locale, .init(identifier: Locale.current.identifier))
+            .toolbarSavePhotoButtonInIOS16(
+                title: "保存".localized,
+                placement: .navigationBarLeading
+            ) {
+                AllAvatarListShareView(
+                    accountName: account.config.name!,
+                    showingAvatars: showingAvatars,
+                    charMap: viewModel.charMap
+                )
+                .environment(
+                    \.locale,
+                    .init(identifier: Locale.current.identifier)
+                )
             }
         } else {
             ProgressView()
                 .onAppear {
-                    API.Features.fetchAllAvatarInfos(region: account.config.server.region, serverID: account.config.server.id, uid: account.config.uid!, cookie: account.config.cookie!) { result in
+                    MihoyoAPI.fetchAllAvatarInfos(
+                        region: account.config.server.region,
+                        serverID: account.config.server.id,
+                        uid: account.config.uid!,
+                        cookie: account.config.cookie!
+                    ) { result in
                         switch result {
-                        case .success(let data):
-                            self.allAvatarInfo = data
-                        case .failure(_):
+                        case let .success(data):
+                            allAvatarInfo = data
+                        case .failure:
                             break
                         }
                     }
@@ -95,11 +128,12 @@ struct AllAvatarListSheetView: View {
 
     private enum AllAvatarListDisplayType: String, CaseIterable {
         case all = "全部角色"
-        case _5star = "5星角色"
-        case _4star = "4星角色"
+        case _5star = "五星角色"
+        case _4star = "四星角色"
     }
 
-    func goldNum(data: AllAvatarDetailModel) -> (allGold: Int, charGold: Int, weaponGold: Int) {
+    func goldNum(data: AllAvatarDetailModel)
+        -> (allGold: Int, charGold: Int, weaponGold: Int) {
         var charGold = 0
         var weaponGold = 0
         for avatar in data.avatars {
@@ -118,44 +152,37 @@ struct AllAvatarListSheetView: View {
     }
 }
 
+// MARK: - AvatarListItem
+
 @available(iOS 15.0, *)
 struct AvatarListItem: View {
     let avatar: AllAvatarDetailModel.Avatar
-    let charMap: [String : ENCharacterMap.Character]?
+    let charMap: [String: ENCharacterMap.Character]?
 
     var body: some View {
-        HStack {
+        HStack(spacing: 3) {
             ZStack(alignment: .bottomLeading) {
                 Group {
-                    if let charMap = charMap, let char = charMap["\(avatar.id)"] {
-                        EnkaWebIcon(iconString: char.iconString)
-                            .background(content: {
-                                if let charMap = charMap, let char = charMap["\(avatar.id)"] {
-                                    EnkaWebIcon(iconString: char.namecardIconString)
-                                        .scaledToFill()
-                                        .offset(x: -55/3)
-                                } else { EmptyView() }
-                            })
+                    if let char = charMap?["\(avatar.id)"] {
+                        char.decoratedIcon(55, cutTo: .head)
                     } else {
                         WebImage(urlStr: avatar.icon)
                     }
                 }
                 .frame(width: 55, height: 55)
                 .clipShape(Circle())
-                Image(systemName: "heart.fill")
-                    .overlay {
-                        Text("\(avatar.fetter)")
-                            .font(.caption2)
-                            .foregroundColor(.white)
-                    }
-                    .foregroundColor(Color(UIColor.darkGray))
-                    .blendMode(.hardLight)
             }
-            VStack (spacing: 3) {
-                HStack (alignment: .lastTextBaseline, spacing: 5) {
-                    Text(avatar.name)
+            .frame(width: 65, alignment: .leading)
+            .corneredTag(
+                varbatim: "♡\(avatar.fetter)",
+                alignment: .bottomTrailing,
+                enabled: !avatar.isProtagonist
+            )
+            VStack(spacing: 3) {
+                HStack(alignment: .lastTextBaseline, spacing: 5) {
+                    Text(avatar.nameCorrected)
                         .font(.system(size: 20, weight: .medium))
-//                        .fixedSize(horizontal: true, vertical: false)
+                        // .fixedSize(horizontal: true, vertical: false)
                         .minimumScaleFactor(0.5)
                         .lineLimit(1)
                     Spacer()
@@ -174,17 +201,28 @@ struct AvatarListItem: View {
                         .layoutPriority(1)
                         .fixedSize()
                 }
-                HStack (spacing: 0) {
+                HStack(spacing: 0) {
                     HStack(spacing: 0) {
                         ZStack {
-                            EnkaWebIcon(iconString: RankLevel(rawValue: avatar.weapon.rarity)?.squaredBackgroundIconString ?? "")
-                                .scaledToFit()
-                                .scaleEffect(1.1)
-                                .clipShape(Circle())
-                            if let iconString = URL(string: avatar.weapon.icon)?.lastPathComponent.split(separator: ".").first {
-                                EnkaWebIcon(iconString: String(iconString) + "_Awaken").scaledToFit()
+                            EnkaWebIcon(
+                                iconString: RankLevel(
+                                    rawValue: avatar
+                                        .weapon.rarity
+                                )?
+                                    .squaredBackgroundIconString ?? ""
+                            )
+                            .scaledToFit()
+                            .scaleEffect(1.1)
+                            .clipShape(Circle())
+                            if let iconString = URL(string: avatar.weapon.icon)?
+                                .lastPathComponent.split(separator: ".").first {
+                                EnkaWebIcon(
+                                    iconString: String(iconString) +
+                                        "_Awaken"
+                                ).scaledToFit()
                             } else {
-                                WebImage(urlStr: avatar.weapon.icon).scaledToFit()
+                                WebImage(urlStr: avatar.weapon.icon)
+                                    .scaledToFit()
                             }
                         }
                         .frame(width: 25, height: 25)
@@ -197,7 +235,10 @@ struct AvatarListItem: View {
                                 .padding(.horizontal, 5)
                                 .background(
                                     Capsule()
-                                        .foregroundColor(Color(UIColor.systemGray))
+                                        .foregroundColor(Color(
+                                            UIColor
+                                                .systemGray
+                                        ))
                                         .opacity(0.2)
                                 )
                         }
@@ -205,8 +246,10 @@ struct AvatarListItem: View {
                     Spacer()
                     ForEach(avatar.reliquaries, id: \.id) { reliquary in
                         Group {
-                            if let iconString = URL(string: reliquary.icon)?.lastPathComponent.split(separator: ".").first {
-                                EnkaWebIcon(iconString: String(iconString)).scaledToFit()
+                            if let iconString = URL(string: reliquary.icon)?
+                                .lastPathComponent.split(separator: ".").first {
+                                EnkaWebIcon(iconString: String(iconString))
+                                    .scaledToFit()
                             } else {
                                 WebImage(urlStr: reliquary.icon)
                             }
@@ -219,16 +262,21 @@ struct AvatarListItem: View {
     }
 }
 
+// MARK: - AllAvatarListShareView
+
 @available(iOS 15.0, *)
 private struct AllAvatarListShareView: View {
     let accountName: String
     let showingAvatars: [AllAvatarDetailModel.Avatar]
-    let charMap: [String : ENCharacterMap.Character]?
+    let charMap: [String: ENCharacterMap.Character]?
 
     var eachColumnAvatars: [[AllAvatarDetailModel.Avatar]] {
-        let chunkSize: Int = 16 // 每列的角色数
+        let chunkSize = 16 // 每列的角色数
         return stride(from: 0, to: showingAvatars.count, by: chunkSize).map {
-            Array(showingAvatars[$0..<min($0 + chunkSize, showingAvatars.count)])
+            Array(showingAvatars[
+                $0 ..<
+                    min($0 + chunkSize, showingAvatars.count)
+            ])
         }
     }
 
@@ -245,7 +293,10 @@ private struct AllAvatarListShareView: View {
                 ForEach(eachColumnAvatars, id: \.first!.id) { columnAvatars in
                     let view = VStack(alignment: .leading) {
                         ForEach(columnAvatars, id: \.id) { avatar in
-                            AvatarListItemShare(avatar: avatar, charMap: charMap)
+                            AvatarListItemShare(
+                                avatar: avatar,
+                                charMap: charMap
+                            )
                         }
                     }
                     if columnAvatars != eachColumnAvatars.last {
@@ -270,24 +321,19 @@ private struct AllAvatarListShareView: View {
     }
 }
 
+// MARK: - AvatarListItemShare
+
 @available(iOS 15.0, *)
 private struct AvatarListItemShare: View {
     let avatar: AllAvatarDetailModel.Avatar
-    let charMap: [String : ENCharacterMap.Character]?
+    let charMap: [String: ENCharacterMap.Character]?
 
     var body: some View {
         HStack {
             ZStack(alignment: .bottomLeading) {
                 Group {
-                    if let charMap = charMap, let char = charMap["\(avatar.id)"] {
-                        EnkaWebIcon(iconString: char.iconString)
-                            .background(content: {
-                                if let charMap = charMap, let char = charMap["\(avatar.id)"] {
-                                    EnkaWebIcon(iconString: char.namecardIconString)
-                                        .scaledToFill()
-                                        .offset(x: -55/3)
-                                } else { EmptyView() }
-                            })
+                    if let char = charMap?["\(avatar.id)"] {
+                        char.decoratedIcon(55, cutTo: .head)
                     } else {
                         WebImage(urlStr: avatar.icon)
                     }
@@ -305,11 +351,11 @@ private struct AvatarListItemShare: View {
             }
             .layoutPriority(2)
             VStack(alignment: .leading, spacing: 3) {
-                HStack (alignment: .lastTextBaseline, spacing: 5) {
-                    Text(avatar.name)
+                HStack(alignment: .lastTextBaseline, spacing: 5) {
+                    Text(avatar.nameCorrected)
                         .font(.system(size: 20, weight: .medium))
-//                        .fixedSize(horizontal: true, vertical: false)
-//                        .minimumScaleFactor(0.7)
+                        // .fixedSize(horizontal: true, vertical: false)
+                        // .minimumScaleFactor(0.7)
                         .lineLimit(1)
                         .layoutPriority(1)
                     Spacer()
@@ -328,17 +374,28 @@ private struct AvatarListItemShare: View {
                         .layoutPriority(1)
                         .fixedSize()
                 }
-                HStack (spacing: 0) {
+                HStack(spacing: 0) {
                     HStack(spacing: 0) {
                         ZStack {
-                            EnkaWebIcon(iconString: RankLevel(rawValue: avatar.weapon.rarity)?.squaredBackgroundIconString ?? "")
-                                .scaledToFit()
-                                .scaleEffect(1.1)
-                                .clipShape(Circle())
-                            if let iconString = URL(string: avatar.weapon.icon)?.lastPathComponent.split(separator: ".").first {
-                                EnkaWebIcon(iconString: String(iconString) + "_Awaken").scaledToFit()
+                            EnkaWebIcon(
+                                iconString: RankLevel(
+                                    rawValue: avatar
+                                        .weapon.rarity
+                                )?
+                                    .squaredBackgroundIconString ?? ""
+                            )
+                            .scaledToFit()
+                            .scaleEffect(1.1)
+                            .clipShape(Circle())
+                            if let iconString = URL(string: avatar.weapon.icon)?
+                                .lastPathComponent.split(separator: ".").first {
+                                EnkaWebIcon(
+                                    iconString: String(iconString) +
+                                        "_Awaken"
+                                ).scaledToFit()
                             } else {
-                                WebImage(urlStr: avatar.weapon.icon).scaledToFit()
+                                WebImage(urlStr: avatar.weapon.icon)
+                                    .scaledToFit()
                             }
                         }
                         .frame(width: 25, height: 25)
@@ -352,7 +409,10 @@ private struct AvatarListItemShare: View {
                                 .padding(.horizontal, 5)
                                 .background(
                                     Capsule()
-                                        .foregroundColor(Color(UIColor.systemGray))
+                                        .foregroundColor(Color(
+                                            UIColor
+                                                .systemGray
+                                        ))
                                         .opacity(0.2)
                                 )
                                 .fixedSize()
@@ -361,8 +421,10 @@ private struct AvatarListItemShare: View {
                     Spacer()
                     ForEach(avatar.reliquaries, id: \.id) { reliquary in
                         Group {
-                            if let iconString = URL(string: reliquary.icon)?.lastPathComponent.split(separator: ".").first {
-                                EnkaWebIcon(iconString: String(iconString)).scaledToFit()
+                            if let iconString = URL(string: reliquary.icon)?
+                                .lastPathComponent.split(separator: ".").first {
+                                EnkaWebIcon(iconString: String(iconString))
+                                    .scaledToFit()
                             } else {
                                 WebImage(urlStr: reliquary.icon)
                             }
@@ -371,6 +433,20 @@ private struct AvatarListItemShare: View {
                     }
                 }
             }
+        }
+    }
+}
+
+// MARK: - AllAvatarDetailModel.Avatar.nameCorrected Extension.
+
+extension AllAvatarDetailModel.Avatar {
+    /// 经过错字订正处理的角色姓名
+    fileprivate var nameCorrected: String {
+        switch id {
+        case 10000005: return "空".localizedWithFix
+        case 10000007: return "荧".localizedWithFix
+        case 10000075: return "流浪者".localizedWithFix
+        default: return name.localizedWithFix
         }
     }
 }

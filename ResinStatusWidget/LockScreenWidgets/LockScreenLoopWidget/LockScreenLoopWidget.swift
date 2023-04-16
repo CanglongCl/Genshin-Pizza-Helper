@@ -5,31 +5,83 @@
 //  Created by 戴藏龙 on 2022/9/12.
 //
 
+import HBMihoyoAPI
 import SwiftUI
 import WidgetKit
+
+// MARK: - LockScreenLoopWidget
 
 @available(iOSApplicationExtension 16.0, *)
 struct LockScreenLoopWidget: Widget {
     let kind: String = "LockScreenLoopWidget"
 
     var body: some WidgetConfiguration {
-        IntentConfiguration(kind: kind, intent: SelectAccountAndShowWhichInfoIntent.self, provider: LockScreenLoopWidgetProvider(recommendationsTag: "的智能轮换信息")) { entry in
+        IntentConfiguration(
+            kind: kind,
+            intent: SelectAccountAndShowWhichInfoIntent.self,
+            provider: LockScreenLoopWidgetProvider(
+                recommendationsTag: "的智能轮换信息"
+            )
+        ) { entry in
             LockScreenLoopWidgetView(entry: entry)
         }
         .configurationDisplayName("自动轮换")
         .description("自动展示你最需要的信息")
         #if os(watchOS)
-        .supportedFamilies([.accessoryCircular, .accessoryCorner])
+            .supportedFamilies([.accessoryCircular, .accessoryCorner])
         #else
-        .supportedFamilies([.accessoryCircular])
+            .supportedFamilies([.accessoryCircular])
         #endif
     }
 }
 
-@available (iOS 16.0, *)
+// MARK: - LockScreenLoopWidgetView
+
+@available(iOS 16.0, *)
 struct LockScreenLoopWidgetView: View {
-    @Environment(\.widgetFamily) var family: WidgetFamily
+    @Environment(\.widgetFamily)
+    var family: WidgetFamily
     let entry: LockScreenLoopWidgetProvider.Entry
+    var body: some View {
+        Group {
+            switch dataKind {
+            case let .normal(result):
+                switch family {
+                #if os(watchOS)
+                case .accessoryCorner:
+                    LockScreenLoopWidgetCorner(result: result)
+                #endif
+                case .accessoryCircular:
+                    LockScreenLoopWidgetCircular(
+                        result: result,
+                        showWeeklyBosses: showWeeklyBosses,
+                        showTransformer: showTransformer,
+                        resinStyle: resinStyle
+                    )
+                default:
+                    EmptyView()
+                }
+            case let .simplified(result):
+                switch family {
+                #if os(watchOS)
+                case .accessoryCorner:
+                    LockScreenLoopWidgetCorner(result: result)
+                #endif
+                case .accessoryCircular:
+                    SimplifiedLockScreenLoopWidgetCircular(
+                        result: result,
+                        showWeeklyBosses: showWeeklyBosses,
+                        showTransformer: showTransformer,
+                        resinStyle: resinStyle
+                    )
+                default:
+                    EmptyView()
+                }
+            }
+        }
+        .widgetURL(url)
+    }
+
     var dataKind: WidgetDataKind { entry.widgetDataKind }
     var accountName: String? { entry.accountName }
     var showWeeklyBosses: Bool { entry.showWeeklyBosses }
@@ -42,60 +94,34 @@ struct LockScreenLoopWidgetView: View {
             components.scheme = "ophelperwidget"
             components.host = "accountSetting"
             components.queryItems = [
-                .init(name: "accountUUIDString", value: entry.accountUUIDString)
+                .init(
+                    name: "accountUUIDString",
+                    value: entry.accountUUIDString
+                ),
             ]
             return components.url!
         }()
 
         switch entry.widgetDataKind {
-        case .normal(let result):
+        case let .normal(result):
             switch result {
-            case .success(_):
+            case .success:
                 return nil
-            case .failure(_):
+            case .failure:
                 return errorURL
             }
-        case .simplified(let result):
+        case let .simplified(result):
             switch result {
-            case .success(_):
+            case .success:
                 return nil
-            case .failure(_):
+            case .failure:
                 return errorURL
             }
         }
-    }
-
-    var body: some View {
-        Group {
-            switch dataKind {
-            case .normal(let result):
-                switch family {
-                #if os(watchOS)
-                case .accessoryCorner:
-                    LockScreenLoopWidgetCorner(result: result)
-                #endif
-                case .accessoryCircular:
-                    LockScreenLoopWidgetCircular(result: result, showWeeklyBosses: showWeeklyBosses, showTransformer: showTransformer, resinStyle: resinStyle)
-                default:
-                    EmptyView()
-                }
-            case .simplified(let result):
-                switch family {
-                #if os(watchOS)
-                case .accessoryCorner:
-                    LockScreenLoopWidgetCorner(result: result)
-                #endif
-                case .accessoryCircular:
-                    SimplifiedLockScreenLoopWidgetCircular(result: result, showWeeklyBosses: showWeeklyBosses, showTransformer: showTransformer, resinStyle: resinStyle)
-                default:
-                    EmptyView()
-                }
-            }
-        }
-        .widgetURL(url)
-
     }
 }
+
+// MARK: - LockScreenLoopWidgetType
 
 enum LockScreenLoopWidgetType {
     case resin
@@ -105,9 +131,11 @@ enum LockScreenLoopWidgetType {
     case transformer
     case weeklyBosses
 
+    // MARK: Internal
+
     static func autoChoose(result: FetchResult) -> LockScreenLoopWidgetType {
         switch result {
-        case .success(let data):
+        case let .success(data):
             if data.homeCoinInfo.score > data.resinInfo.score {
                 return .homeCoin
             } else if data.expeditionInfo.score > data.resinInfo.score {
@@ -121,11 +149,13 @@ enum LockScreenLoopWidgetType {
             } else {
                 return .resin
             }
-        case .failure(_) :
+        case .failure:
             return .resin
         }
     }
 }
+
+// MARK: - SimplifiedLockScreenLoopWidgetType
 
 enum SimplifiedLockScreenLoopWidgetType {
     case resin
@@ -133,9 +163,12 @@ enum SimplifiedLockScreenLoopWidgetType {
     case dailyTask
     case homeCoin
 
-    static func autoChoose<T>(result: SimplifiedUserDataContainerResult<T>) -> Self where T: SimplifiedUserDataContainer {
+    // MARK: Internal
+
+    static func autoChoose<T>(result: SimplifiedUserDataContainerResult<T>)
+        -> Self where T: SimplifiedUserDataContainer {
         switch result {
-        case .success(let data):
+        case let .success(data):
             if data.homeCoinInfo.score > data.resinInfo.score {
                 return .homeCoin
             } else if data.expeditionInfo.score > data.resinInfo.score {
@@ -145,7 +178,7 @@ enum SimplifiedLockScreenLoopWidgetType {
             } else {
                 return .resin
             }
-        case .failure(_) :
+        case .failure:
             return .resin
         }
     }

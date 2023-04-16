@@ -5,25 +5,14 @@
 //  Created by 戴藏龙 on 2022/7/19.
 //
 
-import SwiftUI
 import StoreKit
+import SwiftUI
+
+// MARK: - GenshinPizzaHeplerApp
 
 @main
 struct GenshinPizzaHeplerApp: App {
-    let viewModel: ViewModel = .shared
-    #if !os(watchOS)
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    #endif
-    @StateObject var storeManager = StoreManager()
-
-    let productIDs = [
-            "Canglong.GenshinPizzaHepler.IAP.6",
-            "Canglong.GenshinPizzaHepler.IAP.30",
-            "Canglong.GenshinPizzaHepler.IAP.98",
-            "Canglong.GenshinPizzaHepler.IAP.198",
-            "Canglong.GenshinPizzaHepler.IAP.328",
-            "Canglong.GenshinPizzaHepler.IAP.648"
-        ]
+    // MARK: Lifecycle
 
     init() {
 //        let buildVersion = Bundle.main.infoDictionary!["CFBundleVersion"] as! Int
@@ -41,7 +30,26 @@ struct GenshinPizzaHeplerApp: App {
         UserNotificationCenter.shared.askPermission()
         #endif
     }
-    
+
+    // MARK: Internal
+
+    let viewModel: ViewModel = .shared
+    #if !os(watchOS)
+    @UIApplicationDelegateAdaptor(AppDelegate.self)
+    var appDelegate
+    #endif
+    @StateObject
+    var storeManager = StoreManager()
+
+    let productIDs = [
+        "Canglong.GenshinPizzaHepler.IAP.6",
+        "Canglong.GenshinPizzaHepler.IAP.30",
+        "Canglong.GenshinPizzaHepler.IAP.98",
+        "Canglong.GenshinPizzaHepler.IAP.198",
+        "Canglong.GenshinPizzaHepler.IAP.328",
+        "Canglong.GenshinPizzaHepler.IAP.648",
+    ]
+
     var body: some Scene {
         WindowGroup {
             #if os(watchOS)

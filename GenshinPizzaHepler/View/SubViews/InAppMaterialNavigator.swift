@@ -8,20 +8,31 @@
 import SwiftUI
 
 struct InAppMaterialNavigator: View {
-    @State var showingWeekday: MaterialWeekday = .today()
-    var talentMaterialProvider: TalentMaterialProvider { .init(weekday: showingWeekday) }
-    var weaponMaterialProvider: WeaponMaterialProvider { .init(weekday: showingWeekday) }
-    @Environment(\.scenePhase) var scenePhase
+    @State
+    var showingWeekday: MaterialWeekday = .today()
+    @Environment(\.scenePhase)
+    var scenePhase
 
     let uuid = UUID()
 
-    @State var showMaterialDetail = false
+    @State
+    var showMaterialDetail = false
 
-    @State var showRelatedDetailOfMaterial: WeaponOrTalentMaterial?
+    @State
+    var showRelatedDetailOfMaterial: WeaponOrTalentMaterial?
 
-    @Namespace var animationMaterial
+    @Namespace
+    var animationMaterial
 
     let imageWidth = CGFloat(50)
+
+    var talentMaterialProvider: TalentMaterialProvider {
+        .init(weekday: showingWeekday)
+    }
+
+    var weaponMaterialProvider: WeaponMaterialProvider {
+        .init(weekday: showingWeekday)
+    }
 
     var body: some View {
         VStack {
@@ -30,7 +41,10 @@ struct InAppMaterialNavigator: View {
                     Group {
                         if showMaterialDetail {
                             Menu(showingWeekday.describe()) {
-                                ForEach(MaterialWeekday.allCases, id: \.hashValue) { weekday in
+                                ForEach(
+                                    MaterialWeekday.allCases,
+                                    id: \.hashValue
+                                ) { weekday in
                                     Button(weekday.describe()) {
                                         withAnimation {
                                             showingWeekday = weekday
@@ -55,7 +69,11 @@ struct InAppMaterialNavigator: View {
                     } else {
                         Button("收起") {
                             simpleTaptic(type: .light)
-                            withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 1.0, blendDuration: 0)) {
+                            withAnimation(.interactiveSpring(
+                                response: 0.25,
+                                dampingFraction: 1.0,
+                                blendDuration: 0
+                            )) {
                                 showingWeekday = .today()
                                 showRelatedDetailOfMaterial = nil
                                 showMaterialDetail = false
@@ -66,8 +84,14 @@ struct InAppMaterialNavigator: View {
                         .padding(.bottom, -10)
                     }
                     Image(systemName: "chevron.forward")
-                        .rotationEffect(Angle(degrees: showMaterialDetail ? 90 : 0), anchor: .center)
-                        .foregroundColor(showMaterialDetail ? .accentColor : .secondary)
+                        .rotationEffect(
+                            Angle(degrees: showMaterialDetail ? 90 : 0),
+                            anchor: .center
+                        )
+                        .foregroundColor(
+                            showMaterialDetail ? .accentColor :
+                                .secondary
+                        )
                         .padding(.trailing, 25)
                         .font(.caption)
                         .padding(.top)
@@ -76,7 +100,10 @@ struct InAppMaterialNavigator: View {
                     Group {
                         if showMaterialDetail {
                             Menu(showingWeekday.describe()) {
-                                ForEach(MaterialWeekday.allCases, id: \.hashValue) { weekday in
+                                ForEach(
+                                    MaterialWeekday.allCases,
+                                    id: \.hashValue
+                                ) { weekday in
                                     Button(weekday.describe()) {
                                         showingWeekday = weekday
                                     }
@@ -91,8 +118,8 @@ struct InAppMaterialNavigator: View {
                     .padding(.leading, 25)
                     Spacer()
                     Group {
-                        if showRelatedDetailOfMaterial != nil { Text("左右滑动查看所有角色") }
-                        else { Text("所有材料均可获取") }
+                        if showRelatedDetailOfMaterial !=
+                            nil { Text("左右滑动查看所有角色") } else { Text("所有材料均可获取") }
                     }
                     .multilineTextAlignment(.center)
                     .font(.caption)
@@ -105,7 +132,11 @@ struct InAppMaterialNavigator: View {
                     } else {
                         Button("收起") {
                             simpleTaptic(type: .light)
-                            withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 1.0, blendDuration: 0)) {
+                            withAnimation(.interactiveSpring(
+                                response: 0.25,
+                                dampingFraction: 1.0,
+                                blendDuration: 0
+                            )) {
                                 showingWeekday = .today()
                                 showRelatedDetailOfMaterial = nil
                                 showMaterialDetail = false
@@ -115,8 +146,14 @@ struct InAppMaterialNavigator: View {
                         .padding(.vertical)
                     }
                     Image(systemName: "chevron.forward")
-                        .rotationEffect(Angle(degrees: showMaterialDetail ? 90 : 0), anchor: .center)
-                        .foregroundColor(showMaterialDetail ? .accentColor : .secondary)
+                        .rotationEffect(
+                            Angle(degrees: showMaterialDetail ? 90 : 0),
+                            anchor: .center
+                        )
+                        .foregroundColor(
+                            showMaterialDetail ? .accentColor :
+                                .secondary
+                        )
                         .padding(.trailing, 25)
                         .font(.caption)
                 }
@@ -126,12 +163,14 @@ struct InAppMaterialNavigator: View {
             } else {
                 if showRelatedDetailOfMaterial == nil {
                     materialsDetail()
-                        .padding(showingWeekday != .sunday ? .vertical : .bottom)
+                        .padding(
+                            showingWeekday != .sunday ? .vertical :
+                                .bottom
+                        )
                 } else {
                     materialRelatedItemView()
                         .padding()
                 }
-
             }
         }
         .blurMaterialBackground()
@@ -139,14 +178,22 @@ struct InAppMaterialNavigator: View {
         .onTapGesture {
             if !showMaterialDetail {
                 simpleTaptic(type: .light)
-                withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 1.0, blendDuration: 0)) {
+                withAnimation(.interactiveSpring(
+                    response: 0.25,
+                    dampingFraction: 1.0,
+                    blendDuration: 0
+                )) {
                     showingWeekday = .today()
                     showMaterialDetail = true
                 }
             }
             if showRelatedDetailOfMaterial != nil {
                 simpleTaptic(type: .light)
-                withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 1.0, blendDuration: 0)) {
+                withAnimation(.interactiveSpring(
+                    response: 0.25,
+                    dampingFraction: 1.0,
+                    blendDuration: 0
+                )) {
                     showRelatedDetailOfMaterial = nil
                 }
             }
@@ -167,20 +214,32 @@ struct InAppMaterialNavigator: View {
             let imageWidth = CGFloat(40)
             HStack(spacing: 0) {
                 Spacer()
-                ForEach(talentMaterialProvider.todaysMaterials, id: \.imageString) { material in
+                ForEach(
+                    talentMaterialProvider.todaysMaterials,
+                    id: \.imageString
+                ) { material in
                     Image(material.imageString)
                         .resizable()
                         .scaledToFit()
-                        .matchedGeometryEffect(id: material.imageString, in: animationMaterial)
+                        .matchedGeometryEffect(
+                            id: material.imageString,
+                            in: animationMaterial
+                        )
                         .frame(width: imageWidth)
                         .padding(.vertical)
                 }
                 Spacer()
-                ForEach(weaponMaterialProvider.todaysMaterials, id: \.imageString) { material in
+                ForEach(
+                    weaponMaterialProvider.todaysMaterials,
+                    id: \.imageString
+                ) { material in
                     Image(material.imageString)
                         .resizable()
                         .scaledToFit()
-                        .matchedGeometryEffect(id: material.imageString, in: animationMaterial)
+                        .matchedGeometryEffect(
+                            id: material.imageString,
+                            in: animationMaterial
+                        )
                         .frame(width: imageWidth)
                 }
                 Spacer()
@@ -196,20 +255,33 @@ struct InAppMaterialNavigator: View {
             HStack {
                 Spacer()
                 VStack(alignment: .leading) {
-                    ForEach(talentMaterialProvider.todaysMaterials, id: \.imageString) { material in
+                    ForEach(
+                        talentMaterialProvider.todaysMaterials,
+                        id: \.imageString
+                    ) { material in
                         HStack {
                             Image(material.imageString)
                                 .resizable()
                                 .scaledToFit()
-                                .matchedGeometryEffect(id: material.imageString, in: animationMaterial)
+                                .matchedGeometryEffect(
+                                    id: material.imageString,
+                                    in: animationMaterial
+                                )
                                 .frame(width: imageWidth)
                             Text(material.displayName)
                                 .foregroundColor(Color("materialTextColor"))
-                                .matchedGeometryEffect(id: material.displayName, in: animationMaterial)
+                                .matchedGeometryEffect(
+                                    id: material.displayName,
+                                    in: animationMaterial
+                                )
                         }
                         .onTapGesture {
                             simpleTaptic(type: .light)
-                            withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 1.0, blendDuration: 0))  {
+                            withAnimation(.interactiveSpring(
+                                response: 0.25,
+                                dampingFraction: 1.0,
+                                blendDuration: 0
+                            )) {
                                 showRelatedDetailOfMaterial = material
                             }
                         }
@@ -217,20 +289,33 @@ struct InAppMaterialNavigator: View {
                 }
                 Spacer()
                 VStack(alignment: .leading) {
-                    ForEach(weaponMaterialProvider.todaysMaterials, id: \.imageString) { material in
+                    ForEach(
+                        weaponMaterialProvider.todaysMaterials,
+                        id: \.imageString
+                    ) { material in
                         HStack {
                             Image(material.imageString)
                                 .resizable()
                                 .scaledToFit()
-                                .matchedGeometryEffect(id: material.imageString, in: animationMaterial)
+                                .matchedGeometryEffect(
+                                    id: material.imageString,
+                                    in: animationMaterial
+                                )
                                 .frame(width: imageWidth)
                             Text(material.displayName)
                                 .foregroundColor(Color("materialTextColor"))
-                                .matchedGeometryEffect(id: material.displayName, in: animationMaterial)
+                                .matchedGeometryEffect(
+                                    id: material.displayName,
+                                    in: animationMaterial
+                                )
                         }
                         .onTapGesture {
                             simpleTaptic(type: .light)
-                            withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 1.0, blendDuration: 0))  {
+                            withAnimation(.interactiveSpring(
+                                response: 0.25,
+                                dampingFraction: 1.0,
+                                blendDuration: 0
+                            )) {
                                 showRelatedDetailOfMaterial = material
                             }
                         }
@@ -251,15 +336,24 @@ struct InAppMaterialNavigator: View {
                         Image(material.imageString)
                             .resizable()
                             .scaledToFit()
-                            .matchedGeometryEffect(id: material.imageString, in: animationMaterial)
+                            .matchedGeometryEffect(
+                                id: material.imageString,
+                                in: animationMaterial
+                            )
                             .frame(width: imageWidth)
                         Text(material.displayName)
                             .foregroundColor(Color("materialTextColor"))
-                            .matchedGeometryEffect(id: material.displayName, in: animationMaterial)
+                            .matchedGeometryEffect(
+                                id: material.displayName,
+                                in: animationMaterial
+                            )
                     }
                     ScrollView(.horizontal) {
                         HStack {
-                            ForEach(material.relatedItem, id: \.imageString) { item in
+                            ForEach(
+                                material.relatedItem,
+                                id: \.imageString
+                            ) { item in
                                 VStack {
                                     Image(item.imageString)
                                         .resizable()
@@ -281,7 +375,11 @@ struct InAppMaterialNavigator: View {
             }
             .onTapGesture {
                 simpleTaptic(type: .light)
-                withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 1.0, blendDuration: 0))  {
+                withAnimation(.interactiveSpring(
+                    response: 0.25,
+                    dampingFraction: 1.0,
+                    blendDuration: 0
+                )) {
                     showRelatedDetailOfMaterial = nil
                 }
             }
@@ -295,5 +393,4 @@ struct InAppMaterialNavigator: View {
         formatter.setLocalizedDateFormatFromTemplate("MMMMd EEEE")
         return formatter.string(from: Date())
     }
-
 }

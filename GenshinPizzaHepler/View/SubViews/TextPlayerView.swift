@@ -10,7 +10,7 @@ import SwiftUI
 struct TextPlayerView: View {
     var title: String
     var text: String
-    var nvTitle: String? = nil
+    var nvTitle: String?
 
     var body: some View {
         List {

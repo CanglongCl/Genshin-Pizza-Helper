@@ -19,11 +19,13 @@ struct AccountInfoView: View {
                 if let result = account.result {
                     Spacer()
                     switch result {
-                    case .failure(_):
-                        Image(systemName: "exclamationmark.arrow.triangle.2.circlepath")
-                            .padding()
-                            .foregroundColor(.red)
-                    case .success(_):
+                    case .failure:
+                        Image(
+                            systemName: "exclamationmark.arrow.triangle.2.circlepath"
+                        )
+                        .padding()
+                        .foregroundColor(.red)
+                    case .success:
                         EmptyView()
                     }
                 }

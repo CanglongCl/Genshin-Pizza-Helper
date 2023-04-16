@@ -5,44 +5,68 @@
 //  Created by Bill Haku on 2022/8/22.
 //  根View
 
+import HBPizzaHelperAPI
 import SwiftUI
 import WidgetKit
 
+// MARK: - ContentView
+
 struct ContentView: View {
-    @EnvironmentObject var viewModel: ViewModel
+    @EnvironmentObject
+    var viewModel: ViewModel
 
-    @Environment(\.scenePhase) var scenePhase
+    @Environment(\.scenePhase)
+    var scenePhase
 
-    @State var selection: Int = UserDefaults.standard.integer(forKey: "AppTabIndex") == 3 ? 0 : UserDefaults.standard.integer(forKey: "AppTabIndex")
+    @State
+    var selection: Int = UserDefaults.standard
+        .integer(forKey: "AppTabIndex") == 3 ? 0 : UserDefaults.standard
+        .integer(forKey: "AppTabIndex")
 
-    @State var sheetType: ContentViewSheetType? = nil
-    @State var newestVersionInfos: NewestVersion? = nil
-    @State var isJustUpdated: Bool = false
+    @State
+    var sheetType: ContentViewSheetType?
+    @State
+    var newestVersionInfos: NewestVersion?
+    @State
+    var isJustUpdated: Bool = false
 
-    @AppStorage("autoDeliveryResinTimerLiveActivity") var autoDeliveryResinTimerLiveActivity: Bool = false
+    @AppStorage(
+        "autoDeliveryResinTimerLiveActivity"
+    )
+    var autoDeliveryResinTimerLiveActivity: Bool =
+        false
+
+    @State
+    var isPopUpViewShow: Bool = false
+    @Namespace
+    var animation
+
+    @StateObject
+    var storeManager: StoreManager
+    @State
+    var isJumpToSettingsView: Bool = false
+
+    let appVersion = Bundle.main
+        .infoDictionary!["CFBundleShortVersionString"] as! String
+    let buildVersion = Int(
+        Bundle.main
+            .infoDictionary!["CFBundleVersion"] as! String
+    )!
+
+    @State
+    var settingForAccountIndex: Int?
 
     var index: Binding<Int> { Binding(
-        get: { self.selection },
+        get: { selection },
         set: {
-            if $0 != self.selection {
+            if $0 != selection {
                 simpleTaptic(type: .medium)
             }
-            self.selection = $0
+            selection = $0
             UserDefaults.standard.setValue($0, forKey: "AppTabIndex")
             UserDefaults.standard.synchronize()
         }
-    )}
-
-    @State var isPopUpViewShow: Bool = false
-    @Namespace var animation
-
-    @StateObject var storeManager: StoreManager
-    @State var isJumpToSettingsView: Bool = false
-
-    let appVersion = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
-    let buildVersion = Int(Bundle.main.infoDictionary!["CFBundleVersion"] as! String)!
-
-    @State var settingForAccountIndex: Int?
+    ) }
 
     var body: some View {
         ZStack {
@@ -80,22 +104,30 @@ struct ContentView: View {
             if let showDetailOfAccount = viewModel.showDetailOfAccount {
                 Color.black
                     .ignoresSafeArea()
-                AccountDisplayView(account: showDetailOfAccount, animation: animation)
-                    .zIndex(1)
+                AccountDisplayView(
+                    account: showDetailOfAccount,
+                    animation: animation
+                )
+                .zIndex(1)
             }
             if let account = viewModel.showCharacterDetailOfAccount {
                 Color.black
                     .ignoresSafeArea()
-                CharacterDetailView(account: account, showingCharacterName: viewModel.showingCharacterName!, animation: animation)
-                    .environment(\.colorScheme, .dark)
-                    .zIndex(2)
+                CharacterDetailView(
+                    account: account,
+                    showingCharacterName: viewModel.showingCharacterName!,
+                    animation: animation
+                )
+                .environment(\.colorScheme, .dark)
+                .zIndex(2)
             }
         }
         .onChange(of: scenePhase, perform: { newPhase in
             switch newPhase {
             case .active:
                 // 检查是否同意过用户协议
-                let isPolicyShown = UserDefaults.standard.bool(forKey: "isPolicyShown")
+                let isPolicyShown = UserDefaults.standard
+                    .bool(forKey: "isPolicyShown")
                 if !isPolicyShown { sheetType = .userPolicy }
                 DispatchQueue.main.async {
                     viewModel.fetchAccount()
@@ -113,19 +145,36 @@ struct ContentView: View {
                 WidgetCenter.shared.reloadAllTimelines()
                 #if canImport(ActivityKit)
                 if autoDeliveryResinTimerLiveActivity {
-                    let pinToTopAccountUUIDString = UserDefaults.standard.string(forKey: "pinToTopAccountUUIDString")
+                    let pinToTopAccountUUIDString = UserDefaults.standard
+                        .string(forKey: "pinToTopAccountUUIDString")
                     if #available(iOS 16.1, *) {
                         if let account = viewModel.accounts.first(where: {
-                            $0.config.uuid!.uuidString == pinToTopAccountUUIDString
+                            $0.config.uuid!
+                                .uuidString == pinToTopAccountUUIDString
                         }) {
-                            try? ResinRecoveryActivityController.shared.createResinRecoveryTimerActivity(for: account)
+                            try? ResinRecoveryActivityController.shared
+                                .createResinRecoveryTimerActivity(
+                                    for: account
+                                )
                         } else {
-                            if let account = viewModel.accounts.filter({ account in
-                                (try? account.result?.get()) != nil
-                            }).min(by: { lhs, rhs in
-                                (try! lhs.result!.get().resinInfo.recoveryTime.second) < (try! rhs.result!.get().resinInfo.recoveryTime.second)
-                            }) {
-                                try? ResinRecoveryActivityController.shared.createResinRecoveryTimerActivity(for: account)
+                            if let account = viewModel.accounts
+                                .filter({ account in
+                                    (try? account.result?.get()) != nil
+                                }).min(by: { lhs, rhs in
+                                    (
+                                        try! lhs.result!.get().resinInfo
+                                            .recoveryTime
+                                            .second
+                                    ) <
+                                        (
+                                            try! rhs.result!.get().resinInfo
+                                                .recoveryTime.second
+                                        )
+                                }) {
+                                try? ResinRecoveryActivityController.shared
+                                    .createResinRecoveryTimerActivity(
+                                        for: account
+                                    )
                             }
                         }
                     }
@@ -143,12 +192,19 @@ struct ContentView: View {
                 UserPolicyView(sheet: $sheetType)
                     .allowAutoDismiss(false)
             case .foundNewestVersion:
-                LatestVersionInfoView(sheetType: $sheetType, newestVersionInfos: $newestVersionInfos, isJustUpdated: $isJustUpdated)
-                    .allowAutoDismiss(false)
+                LatestVersionInfoView(
+                    sheetType: $sheetType,
+                    newestVersionInfos: $newestVersionInfos,
+                    isJustUpdated: $isJustUpdated
+                )
+                .allowAutoDismiss(false)
             case .accountSetting:
                 NavigationView {
-                    AccountDetailView(account: $viewModel.accounts[settingForAccountIndex!])
-                        .dismissableSheet(sheet: $sheetType)
+                    AccountDetailView(
+                        account: $viewModel
+                            .accounts[settingForAccountIndex!]
+                    )
+                    .dismissableSheet(sheet: $sheetType)
                 }
             }
         }
@@ -157,11 +213,18 @@ struct ContentView: View {
             case "settings":
                 print("jump to settings")
                 isJumpToSettingsView.toggle()
-                self.selection = 1
+                selection = 1
             case "accountSetting":
-                self.selection = 2
-                if let accountUUIDString = URLComponents(url: url, resolvingAgainstBaseURL: true)?.queryItems?.first(where: { $0.name == "accountUUIDString" })?.value,
-                   let accountIndex = viewModel.accounts.firstIndex(where: { ($0.config.uuid?.uuidString ?? "") == accountUUIDString }) {
+                selection = 2
+                if let accountUUIDString = URLComponents(
+                    url: url,
+                    resolvingAgainstBaseURL: true
+                )?.queryItems?.first(where: { $0.name == "accountUUIDString" })?
+                    .value,
+                    let accountIndex = viewModel.accounts
+                    .firstIndex(where: {
+                        ($0.config.uuid?.uuidString ?? "") == accountUUIDString
+                    }) {
                     settingForAccountIndex = accountIndex
                     sheetType = .accountSetting
                 }
@@ -170,34 +233,51 @@ struct ContentView: View {
             }
         }
         .onAppear {
-            print("Locale: \(Bundle.main.preferredLocalizations.first ?? "Unknown")")
+            print(
+                "Locale: \(Bundle.main.preferredLocalizations.first ?? "Unknown")"
+            )
         }
         .onAppear {
-            UserDefaults(suiteName: "group.GenshinPizzaHelper")?.register(defaults: [
-                "lockscreenWidgetSyncFrequencyInMinute" : 60,
-                "mainWidgetSyncFrequencyInMinute": 60,
-                "homeCoinRefreshFrequencyInHour": 30,
-                "watchWidgetUseSimplifiedMode": true
+            UserDefaults(suiteName: "group.GenshinPizzaHelper")?
+                .register(defaults: [
+                    "lockscreenWidgetSyncFrequencyInMinute": 60,
+                    "mainWidgetSyncFrequencyInMinute": 60,
+                    "homeCoinRefreshFrequencyInHour": 30,
+                    "watchWidgetUseSimplifiedMode": true,
+                ])
+            UserDefaults.standard.register(defaults: [
+                "alreadyInstallCA": false,
+                "isGachaHelpsheetShown": false,
             ])
         }
-        .navigate(to: NotificationSettingView().environmentObject(viewModel), when: $isJumpToSettingsView)
+        .navigate(
+            to: NotificationSettingView().environmentObject(viewModel),
+            when: $isJumpToSettingsView
+        )
     }
 
     func checkNewestVersion() {
         DispatchQueue.global(qos: .default).async {
             switch AppConfig.appConfiguration {
             case .AppStore:
-                API.HomeAPIs.fetchNewestVersion(isBeta: false) { result in
+                PizzaHelperAPI.fetchNewestVersion(isBeta: false) { result in
                     newestVersionInfos = result
                     guard let newestVersionInfos = newestVersionInfos else {
                         return
                     }
                     // 发现新版本
                     if buildVersion < newestVersionInfos.buildVersion {
-                        let checkedUpdateVersions = (UserDefaults.standard.array(forKey: "checkedUpdateVersions") ?? []) as? [Int]
+                        let checkedUpdateVersions = (
+                            UserDefaults.standard
+                                .array(forKey: "checkedUpdateVersions") ??
+                                []
+                        ) as? [Int]
                         // 若已有存储的检查过的版本号数组
                         if let checkedUpdateVersions = checkedUpdateVersions {
-                            if !(checkedUpdateVersions.contains(newestVersionInfos.buildVersion)) {
+                            if !(
+                                checkedUpdateVersions
+                                    .contains(newestVersionInfos.buildVersion)
+                            ) {
                                 sheetType = .foundNewestVersion
                             }
                         } else {
@@ -206,37 +286,54 @@ struct ContentView: View {
                         }
                     } else {
                         // App版本号>=服务器版本号
-                        let checkedNewestVersion = UserDefaults.standard.integer(forKey: "checkedNewestVersion")
+                        let checkedNewestVersion = UserDefaults.standard
+                            .integer(forKey: "checkedNewestVersion")
                         // 已经看过的版本号小于服务器版本号，说明是第一次打开该新版本
-                        if checkedNewestVersion < newestVersionInfos.buildVersion {
+                        if checkedNewestVersion < newestVersionInfos
+                            .buildVersion {
                             isJustUpdated = true
                             sheetType = .foundNewestVersion
-                            UserDefaults.standard.setValue(newestVersionInfos.buildVersion, forKey: "checkedNewestVersion")
+                            UserDefaults.standard.setValue(
+                                newestVersionInfos.buildVersion,
+                                forKey: "checkedNewestVersion"
+                            )
                             UserDefaults.standard.synchronize()
                         }
                     }
                 }
             case .Debug, .TestFlight:
-                API.HomeAPIs.fetchNewestVersion(isBeta: true) { result in
+                PizzaHelperAPI.fetchNewestVersion(isBeta: true) { result in
                     newestVersionInfos = result
                     guard let newestVersionInfos = newestVersionInfos else {
                         return
                     }
                     if buildVersion < newestVersionInfos.buildVersion {
-                        let checkedUpdateVersions = (UserDefaults.standard.array(forKey: "checkedUpdateVersions") ?? []) as? [Int]
+                        let checkedUpdateVersions = (
+                            UserDefaults.standard
+                                .array(forKey: "checkedUpdateVersions") ??
+                                []
+                        ) as? [Int]
                         if let checkedUpdateVersions = checkedUpdateVersions {
-                            if !(checkedUpdateVersions.contains(newestVersionInfos.buildVersion)) {
+                            if !(
+                                checkedUpdateVersions
+                                    .contains(newestVersionInfos.buildVersion)
+                            ) {
                                 sheetType = .foundNewestVersion
                             }
                         } else {
                             sheetType = .foundNewestVersion
                         }
                     } else {
-                        let checkedNewestVersion = UserDefaults.standard.integer(forKey: "checkedNewestVersion")
-                        if checkedNewestVersion < newestVersionInfos.buildVersion {
+                        let checkedNewestVersion = UserDefaults.standard
+                            .integer(forKey: "checkedNewestVersion")
+                        if checkedNewestVersion < newestVersionInfos
+                            .buildVersion {
                             isJustUpdated = true
                             sheetType = .foundNewestVersion
-                            UserDefaults.standard.setValue(newestVersionInfos.buildVersion, forKey: "checkedNewestVersion")
+                            UserDefaults.standard.setValue(
+                                newestVersionInfos.buildVersion,
+                                forKey: "checkedNewestVersion"
+                            )
                             UserDefaults.standard.synchronize()
                         }
                     }
@@ -246,12 +343,16 @@ struct ContentView: View {
     }
 }
 
-enum ContentViewSheetType: Identifiable {
-    var id: Int {
-        hashValue
-    }
+// MARK: - ContentViewSheetType
 
+enum ContentViewSheetType: Identifiable {
     case userPolicy
     case foundNewestVersion
     case accountSetting
+
+    // MARK: Internal
+
+    var id: Int {
+        hashValue
+    }
 }

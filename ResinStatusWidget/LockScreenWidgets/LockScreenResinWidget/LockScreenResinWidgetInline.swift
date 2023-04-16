@@ -5,26 +5,29 @@
 //  Created by 戴藏龙 on 2022/9/11.
 //
 
+import HBMihoyoAPI
 import SwiftUI
 
-struct LockScreenResinWidgetInline<T>: View where T: SimplifiedUserDataContainer {
+struct LockScreenResinWidgetInline<T>: View
+    where T: SimplifiedUserDataContainer {
     let result: SimplifiedUserDataContainerResult<T>
-    
+
     var body: some View {
         switch result {
-        case .success(let data):
+        case let .success(data):
             if data.resinInfo.isFull {
                 Image(systemName: "moon.stars.fill")
             } else {
                 Image(systemName: "moon.fill")
             }
-            Text("\(data.resinInfo.currentResin)  \(data.resinInfo.recoveryTime.describeIntervalShort(finishedTextPlaceholder: "", unisStyle: .brief))")
-            // 似乎不能插入自定义的树脂图片，也许以后会开放
+            Text(
+                "\(data.resinInfo.currentResin)  \(data.resinInfo.recoveryTime.describeIntervalShort(finishedTextPlaceholder: "", unisStyle: .brief))"
+            )
+        // 似乎不能插入自定义的树脂图片，也许以后会开放
 //                Image("icon.resin")
-        case .failure(_):
+        case .failure:
             Image(systemName: "moon.fill")
-            Text("...")
+            Text("…")
         }
     }
 }
-

@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "UI_Icon_CurAttack.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "UI_Icon_CurAttack@2x.heic",
       "idiom" : "universal",
       "scale" : "2x"
     },

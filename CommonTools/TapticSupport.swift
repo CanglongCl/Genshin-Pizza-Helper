@@ -8,8 +8,8 @@
 import Foundation
 import UIKit
 #if !os(watchOS)
-import CoreHaptics
 import AudioToolbox
+import CoreHaptics
 
 enum SimpleTapticType {
     case success
@@ -56,11 +56,13 @@ func simpleTaptic(type: SimpleTapticType) {
         let selectionGenerator = UISelectionFeedbackGenerator()
         selectionGenerator.selectionChanged()
     }
-    if UIDevice.modelName == "iPhone 6s" || UIDevice.modelName == "iPhone 6s Plus" || UIDevice.modelName == "iPhone SE"{
+    if UIDevice.modelName == "iPhone 6s" || UIDevice
+        .modelName == "iPhone 6s Plus" || UIDevice
+        .modelName == "iPhone SE" {
         switch type {
-        case .success, .warning, .error, .heavy, .medium, .rigid:
+        case .error, .heavy, .medium, .rigid, .success, .warning:
             AudioServicesPlaySystemSound(1519) // Actuate `Peek` feedback (weak boom)
-        case .light, .soft, .selection:
+        case .light, .selection, .soft:
             AudioServicesPlaySystemSound(1520) // Actuate `Pop` feedback (strong boom)
         }
     }
@@ -68,13 +70,14 @@ func simpleTaptic(type: SimpleTapticType) {
 }
 
 class CHTaptic {
-    private var engine: CHHapticEngine?
+    // MARK: Internal
 
     func prepareHaptics() {
-        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics
+        else { return }
 
         do {
-            self.engine = try CHHapticEngine()
+            engine = try CHHapticEngine()
             try engine?.start()
         } catch {
             print("创建引擎时出现错误： \(error.localizedDescription)")
@@ -83,23 +86,41 @@ class CHTaptic {
 
     func complexTaptic() {
         // 确保设备支持震动反馈
-        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics
+        else { return }
         var events = [CHHapticEvent]()
 
         // 创建一个强烈的，锐利的震动
-        let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 1)
-        let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 1)
-        let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: 0)
+        let intensity = CHHapticEventParameter(
+            parameterID: .hapticIntensity,
+            value: 1
+        )
+        let sharpness = CHHapticEventParameter(
+            parameterID: .hapticSharpness,
+            value: 1
+        )
+        let event = CHHapticEvent(
+            eventType: .hapticTransient,
+            parameters: [intensity, sharpness],
+            relativeTime: 0
+        )
         events.append(event)
 
         // 将震动事件转换成模式，立即播放
         do {
-            let pattern = try CHHapticPattern(events: events, parameters: [])
+            let pattern = try CHHapticPattern(
+                events: events,
+                parameters: []
+            )
             let player = try engine?.makePlayer(with: pattern)
             try player?.start(atTime: 0)
         } catch {
             print("Failed to play pattern: \(error.localizedDescription).")
         }
     }
+
+    // MARK: Private
+
+    private var engine: CHHapticEngine?
 }
 #endif

@@ -5,11 +5,14 @@
 //  Created by 戴藏龙 on 2022/9/11.
 //
 
+import HBMihoyoAPI
 import SwiftUI
 
 @available(iOSApplicationExtension 16.0, *)
-struct LockScreenHomeCoinWidgetCircular<T>: View where T: SimplifiedUserDataContainer {
-    @Environment(\.widgetRenderingMode) var widgetRenderingMode
+struct LockScreenHomeCoinWidgetCircular<T>: View
+    where T: SimplifiedUserDataContainer {
+    @Environment(\.widgetRenderingMode)
+    var widgetRenderingMode
 
     let result: SimplifiedUserDataContainerResult<T>
 
@@ -21,10 +24,10 @@ struct LockScreenHomeCoinWidgetCircular<T>: View where T: SimplifiedUserDataCont
                     .resizable()
                     .scaledToFit()
                 switch result {
-                case .success(let data):
+                case let .success(data):
                     Text("\(data.homeCoinInfo.currentHomeCoin)")
                         .font(.system(.body, design: .rounded).weight(.medium))
-                case .failure(_):
+                case .failure:
                     Image(systemName: "ellipsis")
                 }
             }
@@ -42,10 +45,10 @@ struct LockScreenHomeCoinWidgetCircular<T>: View where T: SimplifiedUserDataCont
                     .scaledToFit()
                     .foregroundColor(Color("iconColor.homeCoin.lightBlue"))
                 switch result {
-                case .success(let data):
+                case let .success(data):
                     Text("\(data.homeCoinInfo.currentHomeCoin)")
                         .font(.system(.body, design: .rounded).weight(.medium))
-                case .failure(_):
+                case .failure:
                     Image(systemName: "ellipsis")
                 }
             }
@@ -62,10 +65,10 @@ struct LockScreenHomeCoinWidgetCircular<T>: View where T: SimplifiedUserDataCont
                     .scaledToFit()
 
                 switch result {
-                case .success(let data):
+                case let .success(data):
                     Text("\(data.homeCoinInfo.currentHomeCoin)")
                         .font(.system(.body, design: .rounded).weight(.medium))
-                case .failure(_):
+                case .failure:
                     Image(systemName: "ellipsis")
                 }
             }
@@ -78,4 +81,3 @@ struct LockScreenHomeCoinWidgetCircular<T>: View where T: SimplifiedUserDataCont
         }
     }
 }
-

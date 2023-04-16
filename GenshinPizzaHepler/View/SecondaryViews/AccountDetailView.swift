@@ -5,56 +5,82 @@
 //  Created by Bill Haku on 2022/8/7.
 //  设置页帐号详细信息View
 
+import HBMihoyoAPI
 import SwiftUI
 
+// MARK: - AccountDetailView
+
 struct AccountDetailView: View {
-    @EnvironmentObject var viewModel: ViewModel
-    
-    @Binding var account: Account
-    
+    @EnvironmentObject
+    var viewModel: ViewModel
+
+    @Binding
+    var account: Account
+
     var bindingName: Binding<String> {
         Binding($account.config.name)!
     }
+
     var bindingUid: Binding<String> {
         Binding($account.config.uid)!
     }
+
     var bindingCookie: Binding<String> {
         Binding($account.config.cookie)!
     }
+
     var bindingServer: Binding<Server> {
         Binding(projectedValue: $account.config.server)
     }
-    
+
     var name: String {
         account.config.name!
     }
+
     var uid: String {
         account.config.uid!
     }
+
     var cookie: String {
         account.config.cookie!
     }
+
     var server: Server {
         account.config.server
     }
 
-    @State private var isPresentingConfirm: Bool = false
-    
-    @State var isWebShown: Bool = false
+    @State
+    private var isPresentingConfirm: Bool = false
 
-    @State private var connectStatus: ConnectStatus = .unknown
-    
+    @State
+    var isWebShown: Bool = false
+
+    @State
+    private var connectStatus: ConnectStatus = .unknown
+
     var body: some View {
         List {
             Button("重新登录米哈游通行证帐号") { isWebShown.toggle() }
             Section(header: Text("帐号配置")) {
-                NavigationLink(destination: TextFieldEditorView(title: "帐号名".localized, note: "你可以自定义显示在小组件上的帐号名称".localized, content: bindingName)) {
+                NavigationLink(destination: TextFieldEditorView(
+                    title: "帐号名".localized,
+                    note: "你可以自定义显示在小组件上的帐号名称".localized,
+                    content: bindingName
+                )) {
                     InfoPreviewer(title: "帐号名", content: name)
                 }
-                NavigationLink(destination: TextFieldEditorView(title: "UID", content: bindingUid, keyboardType: .numberPad)) {
+                NavigationLink(destination: TextFieldEditorView(
+                    title: "UID",
+                    content: bindingUid,
+                    keyboardType: .numberPad
+                )) {
                     InfoPreviewer(title: "UID", content: uid)
                 }
-                NavigationLink(destination: TextEditorView(title: "Cookie", content: bindingCookie, showPasteButton: true)) {
+                NavigationLink(destination: TextEditorView(
+                    title: "Cookie",
+                    content: bindingCookie,
+                    showPasteButton: true
+                )) {
                     Text("Cookie")
                 }
                 Picker("服务器", selection: $account.config.server) {
@@ -64,17 +90,26 @@ struct AccountDetailView: View {
                     }
                 }
             }
-            TestSectionView(connectStatus: $connectStatus, uid: bindingUid, cookie: bindingCookie, server: bindingServer)
+            TestSectionView(
+                connectStatus: $connectStatus,
+                uid: bindingUid,
+                cookie: bindingCookie,
+                server: bindingServer
+            )
         }
         .navigationBarTitle("帐号信息", displayMode: .inline)
         .onDisappear {
             viewModel.saveAccount()
         }
         .sheet(isPresented: $isWebShown) {
-            GetCookieWebView(isShown: $isWebShown, cookie: bindingCookie, region: server.region)
-                .onDisappear {
-                    connectStatus = .testing
-                }
+            GetCookieWebView(
+                isShown: $isWebShown,
+                cookie: bindingCookie,
+                region: server.region
+            )
+            .onDisappear {
+                connectStatus = .testing
+            }
         }
         .onAppear {
             connectStatus = .testing
@@ -82,20 +117,27 @@ struct AccountDetailView: View {
     }
 }
 
-struct AccountDetailSheet<SheetType>: View {
-    @EnvironmentObject var viewModel: ViewModel
+// MARK: - AccountDetailSheet
 
-    @Binding var account: Account
+struct AccountDetailSheet<SheetType>: View {
+    @EnvironmentObject
+    var viewModel: ViewModel
+
+    @Binding
+    var account: Account
 
     var bindingName: Binding<String> {
         Binding($account.config.name)!
     }
+
     var bindingUid: Binding<String> {
         Binding($account.config.uid)!
     }
+
     var bindingCookie: Binding<String> {
         Binding($account.config.cookie)!
     }
+
     var bindingServer: Binding<Server> {
         Binding(projectedValue: $account.config.server)
     }
@@ -103,35 +145,54 @@ struct AccountDetailSheet<SheetType>: View {
     var name: String {
         account.config.name!
     }
+
     var uid: String {
         account.config.uid!
     }
+
     var cookie: String {
         account.config.cookie!
     }
+
     var server: Server {
         account.config.server
     }
 
-    @Binding var sheetType: SheetType?
+    @Binding
+    var sheetType: SheetType?
 
-    @State private var isPresentingConfirm: Bool = false
+    @State
+    private var isPresentingConfirm: Bool = false
 
-    @State var isWebShown: Bool = false
+    @State
+    var isWebShown: Bool = false
 
-    @State private var connectStatus: ConnectStatus = .unknown
+    @State
+    private var connectStatus: ConnectStatus = .unknown
 
     var body: some View {
         List {
             Button("重新登录米游社帐号") { isWebShown.toggle() }
             Section(header: Text("帐号配置")) {
-                NavigationLink(destination: TextFieldEditorView(title: "帐号名".localized, note: "你可以自定义显示在小组件上的帐号名称".localized, content: bindingName)) {
+                NavigationLink(destination: TextFieldEditorView(
+                    title: "帐号名".localized,
+                    note: "你可以自定义显示在小组件上的帐号名称".localized,
+                    content: bindingName
+                )) {
                     InfoPreviewer(title: "帐号名", content: name)
                 }
-                NavigationLink(destination: TextFieldEditorView(title: "UID", content: bindingUid, keyboardType: .numberPad)) {
+                NavigationLink(destination: TextFieldEditorView(
+                    title: "UID",
+                    content: bindingUid,
+                    keyboardType: .numberPad
+                )) {
                     InfoPreviewer(title: "UID", content: uid)
                 }
-                NavigationLink(destination: TextEditorView(title: "Cookie", content: bindingCookie, showPasteButton: true)) {
+                NavigationLink(destination: TextEditorView(
+                    title: "Cookie",
+                    content: bindingCookie,
+                    showPasteButton: true
+                )) {
                     Text("Cookie")
                 }
                 Picker("服务器", selection: $account.config.server) {
@@ -141,14 +202,23 @@ struct AccountDetailSheet<SheetType>: View {
                     }
                 }
             }
-            TestSectionView(connectStatus: $connectStatus, uid: bindingUid, cookie: bindingCookie, server: bindingServer)
+            TestSectionView(
+                connectStatus: $connectStatus,
+                uid: bindingUid,
+                cookie: bindingCookie,
+                server: bindingServer
+            )
         }
         .navigationBarTitle("帐号信息", displayMode: .inline)
         .sheet(isPresented: $isWebShown) {
-            GetCookieWebView(isShown: $isWebShown, cookie: bindingCookie, region: server.region)
-                .onDisappear {
-                    connectStatus = .testing
-                }
+            GetCookieWebView(
+                isShown: $isWebShown,
+                cookie: bindingCookie,
+                region: server.region
+            )
+            .onDisappear {
+                connectStatus = .testing
+            }
         }
         .onAppear {
             connectStatus = .testing

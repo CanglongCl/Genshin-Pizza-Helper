@@ -5,11 +5,14 @@
 //  Created by 戴藏龙 on 2022/9/14.
 //
 
+import HBMihoyoAPI
 import SwiftUI
 
 @available(iOSApplicationExtension 16.0, *)
-struct LockScreenLoopWidgetCorner<T>: View where T: SimplifiedUserDataContainer {
-    @Environment(\.widgetRenderingMode) var widgetRenderingMode
+struct LockScreenLoopWidgetCorner<T>: View
+    where T: SimplifiedUserDataContainer {
+    @Environment(\.widgetRenderingMode)
+    var widgetRenderingMode
 
     let result: SimplifiedUserDataContainerResult<T>
 
@@ -26,4 +29,3 @@ struct LockScreenLoopWidgetCorner<T>: View where T: SimplifiedUserDataContainer 
         }
     }
 }
-

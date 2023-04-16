@@ -5,31 +5,50 @@
 //  Created by Bill Haku on 2022/8/7.
 //  设置View
 
+import AlertToast
 import SwiftUI
 
+// MARK: - SettingsView
+
 struct SettingsView: View {
-    @State var editMode: EditMode = .inactive
+    @State
+    var editMode: EditMode = .inactive
 
-    @EnvironmentObject var viewModel: ViewModel
+    @EnvironmentObject
+    var viewModel: ViewModel
+    @State
+    var isGameBlockAvailable: Bool = true
+
+    @StateObject
+    var storeManager: StoreManager
+
+    @State
+    var isWidgetTipsSheetShow: Bool = false
+
+    @State
+    var isAlertToastShow = false
+
     var accounts: [Account] { viewModel.accounts }
-    
-    @State var isGameBlockAvailable: Bool = true
-
-    @StateObject var storeManager: StoreManager
-
-    @State var isWidgetTipsSheetShow: Bool = false
 
     var body: some View {
         NavigationView {
             List {
                 Section {
-                    ForEach($viewModel.accounts, id: \.config.uuid) { $account in
-                        NavigationLink(destination: AccountDetailView(account: $account)) {
+                    ForEach(
+                        $viewModel.accounts,
+                        id: \.config.uuid
+                    ) { $account in
+                        NavigationLink(
+                            destination: AccountDetailView(account: $account)
+                        ) {
                             AccountInfoView(account: account)
                         }
                     }
                     .onDelete { indexSet in
-                        indexSet.forEach { viewModel.deleteAccount(account: accounts[$0]) }
+                        indexSet
+                            .forEach {
+                                viewModel.deleteAccount(account: accounts[$0])
+                            }
                     }
                     NavigationLink(destination: AddAccountView()) {
                         Label("添加帐号", systemImage: "plus.circle")
@@ -52,23 +71,59 @@ struct SettingsView: View {
                     let url: String = {
                         switch Bundle.main.preferredLocalizations.first {
                         case "zh-Hans", "zh-Hant", "zh-HK":
-                            return "http://ophelper.top/static/faq.html"
+                            return "https://ophelper.top/static/faq.html"
                         default:
-                            return "http://ophelper.top/static/faq_en.html"
+                            return "https://ophelper.top/static/faq_en.html"
                         }
                     }()
-                    NavigationLink(destination: WebBroswerView(url: url).navigationTitle("FAQ").navigationBarTitleDisplayMode(.inline)) {
-                        Label("常见使用问题（FAQ）", systemImage: "person.fill.questionmark")
+                    NavigationLink(
+                        destination: WebBroswerView(url: url)
+                            .navigationTitle("FAQ")
+                            .navigationBarTitleDisplayMode(.inline)
+                    ) {
+                        Label(
+                            "常见使用问题（FAQ）",
+                            systemImage: "person.fill.questionmark"
+                        )
                     }
                     #if DEBUG
                     Button("debug") {
-                        UserNotificationCenter.shared.printAllNotificationRequest()
+//                        UserNotificationCenter.shared
+//                            .printAllNotificationRequest()
+                        isAlertToastShow.toggle()
                     }
                     #endif
                 }
 
-                // 小组件相关设置
-                NavigationLink("小组件设置", destination: { WidgetSettingView() })
+                // 该功能对 macCatalyst 无效。
+                Section {
+                    Button {
+                        UIApplication.shared
+                            .open(URL(
+                                string: UIApplication
+                                    .openSettingsURLString
+                            )!)
+                    } label: {
+                        Label {
+                            Text("偏好语言")
+                                .foregroundColor(.primary)
+                        } icon: {
+                            Image(systemName: "globe")
+                        }
+                    }
+                    NavigationLink(destination: DisplayOptionsView()) {
+                        Label(
+                            "界面偏好设置",
+                            systemImage: "uiwindow.split.2x1"
+                        )
+                    }
+                    NavigationLink(destination: WidgetSettingView()) {
+                        Label(
+                            "小组件设置",
+                            systemImage: "speedometer"
+                        )
+                    }
+                }
 
                 // 通知设置
                 NotificationSettingNavigator()
@@ -81,27 +136,23 @@ struct SettingsView: View {
                     Button("在App Store评分") {
                         ReviewHandler.requestReview()
                     }
-                    NavigationLink(destination: GlobalDonateView(storeManager: storeManager)) {
+                    NavigationLink(
+                        destination: GlobalDonateView(
+                            storeManager: storeManager
+                        )
+                    ) {
                         Text("支持我们")
                     }
                 }
 
-                Section {
-                    Button {
-                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
-                    } label: {
-                        Label {
-                            Text("偏好语言")
-                                .foregroundColor(.primary)
-                        } icon: {
-                            Image(systemName: "globe")
+                Group {
+                    Section {
+                        NavigationLink("隐私设置") {
+                            PrivacySettingsView()
                         }
-                    }
-                }
-
-                Section {
-                    NavigationLink("隐私设置") {
-                        PrivacySettingsView()
+                        NavigationLink("祈愿数据管理") {
+                            GachaSetting()
+                        }
                     }
                 }
 
@@ -125,11 +176,22 @@ struct SettingsView: View {
         .sheet(isPresented: $isWidgetTipsSheetShow) {
             WidgetTipsView(isSheetShow: $isWidgetTipsSheetShow)
         }
+        .toast(isPresenting: $isAlertToastShow) {
+            AlertToast(
+                displayMode: .hud,
+                type: .complete(.green),
+                title: "Complete"
+            )
+        }
     }
 }
 
+// MARK: - EditModeButton
+
 private struct EditModeButton: View {
-    @Binding var editMode: EditMode
+    @Binding
+    var editMode: EditMode
+
     var body: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.1)) {

@@ -7,19 +7,23 @@
 
 import Foundation
 
+// MARK: - MultiTokenResult
+
 struct MultiTokenResult: Codable {
     let retcode: Int
     let message: String
     let data: MultiToken?
 }
 
-struct MultiToken: Codable {
-    var list: [Item]
+// MARK: - MultiToken
 
+struct MultiToken: Codable {
     struct Item: Codable {
         let name: String
         let token: String
     }
+
+    var list: [Item]
 
     var stoken: String {
         list.first { item in

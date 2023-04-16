@@ -1,9 +1,9 @@
-/* 
+/*
   Localizable.strings
   GenshinPizzaHelper
 
   Created by Bill Haku on 2022/8/23.
-  
+
 */
 
 // MARK: - 2.0 & above
@@ -58,11 +58,11 @@
 "完成" = "Fini";
 "未获取到登录信息，请重试" = "Erreur d'obtention d'information. Merci de réessayer.";
 "尚未完成帐号设置" = "La configuration du compte n'a pas été terminée";
-"添加账号前…" = "Avant d'ajouter votre compte...";
-"请先确保绑定的米游社账号已开启并能在米游社App中查看“实时便笺”功能" = "Verifier que vous avez ouvert et activer \"Les données en temps réel\" dans HoYoLAB.";
+"添加帐号前…" = "Avant d'ajouter votre compte…";
+"请先确保绑定的米游社帐号已开启并能在米游社App中查看「实时便笺」功能" = "Verifier que vous avez ouvert et activer \"Les données en temps réel\" dans HoYoLAB.";
 "好" = "OK";
 "提示" = "Conseils";
-"请在打开的网页完成登录米游社操作后点击「完成」。\n通过Google，Facebook或Twitter登录HoYoLAB不可使用，请使用账号密码登录。\n我们承诺：您的登录信息只会保存在您的本地设备和私人iCloud中，仅用于向米游社请求您的原神状态。" = "Cliquer sur \"Compris\" après avoir fini de vous connecter à HoYoLAB dans le page web suivant.\nLa Connection via Google, Facebook et Twitter à HoYoLAB n'est pas supporté, merci d'utiliser compte et mot de passe pour vous connecter\nVos informations de compte vont être stocké seulement dans l'appareil local et dans votre iCloud privé, et utilisé seuleument pour obtenir les données de Genshin Impact nécessaire à HoYoLAB. ";
+"请在打开的网页完成登录米游社操作后点击「完成」。\n通过Google，Facebook或Twitter登录HoYoLAB不可使用，请使用帐号密码登录。\n我们承诺：您的登录信息只会保存在您的本地设备和私人iCloud中，仅用于向米游社请求您的原神状态。" = "Cliquer sur \"Compris\" après avoir fini de vous connecter à HoYoLAB dans le page web suivant.\nLa Connection via Google, Facebook et Twitter à HoYoLAB n'est pas supporté, merci d'utiliser compte et mot de passe pour vous connecter\nVos informations de compte vont être stocké seulement dans l'appareil local et dans votre iCloud privé, et utilisé seuleument pour obtenir les données de Genshin Impact nécessaire à HoYoLAB. ";
 "自定义帐号名" = "Nom de compte personalisé";
 "请选择帐号" = "Choisir votre compte";
 "手动设置帐号详情" = "Détails du compte";
@@ -243,7 +243,7 @@
 "草元素" = "Dendro";
 "雷元素" = "Electro";
 "风元素" = "Anemo";
-"冰元素" = "Cyro";
+"冰元素" = "Cryo";
 "岩元素" = "Geo";
 
 // Widget
@@ -257,7 +257,7 @@
 "查询树脂恢复状态" = "Vérifier le niveau de récupération des résines";
 
 // Notification
-"打开「原神」" = "Ouvrir Genshin Impact";
+"打开《原神》" = "Ouvrir Genshin Impact";
 "通知设置" = "Réglages Notification";
 "「%@」原粹树脂提醒" = "Notification de %@ pour la Résine Originelle";
 "「%@」现有%lld原粹树脂，将在%@ 回满。" = "%@ a maintenant %lld de Résines Originelles, qui va être pleine à %@.";
@@ -266,7 +266,7 @@
 "「%@」探索派遣提醒" = "Notification de %@ pour les expedition";
 "「%@」的探索派遣已全部完成。" = "L'expeditions de %@ est complétée.";
 "「%@」周本折扣提醒" = "Boss Hebdomadaire de %@";
-"「%@」的周本树脂折扣树脂折扣还剩%lld次。" = "Il reste %lld réduction(s) de résine pour les Boss Hebdomadaires pour %@.";
+"「%@」的周本树脂折扣树脂折扣还剩%lld次。" = "Réduction de résine pour le boss hebdomadaire %@: %lld fois.";
 "「%@」参量质变仪提醒" = "Notification de %@ pour le transformeur paramétrique";
 "「%@」的参量质变仪已经可以使用。" = "Le transformeur paramétrique de %@ est disponible.";
 "「%@」每日委托提醒" = "Notification de %@n pour les Quêtes Quotidiennes";
@@ -430,14 +430,14 @@
 "编辑" = "Edit";
 
 //Widget Tips
-"如何添加、配置小组件和更换小组件背景？" = "How to add, configure Widget and change Widget background?";
-"小组件使用提示" = "Widget Tips";
-"如何配置小组件和修改小组件背景？" = "How to configure Widget and change Widget background?";
-"长按小组件，选择编辑\"原神披萨小助手\"" = "Long press the Widget, tap Edit \"Genshin Pizza\"";
-"根据提示选择设置项或启用/关闭功能或修改背景" = "";
-"如何添加小组件？" = "How to add a Widget on your Home Screen";
-"关于如何添加小组件，请参考Apple支持文档" = "About how to add a Widget, please refer to the Apple Support Documents";
-"如果您未能在小组件选单内找到本软件的小组件，请重启并等待十分钟后再尝试添加小组件" = "If you failed to find our Widget in the OS's Widget list, reboot and wait for 10 minutes, then try again";
+"如何添加、配置小组件和更换小组件背景？" = "Comment ajouter, configurer un widget et changer l'arrière-plan du widget ?";
+"小组件使用提示" = "Conseils sur les widgets";
+"如何配置小组件和修改小组件背景？" = "Comment configurer un widget et changer l'arrière-plan du widget ?";
+"长按小组件，选择编辑\"原神披萨小助手\"" = "Appuyez longuement sur le widget, appuyez sur Modifier \"GI Pizza\"";
+"根据提示选择设置项或启用/关闭功能或修改背景" = "Suivez les instructions pour sélectionner les paramètres, activer/désactiver des fonctionnalités ou modifier l'arrière-plan";
+"如何添加小组件？" = "Comment ajouter un widget sur votre écran d'accueil";
+"关于如何添加小组件，请参考Apple支持文档" = "Pour savoir comment ajouter un widget, veuillez vous référer aux documents d'assistance Apple";
+"如果您未能在小组件选单内找到本软件的小组件，请重启并等待十分钟后再尝试添加小组件" = "Si vous ne trouvez pas notre widget dans la liste des widgets de votre système d'exploitation, redémarrez et attendez 10 minutes avant de réessayer";
 
 // App Introduce Video
 "App介绍视频" = "App Introduction Video";
@@ -570,10 +570,9 @@
 "Twitter主页" = "Twitter Homepage";
 "YouTube频道" = "YouTube Channel";
 "翻译提供" = "Translators";
-"英语" = "English";
-"日语 英语" = "Japanese English";
-"法语" = "French";
-"日语" = "Japanese";
+"英文" = "English";
+"法文" = "French";
+"日文" = "Japanese";
 "たお👻🍑" = "Hatti";
 
 // weapon names
@@ -729,10 +728,10 @@
 "掠食者" = "Predator";
 
 // Add account
-"关于我们的工作原理" = "How we work?";
-"为了请求您的游戏内的数据，我们需要获取您的UID和Cookie，这是获取数据的必要参数。您在接下来的网页登录后，我们会在您的本地和iCloud存储您的个人数据。然后我们通过类似米游社的方式获取您的游戏内的数据信息。我们承诺，您的个人信息不会发送给任何人，包括我们自己。您的个人信息将会是非常安全的。" = "To get resin and other data from HoYoLAB, UID and login cookie of your account is needed. After logging into HoYoLAB, we will store them locally as well as on your private iCloud. Then our app will use the stored UID and cookie to get the resin and other information in a way similar to HoYoLAB app, then display them on your widget. Your private information will not be sent to other places other than HoYoLAB and iCloud, including us, so your personal information will be very secure.";
-"关于您的帐号安全" = "About your account security";
-"本程序不属于外挂等违法程序。本程序遵守米哈游二次创作规则的相关内容。根据中国原神客服的答复，使用本程序不会造成封号等问题。具体内容参见设置 - FAQ." = "This procedure is not an illegal procedure such as plug-ins. This program abides by the relevant content of miHoYo's secondary creation rules. According to the reply of China's Genshin Impact customer service, the use of our program will not cause problems such as blocking. For details, see Settings - FAQ.";
+"关于我们的工作原理" = "Comment nous travaillons ?";
+"为了请求您的游戏内的数据，我们需要获取您的UID和Cookie，这是获取数据的必要参数。您在接下来的网页登录后，我们会在您的本地和iCloud存储您的个人数据。然后我们通过类似米游社的方式获取您的游戏内的数据信息。我们承诺，您的个人信息不会发送给任何人，包括我们自己。您的个人信息将会是非常安全的。" = "Pour obtenir de la résine et d'autres données de HoYoLAB, il est nécessaire d'avoir l'UID et le cookie de connexion de votre compte. Après vous être connecté à HoYoLAB, nous les stockerons localement ainsi que sur votre iCloud privé. Ensuite, notre application utilisera l'UID et le cookie stockés pour obtenir la résine et d'autres informations d'une manière similaire à l'application HoYoLAB, puis les afficher sur votre widget. Vos informations personnelles ne seront pas envoyées à d'autres endroits autres que HoYoLAB et iCloud, y compris nous-mêmes, donc vos informations personnelles seront très sécurisées.";
+"关于您的帐号安全" = "À propos de la sécurité de votre compte";
+"本程序不属于外挂等违法程序。本程序遵守米哈游二次创作规则的相关内容。根据中国原神客服的答复，使用本程序不会造成封号等问题。具体内容参见设置 - FAQ." = "Cette procédure n'est pas une procédure illégale telle que des plug-ins. Ce programme respecte le contenu pertinent des règles de création secondaire de miHoYo. Selon la réponse du service client de Genshin Impact en Chine, l'utilisation de notre programme ne causera pas de problèmes tels que le blocage. Pour plus de détails, consultez Paramètres - FAQ.";
 
 // MARK: - 2.4.1
 // Widget
@@ -742,17 +741,17 @@
 
 // MARK: - 2.5.0
 // Material Provider
-"星期一 & 星期四" = "Mon & Thu";
-"星期二 & 星期五" = "Tue & Fri";
-"星期三 & 星期六" = "Wed & Sat";
-"星期日" = "Sunday";
+"星期一 & 星期四" = "Lundi et Jeudi";
+"星期二 & 星期五" = "Mardi et Vendredi";
+"星期三 & 星期六" = "Mercredi et Samedi";
+"星期日" = "Dimanche";
 
 // Tool View
-"请先选择账号" = "Please choose account first";
-"角色展示柜" = "Character Showcase";
-"账号未展示角色" = "No characters found in the Character Showcase";
-"今日入账" = "Acquired Today";
-"需要重新登陆本账号以查询，点击重新登陆" = "Please tap to relogin to query this part.";
+"请先选择帐号" = "Veuillez d'abord choisir un compte";
+"角色展示柜" = "Vitrine de personnages";
+"帐号未展示角色" = "Aucun personnage trouvé dans la vitrine de personnages";
+"今日入账" = "Acquisitions d'aujourd'hui";
+"需要重新登录本帐号以查询，点击重新登录" = "Veuillez appuyer pour vous reconnecter et effectuer la recherche.";
 // apiral abyss sheet
 "深境螺旋详情" = "Spiral Abyss Details";
 "保存%lld层的深渊数据" = "Save image for level %lld";
@@ -869,17 +868,17 @@
 "共获得%lld金，其中角色%lld金，武器%lld金。（未统计旅行者和无人装备的五星武器）" = "Acquired 5-star items %lld times from gacha, including 5-star characters %lld times and 5-star weapons %lld times. (Unequipped star 5 weapons are not counted)";
 "精%lld" = "R%lld";
 "全部角色" = "All Characters";
-"5星角色" = "5-star characters";
-"4星角色" = "4-star characters";
+"五星角色" = "5-star characters";
+"四星角色" = "4-star characters";
 "的所有角色" = "Owned Characters";
 "生命值上限" = "Max HP";
 "元素精通​" = "EM"; // 此处元素精通后添加了一个零宽字符，用于英文缩写
 "纳西妲" = "Nahida";
-"莱依拉" = "Layla"; 
+"莱依拉" = "Layla";
 "千夜浮梦" = "Mille rêves flottants";
 
 // MARK: - 2.5.4 HOTFIX
-"账号状态异常，请前往米游社-旅行便笺重新验证" = "Account status is abnormal, please go to HoYoLAB to re-verify";
+"帐号状态异常，请前往米游社-旅行便笺重新验证" = "Account status is abnormal, please go to HoYoLAB to re-verify";
 // MARK: - 2.5.4
 "%lld月原石收入" = "Primogem Income";
 
@@ -911,10 +910,10 @@
 "允许" = "Yes";
 
 // MARK: - 2.6.2
-"反复出现账号异常？点击查看解决方案" = "Recurring account exceptions? Click to see the solution";
+"反复出现帐号异常？点击查看解决方案" = "Recurring account exceptions? Click to see the solution";
 "1034问题的解决方案" = "1034 Problem Solution";
 "点击打开米游社App" = "Click to open miHoYoBBS App";
-"（1034）账号状态异常，请前往「米游社」App-「我的」-「我的角色」进行验证" = "(1034) The account status is abnormal, please go to the 'HoYoLAB' App - 'My' - 'My Battle Chronicle' to re-verify";
+"（1034）帐号状态异常，请前往「米游社」App-「我的」-「我的角色」进行验证" = "(1034) The account status is abnormal, please go to the 'HoYoLAB' App - 'My' - 'My Battle Chronicle' to re-verify";
 "小组件设置" = "Widget Setting";
 "主屏幕小组件刷新频率" = "Home screen widget refresh frequency";
 "锁定屏幕小组件刷新频率" = "Lock screen widget refresh frequency";
@@ -942,8 +941,8 @@
 "您的通知均在本地创建，并在小组件自动刷新时，或您主动打开App时自动更新。\n长时间未打开App或未使用小组件可能会导致通知不准确。\n小组件若处于简洁模式下，部分通知可能仅能通过打开App刷新。" = "Notifications are created locally and are automatically updated when the widget refreshes, or when you open the App. \nLong periods of time without opening the App or without using the widget may result in inaccurate notifications. \nSome notifications may only be refreshed by opening the App if the widget is in clean mode.";
 
 "顶置" = "Pin to top";
-"（1034）账号状态异常，建议降低小组件请求频率，或长按小组件开启简洁模式" = "(1034) The account status is abnormal. It is recommended to reduce the widget request frequency, or long press the widget to open the simple mode";
-"请重新登录本账号以获取stoken" = "Please re-login this account to get stoken";
+"（1034）帐号状态异常，建议降低小组件请求频率，或长按小组件开启简洁模式" = "(1034) The account status is abnormal. It is recommended to reduce the widget request frequency, or long press the widget to open the simple mode";
+"请重新登录本帐号以获取stoken" = "Please re-login this account to get stoken";
 "请登录「%@」" = "Log in to \"%@\"";
 
 // MARK: - v2.6.5
@@ -954,7 +953,7 @@
 "自动启用树脂计时器" = "Enable resin timer automatically";
 "树脂计时器是什么？" = "What is the resin timer";
 "创建树脂计时器成功" = "Create Resin Timer Successfully";
-"若开启，在退出本App时会自动启用一个“实时活动”树脂计时器。默认为顶置的账号，或树脂最少的账号开启计时器。您也可以在“概览”页长按某个账号的卡片手动开启，或启用多个计时器。" = "If enabled, a \"real-time activity\" resin timer will be set after you exit the app. The timer will be set for account the pinned to the top or the account with the least resins by default. You can also enable the timer for an account manually by long press the account infomation card on the \"Overview\" tab or enable more timers.";
+"若开启，在退出本App时会自动启用一个「实时活动」树脂计时器。默认为顶置的帐号，或树脂最少的帐号开启计时器。您也可以在「概览」页长按某个帐号的卡片手动开启，或启用多个计时器。" = "If enabled, a \"real-time activity\" resin timer will be set after you exit the app. The timer will be set for account the pinned to the top or the account with the least resins by default. You can also enable the timer for an account manually by long press the account infomation card on the \"Overview\" tab or enable more timers.";
 "前往设置开启实时活动功能" = "Move to settings to enable \"real-time activity\" feature";
 "实时活动功能未开启，请前往设置开启。" = "\"Real-time activity\" disabled. Please enable it in the settings.";
 
@@ -974,7 +973,7 @@
 
 // Real-time activity error
 "未知错误：%@" = "Unknown Error: %@";
-"账号未获取信息" = "No info with account";
+"帐号未获取信息" = "No info with account";
 "系统设置不允许本软件开启实时活动，请前往开启" = "The system settings are not allowed to start the real-time activity, please go to open";
 
 // MARK: - 2.7.1
@@ -1005,19 +1004,19 @@
 "原粹树脂回满倒计时" = "Timer of the Oringinal Resin";
 "展示原粹树脂与恢复到160树脂的倒计时" = "Showing the original resin and the countdown to 160 resin.";
 "树脂溢出提醒" = "Resin back to full notification";
-"本账号无stoken，可能影响简洁模式下小组件使用。建议重新登陆以获取stoken。" = "No stoken found in cookies, which may affect the use of the widget in simplified mode. It is recommended to re-login to get stoken.";
+"本帐号无stoken，可能影响简洁模式下小组件使用。建议重新登录以获取stoken。" = "No stoken found in cookies, which may affect the use of the widget in simplified mode. It is recommended to re-login to get stoken.";
 
 "今天 " = "Tdy ";
 "明天 " = "Tmw ";
 "实时活动功能未开启" = "\"Real-time activity\" disabled. ";
-"Events and Materials" = "";
+"活动和材料" = "Events and Materials";
 "展示近日活动和今天可以获取的武器和天赋材料。" = "Show the recent events and the weapons' or talents' materials that can be obtained today.";
 "LockScreenHomeCoinWidgetRectangular.resin" = "Resin";
 "LockScreenHomeCoinWidgetRectangular.homeCoin" = "Realm";
 "每小时%@个" = "%@ per hour";
 "每%@" = "Every %@";
 
-"（1034）账号状态异常，建议降低小组件同步频率，或长按小组件开启简洁模式" = "(1034) Account status is abnormal, suggest to reduce the widget sync frequency, or long press the widget to open simplified mode";
+"（1034）帐号状态异常，建议降低小组件同步频率，或长按小组件开启简洁模式" = "(1034) Account status is abnormal, suggest to reduce the widget sync frequency, or long press the widget to open simplified mode";
 "小组件固定每8分钟刷新一次，同步频率不会影响小组件刷新。建议您尽可能设置更长的同步频率，并在每次游玩后打开App自动同步一次。" = "The widget is fixed to refresh every 8 minutes, the sync frequency will not affect the widget refresh. It is recommended that you set a longer sync frequency if possible and open the app to sync once after each tour.";
 "小组件同步频率" = "Widget Sync Frequency";
 "主屏幕小组件同步频率" = "Home screen widget sync frequency";
@@ -1033,3 +1032,280 @@
 
 // MARK: -2.7.4
 "「%@」的原粹树脂已回满。" = "%@'s origin resin is full. ";
+
+// MARK: - 2.7.6
+"腐殖之剑" = "Festering Desire";
+"风花之颂" = "Windblume Ode";
+"「渔获」" = "The Catch";
+
+// MARK: - 2.7.8
+"瑶瑶" = "Yaoyao";
+"艾尔海森" = "Alhaitham";
+"裁叶萃光" = "Light of Foliar Incision";
+"注意：通知设置更改对目前已安排的通知不生效。" = "Note: Notification settings changes will not take effect for currently scheduled notifications.";
+
+// MARK: - 2.7.9
+"俄文" = "Russian";
+
+// MARK: - 2.7.10
+"使用率分级仅作深渊配队参考，不代表对角色的任何评价。" = "Utilization ratings are only for reference in Abyss team formation, and do not represent any evaluation of characters.";
+"强烈推荐选用的角色" = "Highly Recommended Characters";
+"推荐选用的角色" = "Recommended Characters";
+"优先选用的角色" = "Preferred Characters";
+"可以选用的角色" = "Optional Characters";
+"酌情选用的角色" = "Discretionary Characters";
+"普遍可用的角色" = "Universally Available Characters";
+"清空缓存 (%@MB)" = "Clean the Cache (%@MB)";
+
+// MARK: - 2.7.11
+"米卡" = "Mika";
+"苇海信标" = "Balise de la mer de roseaux";
+"饰铁之花" = "Fleur de mailles";
+
+"纪行・蕈原" = "PB - Fongisme";
+"纳西妲・仰月" = "Nahida - Croissant";
+"流浪者・浮歌" = "Nomade - Ballade d'errance";
+"莱依拉・昼梦" = "Layla - Rêverie";
+"纪行・灵津" = "PB - Rivières stellaires";
+"纪行・合韵" = "PB - Rime";
+"珐露珊・封秘" = "Faruzan - Secret scellé";
+"成就・七圣" = "Succès - Invocateur";
+"艾尔海森・诲明" = "Alhaitham - Érudition";
+"须弥·砂岚" = "Sumeru: Sandstorm";
+"瑶瑶・月桂" = "Yaoyao - Yuegui";
+
+"暂无当前活动信息" = "Pas d'informations sur les événements en cours";
+"原神活动信息由[Project Amber](https://ambr.top/)提供" = "Les informations sur les événements de Genshin Impact sont fournies par [Project Amber](https://ambr.top/)";
+
+// MARK: - 2.7.12
+"越南文" = "Vietnamese";
+"未重开玩家使用率" = "Non-restarted Player Usage Rate";
+"时区" = "Timezone";
+"我们会根据您所选服务器对应时区计算每日材料刷新时间。当前时区：%@。" = "We calculate time based on the timezone of the server you chose. Current timezone: %@.";
+"自2023年4月1日起提供" = "Available From 2023-04-01";
+
+// MARK: - 2.7.14
+"中文汉字纠正" = "Chinese UI Text Correction";
+"这将会在简体中文当中强制自动恢复目前已被当地语委恢复的「锺」、在繁体中文当中强制自动恢复「堇」的当代繁体中文写法「菫」。" = "This will convert 钟 & 钟离 (as family names) to 锺 & 锺离 when the UI language is Simplified Chinese. If Traditional Chinese, it will instead convert 堇 to 菫.";
+"显示圣遗物等级与稀有度" = "Show artifact levels and rarity stars";
+"雷电国崩" = "Raiden Kunikuzushi";
+"雷电国崩・浮歌" = "Raiden Kunikuzushi - Ballade d'errance";
+"显示部分角色的真实姓名" = "Show certain characters' real names";
+"角色详情排版间距适配" = "Adaptive layout in character view";
+"这仅对 iPad 以及有「刘海」的 iPhone 生效。" = "This only works with iPad and notched iPhone models.";
+"界面偏好设置" = "UI Settings";
+
+// MARK: - 2.8.0
+"琥珀玥" = "Catalyseur en ambre";
+"黑檀弓" = "Arc en ébène";
+"暗铁剑" = "Épée en fer noir";
+"沐浴龙血的剑" = "Épée sanglante";
+"石英大剑" = "Grande épée en quartz";
+"「旗杆」" = "La hampe";
+"翡玉法球" = "Orbe jadien";
+
+// Display Options
+"裁掉小尺寸角色照片当中的肩膀" = "Recadrer les épaules d'une photo de personnage de petite taille";
+
+// artifact rating
+"%@分" = "%@pt";
+"圣遗物评价" = "Artifact Rank";
+"显示圣遗物评分与评价" = "Show artifact scores and ratings";
+"自定义流浪者姓名" = "Edit Wanderer's Name";
+"自定义姓名" = "Edit Name";
+"请输入自定义流浪者姓名" = "Please enter Wanderer's customized name";
+
+// wish analysis
+"请点击右上角获取抽卡记录" = "Click top right to obtain";
+"祈愿分析" = "Gacha Analysis";
+"角色活动祈愿" = "Character Event";
+"角色活动祈愿-2" = "Character Event - 2";
+"初行者推荐祈愿" = "Beginner's Wish";
+"武器活动祈愿" = "Weapon Event";
+"常驻祈愿" = "Standard";
+"更多图表" = "More Charts";
+"统计数据" = "Statistical Data";
+"当前已垫" = "After Last 5-star";
+"%lld抽" = "%lld Pulls";
+"总抽数" = "Total Pulls";
+"五星平均抽数" = "5-star Average Pulls";
+"五星平均消耗原石数" = "5-star Average Primogems Cost";
+"限定五星平均抽数" = "Limited 5-star Average Pulls";
+"不歪率" = "Won 50/50";
+"派蒙的评价" = "Paimon's Review";
+"总消耗原石数" = "Total Primogems Cost";
+"限定五星平均消耗原石数" = "Limited 5-star Average Primogems Cost";
+"平均抽数：" = "Average Pulls:";
+"暂不支持国际服" = "暂不支持国际服";
+
+"详细记录" = "Record Details";
+"其他图表" = "Other Charts";
+"切换为%@" = "Switch to %@";
+"总抽数分布" = "Distribution of Total Pulls";
+
+"所有记录" = "All";
+"四星及五星" = "4-star & 5-star";
+"五星" = "5-star";
+
+"我该选哪个？" = "Quel devrais-je choisir ?";
+"通过API获取" = "Via API";
+"通过抓包获取" = "Via Capture de Paquets";
+"通过粘贴祈愿页面URL获取" = "Via Copie d'URL de l'historique de souhaits";
+"导入UIGF祈愿记录" = "Importer le journal de souhaits UIGF";
+
+"抽卡记录获取帮助" = "Aide pour le journal de souhaits";
+"无论选择哪种方式，我们都为您提供了详细的操作教程" = "Peu importe la méthode que vous choisissez, nous vous fournissons des tutoriels d'opération détaillés";
+"您也可以选择参考我们的视频完成相关操作" = "Vous pouvez également consulter nos vidéos pour effectuer ces opérations";
+"如果您的帐号所在服务器位于中国大陆" = "Si votre compte est sur les serveurs de la Chine continentale";
+"请优先选择「通过API」一键获取" = "Choisissez « Via API » en premier";
+"仅适用于中国大陆服务器" = "Disponible uniquement pour les serveurs de Chine continentale";
+"如果当前这台设备有安装《原神》" = "Si vous avez installé Genshin Impact sur cet appareil";
+"建议优先选择「通过抓包获取」" = "Choisissez « Via Capture de Paquets » en premier";
+"适用于所有服务器" = "Disponible pour tous les serveurs";
+"如果当前这台设备尚未安装《原神》" = "Si vous n'avez PAS installé Genshin Impact sur cet appareil";
+"建议使用「通过粘贴祈愿页面URL」获取，我们亦内附了教程" = "Il est recommandé d'utiliser « Copie d'URL de l'historique de souhaits », nous avons également fourni des tutoriels pour cela";
+"如果您之前使用其他软件获取过祈愿记录，且该软件支持导出UIGF（统一可交换祈愿记录标准）格式的文件，您可以将其导入" = "Si vous utilisez d'autres logiciels pour obtenir le journal de gacha et que le logiciel prend en charge les fichiers au format UIGF (norme de journal de gacha interchangeables uniformes), vous pouvez les importer.";
+"支持UIGF的软件" = "Logiciels prenant en charge UIGF";
+
+"在进行抓包获取祈愿链接前，您需要根据以下3个步骤安装CA证书。" = "Avant de capturer l'URL de l'historique des souhaits, vous devez installer le certificat CA selon les 3 étapes suivantes.";
+"如您在抓包过程中无法连接互联网，请检查本页面所有3个步骤是否完成。" = "Si vous ne pouvez pas vous connecter à Internet pendant le processus de capture, veuillez vérifier si les 3 étapes de cette page ont été terminées.";
+"您也可以选择根据跟随以下视频进行安装CA证书。" = "Vous pouvez également choisir d'installer le certificat CA en suivant la vidéo suivante.";
+"下载CA证书" = "Télécharger le certificat CA";
+"点击以下链接下载CA证书。" = "Cliquez sur le lien ci-dessous pour télécharger le certificat CA.";
+"安装CA证书" = "Installer le certificat CA";
+"前往「设置」App → 「通用」 → 「VPN与设备管理」 → （已下载的描述文件）「Pizza Helper CA」 → 「安装」" = "Accédez à l'application 'Paramètres' → 'Général' → 'VPN et gestion des appareils' → (profil téléchargé) 'Pizza Helper CA' → 'Installer'";
+"信任CA证书" = "Faire confiance au certificat CA";
+"前往系统「设置」 → 「通用」 → 「关于本机」 → （最下方）「信任证书设置」 → activer l'interrupteur 'Pizza Helper CA'" = "Accédez aux 'Paramètres' du système → 'Général' → 'À propos' → (en bas) 'Réglages de confiance des certificats' → activez l'interrupteur 'Pizza Helper CA'";
+"如何安装CA证书？" = "Comment installer le certificat CA?";
+"CA证书相关" = "En rapport avec le certificat CA";
+"CA证书安装教程" = "Tutoriel d'installation du certificat CA";
+"关于CA证书" = "À propos du certificat CA";
+"请务必确保CA证书下载、安装、信任。" = "Veuillez vous assurer de télécharger, installer et faire confiance au certificat CA.";
+"这台设备需要安装《原神》并处于能够正常游玩游戏的网络环境下。" = "Votre téléphone doit avoir 'Genshin Impact' installé et se trouver dans un environnement réseau qui permet de jouer normalement au jeu.";
+"点击「开始抓包」按钮。" = "Cliquez sur le bouton 'Commencer la capture'.";
+"返回主屏幕，打开《原神》并打开祈愿界面，点击「历史记录」按钮。如成功获取到链接，本软件会向您推送一条通知。" = "Retournez à l'écran principal, ouvrez 'Genshin Impact' et accédez à l'interface de vœux. Cliquez sur le bouton 'Historique'. Si l'URL de l'historique des souhaits est obtenue avec succès, ce logiciel vous enverra une notification.";
+"返回本软件，点击「开始获取祈愿记录」按钮，等待获取完成。" = "Revenez à ce logiciel, cliquez sur le bouton 'Commencer à obtenir les enregistrements de vœux' et attendez la fin de l'obtention.";
+"如何获取祈愿链接？" = "Comment obtenir l'URL de l'historique des souhaits?";
+"视频教程" = "Tutoriel vidéo";
+"您也可以选择根据跟随我们的视频教程获取祈愿记录。" = "Vous pouvez également choisir de suivre notre tutoriel vidéo pour obtenir les enregistrements de vœux.";
+"帮助" = "Aide";
+"确认已经下载、安装并信任CA证书？" = "Avez-vous confirmé avoir téléchargé, installé et fait confiance au certificat CA ?";
+"未正确下载、安装或信任CA证书可能会导致URL抓取功能失效等问题" = "Le téléchargement, l'installation ou la confiance incorrecte dans le certificat CA peut entraîner des problèmes tels que le dysfonctionnement de la fonction de capture d'URL.";
+"我已经下载、安装并信任了CA证书" = "Je l'ai fait";
+"返回" = "Retourner";
+
+"停止抓包" = "Arrêter la capture de paquets";
+"开始抓包" = "Commencer la capture de paquets";
+"通过抓包获取获取祈愿链接" = "Obtenir l'URL d'historique de souhaits en capturant des paquets";
+"重新抓包" = "Capturer les paquets à nouveau";
+"等待祈愿链接…" = "En attente de l'URL de l'historique de souhaits…";
+"开始获取祈愿记录" = "Commencer à obtenir les enregistrements de souhaits";
+"成功获取祈愿数据" = "Données de souhaits obtenues avec succès";
+"共保存了%lld条新的祈愿数据" = "Un total de %lld nouvelles données de souhaits ont été enregistrées";
+"获取失败，因为错误：\n%@" = "Échec de l'obtention en raison d'une erreur :\n%@";
+"成功获取到祈愿记录链接" = "URL de l'historique de souhaits obtenue avec succès";
+"请点击「开始获取祈愿记录」以继续" = "Veuillez cliquer sur 'Commencer à obtenir les enregistrements de souhaits' pour continuer";
+"获取祈愿记录" = "Obtenir les enregistrements de souhaits";
+"正在抓包…请前往打开《原神》前往祈愿记录页面" = "Capture de paquets en cours… Veuillez ouvrir 'Genshin Impact' et accéder à la page d'historique de souhaits";
+"正在开启VPN" = "Activation du VPN en cours";
+"等待开始…" = "En attente du début…";
+"获取到%@条记录，成功保存%@条新记录\n请返回上一级查看，或继续获取其他帐号的记录" = "Obtenu %@ enregistrements, %@ d'entre eux ont été enregistrés avec succès.\nRetournez à la page précédente pour les visualiser ou continuez d'obtenir des enregistrements d'autres comptes.";
+"成功获取到一批…" = "Obtenu avec succès…";
+"卡池：%@" = "Piscine : %@";
+"页码：%@" = "Page : %@";
+"获取到新记录：%@条" = "Nouveaux enregistrements : %@";
+"已获取记录：%@条" = "Enregistrements déjà obtenus : %@";
+"正在获取祈愿记录…请等待" = "Récupération de l'historique de vœux… Veuillez patienter.";
+"获取祈愿记录失败" = "Impossible de récupérer l'historique de vœux";
+"日期" = "Date";
+"抽数" = "Tirages";
+"祈愿类型" = "Catégorie de vœu";
+
+"从剪贴板中获取祈愿URL" = "Obtenir l'URL d'historique de souhaits à partir du presse-papiers";
+"成功获取到祈愿链接" = "URL d'historique de souhaits obtenue avec succès";
+"请返回继续获取祈愿记录。" = "Veuillez revenir en arrière et continuer à obtenir l'historique des souhaits.";
+"重新获取祈愿链接" = "Obtenir à nouveau l'URL d'historique de souhaits";
+"开始获取祈愿记录" = "Commencer à obtenir l'historique des souhaits";
+"从剪贴板上获取到的链接有误" = "L'URL obtenue à partir du presse-papiers est incorrecte";
+"预期应获取到祈愿链接，但获取到了错误的内容：\n%@" = "Il était prévu d'obtenir l'URL d'historique des souhaits, mais le contenu obtenu est incorrect :\n%@";
+"未能从剪贴板获取到内容" = "Impossible d'obtenir le contenu du presse-papiers";
+"由paimon.moe提供的获取祈愿链接的方法" = "La méthode d'obtention de l'historique des souhaits fournie par paimon.moe";
+"其他获取祈愿链接的方法" = "Autres méthodes d'obtention de l'URL d'historique des souhaits";
+"您可以将其他软件获取的祈愿链接粘贴至本软件以获取祈愿记录。但本软件不对外部程序可靠性负责。" = "Vous pouvez coller l'URL d'historique des souhaits obtenue à partir d'un autre logiciel dans cette application pour obtenir l'historique des souhaits. Cependant, cette application n'est pas responsable de la fiabilité des programmes externes.";
+
+"导入UIGF JSON格式祈愿记录" = "Importer les enregistrements de vœux au format JSON UIGF";
+"导入UIGF XLSX格式祈愿记录" = "Importer les enregistrements de vœux au format XLSX UIGF";
+"导入中，请稍候…" = "Importation en cours, veuillez patienter…";
+"数据来自：%@" = "Source de données : %@";
+"导出时间：%@" = "Temps d'exportation : %@";
+"导入了%lld条记录" = "%lld enregistrements ont été importés";
+"储存了%lld条新记录" = "%lld nouveaux enregistrements ont été stockés";
+"继续导入" = "Continuer l'importation";
+"导入失败" = "L'importation a échoué";
+"错误信息：%@" = "Message d'erreur : %@";
+"重试" = "Réessayer";
+"成功导入祈愿数据" = "Les données de vœux ont été importées avec succès";
+"请耐心等待…" = "Veuillez patienter…";
+"开始" = "Démarrer";
+"无法访问文件" = "Impossible d'accéder au fichier";
+"原始数据不存在" = "La feuille de données brutes (Raw Data) n'existe pas";
+"数据表缺失数据" = "Table de données manquante";
+"未成功从文件中解码数据" = "Échec du décodage des données à partir du fichier";
+"导入帮助" = "Aide à l'importation";
+"以下程序或平台的JSON导出格式已通过可用性验证" = "Programmes ou plateformes vérifiés disponibles pour l'exportation JSON";
+"以下程序或平台的XLSX导出格式已通过可用性验证" = "Programmes ou plateformes vérifiés disponibles pour l'exportation XLSX";
+"我们支持所有严格遵守UIGF标准的导出文件。受支持的App及对应导出格式请点击右上角参阅帮助页面。" = "Nous prenons en charge tous les fichiers d'exportation qui respectent strictement la norme UIGF. Pour une liste des applications prises en charge et des formats d'exportation correspondants, veuillez cliquer sur le coin supérieur droit pour ouvrir la page d'aide.";
+"我们支持导入所有符合UIGF格式的文件，但我们仍发现部分宣称已支持UIGF的软件导出的记录不合标准。以下为经验证能够顺利导入本App的软件。" = "Nous prenons en charge l'importation de tous les fichiers conformes au format UIGF, mais nous avons constaté que certains logiciels qui prétendent prendre en charge UIGF ne respectent pas la norme. Les logiciels suivants ont été vérifiés pour pouvoir être importés sans problème dans cette application.";
+
+// gacha data management
+"导出UIGF祈愿记录" = "Exporter les enregistrements de souhaits UIGF";
+"祈愿数据管理" = "Gestion des données de souhaits";
+"清理重复数据" = "Nettoyer les données en double";
+"清理因iCloud同步导致出现的重复祈愿记录" = "Nettoyer les enregistrements de souhaits en double causés par la synchronisation iCloud";
+"选择帐号" = "Sélectionner un compte";
+"未选择" = "Non sélectionné";
+"删除所有时间的记录" = "Supprimer les enregistrements indépendamment de la date.";
+"开始日期" = "Date de début";
+"结束日期" = "Date de fin";
+"删除祈愿记录" = "Supprimer les enregistrements de souhaits";
+"导出祈愿记录" = "Exporter les enregistrements de souhaits";
+"确定要删除「%@」的祈愿数据吗？" = "Êtes-vous sûr de vouloir supprimer les données de souhaits de \"%@\" ?";
+"即将删除「%@」%@的祈愿数据。" = "Les données de souhaits de \"%@\"%@ sont sur le point d'être supprimées.";
+"删除了%lld条数据" = "Supprimé %lld enregistrements";
+"删除了%lld条重复数据" = "Supprimé %lld enregistrements en double";
+"所有" = "Tous";
+"自%@到%@" = "De %@ à %@";
+
+// gacha avaliable language
+"泰文" = "Thaïlandais";
+"朝鲜文" = "Coréen";
+"西班牙文" = "Espagnol";
+"日文" = "Japonais";
+"简体中文" = "Chinois simplifié";
+"印尼文" = "Indonésien";
+"葡萄牙文" = "Portugais";
+"德文" = "Allemand";
+"法文" = "Français";
+"繁体中文" = "Chinois traditionnel";
+"俄文" = "Russe";
+"英语（美国）" = "Anglais (US)";
+"越南文" = "Vietnamien";
+"选择语言" = "Sélectionner la langue";
+
+// Additional terms
+"开始导入？" = "Commencer l'importation ?";
+"导入数据需要一段时间，请耐心等待。" = "L'importation des données peut prendre un certain temps, veuillez patienter...";
+
+// Genshin 3.6 new heros and weapons
+"白术" = "Baizhu";
+"卡维" = "Kaveh";
+"碧落之珑" = "Jadefall’s Splendor";
+
+"复制祈愿链接到剪贴板" = "Copier le lien de vœu dans le presse-papiers";
+"暂无五星祈愿记录" = "Aucun enregistrement de vœu à 5 étoiles pour le moment";
+"成功将祈愿链接复制到剪贴板" = "Le lien de vœu a été copié avec succès dans le presse-papiers";
+
+// Genshin 3.6 Namecards
+"迪希雅・净焰" = "Dehya - Feu purifiant";
+"米卡・索引" = "Mika - Index";
+"纪行・意巧" = "PB - Débrouillardise";

@@ -8,7 +8,7 @@
 import Foundation
 
 @main
-struct WidgetLauncher {
+enum WidgetLauncher {
     static func main() {
         if #available(iOSApplicationExtension 16.0, *) {
             WidgetsBundleiOS16.main()

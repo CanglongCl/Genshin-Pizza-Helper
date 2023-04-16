@@ -6,6 +6,9 @@
 //  HTTP请求方法
 
 import Foundation
+import HBMihoyoAPI
+
+// MARK: - Method
 
 enum Method {
     case post
@@ -13,8 +16,9 @@ enum Method {
     case put
 }
 
-struct HttpMethod<T: Codable> {
+// MARK: - HttpMethod
 
+struct HttpMethod<T: Codable> {
     /// 综合的http 各种方法接口
     /// - Parameters:
     ///   - method:Method, http方法的类型
@@ -24,14 +28,14 @@ struct HttpMethod<T: Codable> {
     ///   - uid: String, UID
     ///   - cookie: String， 用户Cookie
     ///   - completion:异步返回处理好的data以及报错的类型
-    static func commonRequest (
+    static func commonRequest(
         _ method: Method,
         _ urlStr: String,
         _ region: Region,
         _ serverID: String,
         _ uid: String,
         _ cookie: String,
-        completion: @escaping(
+        completion: @escaping (
             (Result<T, RequestError>) -> ()
         )
     ) {
@@ -40,11 +44,21 @@ struct HttpMethod<T: Codable> {
         func getSessionConfiguration() -> URLSessionConfiguration {
             let sessionConfiguration = URLSessionConfiguration.default
 
-            let sessionUseProxy = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.bool(forKey: "useProxy")
-            let sessionProxyHost = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyHost")
-            let sessionProxyPort = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyPort")
-            let sessionProxyUserName = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyUserName")
-            let sessionProxyPassword = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyUserPassword")
+            let sessionUseProxy =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .bool(forKey: "useProxy")
+            let sessionProxyHost =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyHost")
+            let sessionProxyPort =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyPort")
+            let sessionProxyUserName =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyUserName")
+            let sessionProxyPassword =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyUserPassword")
             if sessionUseProxy {
                 guard let sessionProxyHost = sessionProxyHost else {
                     print("Proxy host error")
@@ -55,24 +69,54 @@ struct HttpMethod<T: Codable> {
                     return sessionConfiguration
                 }
 
-                if sessionProxyUserName != nil && sessionProxyUserName != "" && sessionProxyPassword != nil && sessionProxyPassword != "" {
+                if sessionProxyUserName != nil, sessionProxyUserName != "",
+                   sessionProxyPassword != nil, sessionProxyPassword != "" {
                     print("Proxy add authorization")
-                    let userPasswordString = "\(String(describing: sessionProxyUserName)):\(String(describing: sessionProxyPassword))"
-                    let userPasswordData = userPasswordString.data(using: String.Encoding.utf8)
-                    let base64EncodedCredential = userPasswordData!.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+                    let userPasswordString =
+                        "\(String(describing: sessionProxyUserName)):\(String(describing: sessionProxyPassword))"
+                    let userPasswordData = userPasswordString
+                        .data(using: String.Encoding.utf8)
+                    let base64EncodedCredential = userPasswordData!
+                        .base64EncodedString(
+                            options: Data
+                                .Base64EncodingOptions(rawValue: 0)
+                        )
                     let authString = "Basic \(base64EncodedCredential)"
-                    sessionConfiguration.httpAdditionalHeaders = ["Proxy-Authorization": authString]
-                    sessionConfiguration.httpAdditionalHeaders = ["Authorization" : authString]
+                    sessionConfiguration
+                        .httpAdditionalHeaders =
+                        ["Proxy-Authorization": authString]
+                    sessionConfiguration
+                        .httpAdditionalHeaders = ["Authorization": authString]
                 }
 
                 print("Use Proxy \(sessionProxyHost):\(sessionProxyPort)")
 
                 #if !os(watchOS)
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPEnable as String] = true
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPProxy as String] = sessionProxyHost
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPPort as String] = sessionProxyPort
-                sessionConfiguration.connectionProxyDictionary?[kCFProxyTypeHTTP as String] = "\(sessionProxyHost):\(sessionProxyPort)"
-                sessionConfiguration.connectionProxyDictionary?[kCFProxyTypeHTTPS as String] = "\(sessionProxyHost):\(sessionProxyPort)"
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPEnable as String
+                    ] =
+                    true
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPProxy as String
+                    ] =
+                    sessionProxyHost
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPPort as String
+                    ] =
+                    sessionProxyPort
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFProxyTypeHTTP as String
+                    ] =
+                    "\(sessionProxyHost):\(sessionProxyPort)"
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFProxyTypeHTTPS as String
+                    ] =
+                    "\(sessionProxyHost):\(sessionProxyPort)"
                 #endif
             } else {
                 print("No Proxy")
@@ -89,7 +133,7 @@ struct HttpMethod<T: Codable> {
                 s = "okr4obncj8bw5a65hbnn5oo6ixjc3l9w"
             }
             let t = String(Int(Date().timeIntervalSince1970))
-            let r = String(Int.random(in: 100000..<200000))
+            let r = String(Int.random(in: 100000 ..< 200000))
             let q = "role_id=\(uid)&server=\(server_id)"
             let c = "salt=\(s)&t=\(t)&r=\(r)&b=&q=\(q)".md5
             return t + "," + r + "," + c
@@ -97,7 +141,6 @@ struct HttpMethod<T: Codable> {
 
         if networkReachability.reachable {
             DispatchQueue.global(qos: .userInteractive).async {
-
                 // 请求url前缀，后跟request的类型
                 let baseStr: String
                 let appVersion: String
@@ -107,19 +150,21 @@ struct HttpMethod<T: Codable> {
                 case .cn:
                     baseStr = "https://api-takumi-record.mihoyo.com/"
                     appVersion = "2.40.1"
-                    userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.40.1"
+                    userAgent =
+                        "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.40.1"
                     clientType = "5"
                 case .global:
                     baseStr = "https://bbs-api-os.hoyolab.com/"
                     appVersion = "2.9.1"
-                    userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.9.1"
+                    userAgent =
+                        "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.9.1"
                     clientType = "2"
                 }
                 // 由前缀和后缀共同组成的url
                 var url = URLComponents(string: baseStr + urlStr)!
                 url.queryItems = [
                     URLQueryItem(name: "server", value: serverID),
-                    URLQueryItem(name: "role_id", value: uid)
+                    URLQueryItem(name: "role_id", value: uid),
                 ]
                 // 初始化请求
                 var request = URLRequest(url: url.url!)
@@ -130,7 +175,7 @@ struct HttpMethod<T: Codable> {
                     "User-Agent": userAgent,
                     "x-rpc-client_type": clientType,
                     "Referer": "https://webstatic.mihoyo.com/",
-                    "Cookie": cookie
+                    "Cookie": cookie,
                 ]
                 // http方法
                 switch method {
@@ -142,17 +187,21 @@ struct HttpMethod<T: Codable> {
                     request.httpMethod = "PUT"
                 }
                 // 开始请求
-                let session = URLSession.init(configuration: getSessionConfiguration())
+                let session =
+                    URLSession(configuration: getSessionConfiguration())
                 session.dataTask(
                     with: request
                 ) { data, response, error in
                     // 判断有没有错误（这里无论如何都不会抛因为是自己手动返回错误信息的）
                     print(error ?? "ErrorInfo nil")
                     if let error = error {
-                        completion(.failure(.dataTaskError(error.localizedDescription)))
+                        completion(.failure(.dataTaskError(
+                            error
+                                .localizedDescription
+                        )))
                         print(
                             "DataTask error in General HttpMethod: " +
-                            error.localizedDescription + "\n"
+                                error.localizedDescription + "\n"
                         )
                     } else {
                         guard let data = data else {
@@ -168,16 +217,22 @@ struct HttpMethod<T: Codable> {
                         DispatchQueue.main.async {
                             let decoder = JSONDecoder()
                             decoder.keyDecodingStrategy = .convertFromSnakeCase
-                            
+
 //                            let dictionary = try? JSONSerialization.jsonObject(with: data)
 //                            print(dictionary ?? "None")
-                            
+
                             do {
-                                let requestResult = try decoder.decode(T.self, from: data)
+                                let requestResult = try decoder.decode(
+                                    T.self,
+                                    from: data
+                                )
                                 completion(.success(requestResult))
                             } catch {
                                 print(error)
-                                completion(.failure(.decodeError(error.localizedDescription)))
+                                completion(.failure(.decodeError(
+                                    error
+                                        .localizedDescription
+                                )))
                             }
                         }
                     }
@@ -195,11 +250,11 @@ struct HttpMethod<T: Codable> {
     ///   - uid: String, UID
     ///   - cookie: String， 用户Cookie
     ///   - completion:异步返回处理好的data以及报错的类型
-    static func commonWidgetRequest (
+    static func commonWidgetRequest(
         _ method: Method,
         _ urlStr: String,
         _ cookie: String,
-        completion: @escaping(
+        completion: @escaping (
             (Result<T, RequestError>) -> ()
         )
     ) {
@@ -208,11 +263,21 @@ struct HttpMethod<T: Codable> {
         func getSessionConfiguration() -> URLSessionConfiguration {
             let sessionConfiguration = URLSessionConfiguration.default
 
-            let sessionUseProxy = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.bool(forKey: "useProxy")
-            let sessionProxyHost = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyHost")
-            let sessionProxyPort = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyPort")
-            let sessionProxyUserName = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyUserName")
-            let sessionProxyPassword = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyUserPassword")
+            let sessionUseProxy =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .bool(forKey: "useProxy")
+            let sessionProxyHost =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyHost")
+            let sessionProxyPort =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyPort")
+            let sessionProxyUserName =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyUserName")
+            let sessionProxyPassword =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyUserPassword")
             if sessionUseProxy {
                 guard let sessionProxyHost = sessionProxyHost else {
                     print("Proxy host error")
@@ -223,24 +288,54 @@ struct HttpMethod<T: Codable> {
                     return sessionConfiguration
                 }
 
-                if sessionProxyUserName != nil && sessionProxyUserName != "" && sessionProxyPassword != nil && sessionProxyPassword != "" {
+                if sessionProxyUserName != nil, sessionProxyUserName != "",
+                   sessionProxyPassword != nil, sessionProxyPassword != "" {
                     print("Proxy add authorization")
-                    let userPasswordString = "\(String(describing: sessionProxyUserName)):\(String(describing: sessionProxyPassword))"
-                    let userPasswordData = userPasswordString.data(using: String.Encoding.utf8)
-                    let base64EncodedCredential = userPasswordData!.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+                    let userPasswordString =
+                        "\(String(describing: sessionProxyUserName)):\(String(describing: sessionProxyPassword))"
+                    let userPasswordData = userPasswordString
+                        .data(using: String.Encoding.utf8)
+                    let base64EncodedCredential = userPasswordData!
+                        .base64EncodedString(
+                            options: Data
+                                .Base64EncodingOptions(rawValue: 0)
+                        )
                     let authString = "Basic \(base64EncodedCredential)"
-                    sessionConfiguration.httpAdditionalHeaders = ["Proxy-Authorization": authString]
-                    sessionConfiguration.httpAdditionalHeaders = ["Authorization" : authString]
+                    sessionConfiguration
+                        .httpAdditionalHeaders =
+                        ["Proxy-Authorization": authString]
+                    sessionConfiguration
+                        .httpAdditionalHeaders = ["Authorization": authString]
                 }
 
                 print("Use Proxy \(sessionProxyHost):\(sessionProxyPort)")
 
                 #if !os(watchOS)
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPEnable as String] = true
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPProxy as String] = sessionProxyHost
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPPort as String] = sessionProxyPort
-                sessionConfiguration.connectionProxyDictionary?[kCFProxyTypeHTTP as String] = "\(sessionProxyHost):\(sessionProxyPort)"
-                sessionConfiguration.connectionProxyDictionary?[kCFProxyTypeHTTPS as String] = "\(sessionProxyHost):\(sessionProxyPort)"
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPEnable as String
+                    ] =
+                    true
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPProxy as String
+                    ] =
+                    sessionProxyHost
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPPort as String
+                    ] =
+                    sessionProxyPort
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFProxyTypeHTTP as String
+                    ] =
+                    "\(sessionProxyHost):\(sessionProxyPort)"
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFProxyTypeHTTPS as String
+                    ] =
+                    "\(sessionProxyHost):\(sessionProxyPort)"
                 #endif
             } else {
                 print("No Proxy")
@@ -249,9 +344,9 @@ struct HttpMethod<T: Codable> {
         }
 
         func get_ds_token() -> String {
-            let s: String = "t0qEgfub6cvueAPgR5m9aQWWVciEer7v"
+            let s = "t0qEgfub6cvueAPgR5m9aQWWVciEer7v"
             let t = String(Int(Date().timeIntervalSince1970))
-            let r = String(Int.random(in: 100000..<200000))
+            let r = String(Int.random(in: 100000 ..< 200000))
             let q = "game_id=2"
             let c = "salt=\(s)&t=\(t)&r=\(r)&b=&q=\(q)".md5
             return t + "," + r + "," + c
@@ -259,11 +354,11 @@ struct HttpMethod<T: Codable> {
 
         if networkReachability.reachable {
             DispatchQueue.global(qos: .userInteractive).async {
-
                 // 请求url前缀，后跟request的类型
                 let baseStr: String = "https://api-takumi-record.mihoyo.com/"
                 let appVersion: String = "2.34.1"
-                let userAgent: String = "WidgetExtension/264 CFNetwork/1399 Darwin/22.1.0"
+                let userAgent: String =
+                    "WidgetExtension/264 CFNetwork/1399 Darwin/22.1.0"
                 let clientType: String = "2"
 //                switch region {
 //                case .cn:
@@ -280,7 +375,7 @@ struct HttpMethod<T: Codable> {
                 // 由前缀和后缀共同组成的url
                 var url = URLComponents(string: baseStr + urlStr)!
                 url.queryItems = [
-                    URLQueryItem(name: "game_id", value: "2")
+                    URLQueryItem(name: "game_id", value: "2"),
                 ]
                 // 初始化请求
                 var request = URLRequest(url: url.url!)
@@ -293,7 +388,7 @@ struct HttpMethod<T: Codable> {
                     "Referer": "https://app.mihoyo.com/",
                     "Cookie": cookie,
                     "x-rpc-device_id": "",
-                    "x-rpc-channel": "appstore"
+                    "x-rpc-channel": "appstore",
                 ]
                 // http方法
                 switch method {
@@ -305,17 +400,21 @@ struct HttpMethod<T: Codable> {
                     request.httpMethod = "PUT"
                 }
                 // 开始请求
-                let session = URLSession.init(configuration: getSessionConfiguration())
+                let session =
+                    URLSession(configuration: getSessionConfiguration())
                 session.dataTask(
                     with: request
                 ) { data, response, error in
                     // 判断有没有错误（这里无论如何都不会抛因为是自己手动返回错误信息的）
                     print(error ?? "ErrorInfo nil")
                     if let error = error {
-                        completion(.failure(.dataTaskError(error.localizedDescription)))
+                        completion(.failure(.dataTaskError(
+                            error
+                                .localizedDescription
+                        )))
                         print(
                             "DataTask error in General HttpMethod: " +
-                            error.localizedDescription + "\n"
+                                error.localizedDescription + "\n"
                         )
                     } else {
                         guard let data = data else {
@@ -332,15 +431,22 @@ struct HttpMethod<T: Codable> {
                             let decoder = JSONDecoder()
                             decoder.keyDecodingStrategy = .convertFromSnakeCase
 
-                            let dictionary = try? JSONSerialization.jsonObject(with: data)
+                            let dictionary = try? JSONSerialization
+                                .jsonObject(with: data)
                             print(dictionary ?? "None")
 
                             do {
-                                let requestResult = try decoder.decode(T.self, from: data)
+                                let requestResult = try decoder.decode(
+                                    T.self,
+                                    from: data
+                                )
                                 completion(.success(requestResult))
                             } catch {
                                 print(error)
-                                completion(.failure(.decodeError(error.localizedDescription)))
+                                completion(.failure(.decodeError(
+                                    error
+                                        .localizedDescription
+                                )))
                             }
                         }
                     }
@@ -353,12 +459,12 @@ struct HttpMethod<T: Codable> {
     /// - Parameters:
     ///   - login
     ///   - completion:异步返回处理好的data以及报错的类型
-    static func commonGetToken (
+    static func commonGetToken(
         _ method: Method,
         urlStr: String,
         loginTicket: String,
         loginUid: String,
-        completion: @escaping(
+        completion: @escaping (
             (Result<T, RequestError>) -> ()
         )
     ) {
@@ -367,11 +473,21 @@ struct HttpMethod<T: Codable> {
         func getSessionConfiguration() -> URLSessionConfiguration {
             let sessionConfiguration = URLSessionConfiguration.default
 
-            let sessionUseProxy = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.bool(forKey: "useProxy")
-            let sessionProxyHost = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyHost")
-            let sessionProxyPort = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyPort")
-            let sessionProxyUserName = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyUserName")
-            let sessionProxyPassword = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyUserPassword")
+            let sessionUseProxy =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .bool(forKey: "useProxy")
+            let sessionProxyHost =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyHost")
+            let sessionProxyPort =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyPort")
+            let sessionProxyUserName =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyUserName")
+            let sessionProxyPassword =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyUserPassword")
             if sessionUseProxy {
                 guard let sessionProxyHost = sessionProxyHost else {
                     print("Proxy host error")
@@ -382,24 +498,54 @@ struct HttpMethod<T: Codable> {
                     return sessionConfiguration
                 }
 
-                if sessionProxyUserName != nil && sessionProxyUserName != "" && sessionProxyPassword != nil && sessionProxyPassword != "" {
+                if sessionProxyUserName != nil, sessionProxyUserName != "",
+                   sessionProxyPassword != nil, sessionProxyPassword != "" {
                     print("Proxy add authorization")
-                    let userPasswordString = "\(String(describing: sessionProxyUserName)):\(String(describing: sessionProxyPassword))"
-                    let userPasswordData = userPasswordString.data(using: String.Encoding.utf8)
-                    let base64EncodedCredential = userPasswordData!.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+                    let userPasswordString =
+                        "\(String(describing: sessionProxyUserName)):\(String(describing: sessionProxyPassword))"
+                    let userPasswordData = userPasswordString
+                        .data(using: String.Encoding.utf8)
+                    let base64EncodedCredential = userPasswordData!
+                        .base64EncodedString(
+                            options: Data
+                                .Base64EncodingOptions(rawValue: 0)
+                        )
                     let authString = "Basic \(base64EncodedCredential)"
-                    sessionConfiguration.httpAdditionalHeaders = ["Proxy-Authorization": authString]
-                    sessionConfiguration.httpAdditionalHeaders = ["Authorization" : authString]
+                    sessionConfiguration
+                        .httpAdditionalHeaders =
+                        ["Proxy-Authorization": authString]
+                    sessionConfiguration
+                        .httpAdditionalHeaders = ["Authorization": authString]
                 }
 
                 print("Use Proxy \(sessionProxyHost):\(sessionProxyPort)")
 
                 #if !os(watchOS)
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPEnable as String] = true
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPProxy as String] = sessionProxyHost
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPPort as String] = sessionProxyPort
-                sessionConfiguration.connectionProxyDictionary?[kCFProxyTypeHTTP as String] = "\(sessionProxyHost):\(sessionProxyPort)"
-                sessionConfiguration.connectionProxyDictionary?[kCFProxyTypeHTTPS as String] = "\(sessionProxyHost):\(sessionProxyPort)"
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPEnable as String
+                    ] =
+                    true
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPProxy as String
+                    ] =
+                    sessionProxyHost
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPPort as String
+                    ] =
+                    sessionProxyPort
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFProxyTypeHTTP as String
+                    ] =
+                    "\(sessionProxyHost):\(sessionProxyPort)"
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFProxyTypeHTTPS as String
+                    ] =
+                    "\(sessionProxyHost):\(sessionProxyPort)"
                 #endif
             } else {
                 print("No Proxy")
@@ -409,7 +555,6 @@ struct HttpMethod<T: Codable> {
 
         if networkReachability.reachable {
             DispatchQueue.global(qos: .userInteractive).async {
-
                 // 请求url前缀，后跟request的类型
                 let baseStr: String = "https://api-takumi.mihoyo.com/"
 //                switch region {
@@ -442,17 +587,21 @@ struct HttpMethod<T: Codable> {
                     request.httpMethod = "PUT"
                 }
                 // 开始请求
-                let session = URLSession.init(configuration: getSessionConfiguration())
+                let session =
+                    URLSession(configuration: getSessionConfiguration())
                 session.dataTask(
                     with: request
                 ) { data, response, error in
                     // 判断有没有错误（这里无论如何都不会抛因为是自己手动返回错误信息的）
                     print(error ?? "ErrorInfo nil")
                     if let error = error {
-                        completion(.failure(.dataTaskError(error.localizedDescription)))
+                        completion(.failure(.dataTaskError(
+                            error
+                                .localizedDescription
+                        )))
                         print(
                             "DataTask error in General HttpMethod: " +
-                            error.localizedDescription + "\n"
+                                error.localizedDescription + "\n"
                         )
                     } else {
                         guard let data = data else {
@@ -469,15 +618,22 @@ struct HttpMethod<T: Codable> {
                             let decoder = JSONDecoder()
                             decoder.keyDecodingStrategy = .convertFromSnakeCase
 
-                            let dictionary = try? JSONSerialization.jsonObject(with: data)
+                            let dictionary = try? JSONSerialization
+                                .jsonObject(with: data)
                             print(dictionary ?? "None")
 
                             do {
-                                let requestResult = try decoder.decode(T.self, from: data)
+                                let requestResult = try decoder.decode(
+                                    T.self,
+                                    from: data
+                                )
                                 completion(.success(requestResult))
                             } catch {
                                 print(error)
-                                completion(.failure(.decodeError(error.localizedDescription)))
+                                completion(.failure(.decodeError(
+                                    error
+                                        .localizedDescription
+                                )))
                             }
                         }
                     }
@@ -495,7 +651,7 @@ struct HttpMethod<T: Codable> {
     ///   - uid: String, UID
     ///   - cookie: String， 用户Cookie
     ///   - completion:异步返回处理好的data以及报错的类型
-    static func spiralAbyssRequest (
+    static func spiralAbyssRequest(
         _ method: Method,
         _ urlStr: String,
         _ region: Region,
@@ -503,7 +659,7 @@ struct HttpMethod<T: Codable> {
         _ uid: String,
         _ cookie: String,
         _ scheduleType: String,
-        completion: @escaping(
+        completion: @escaping (
             (Result<T, RequestError>) -> ()
         )
     ) {
@@ -512,11 +668,21 @@ struct HttpMethod<T: Codable> {
         func getSessionConfiguration() -> URLSessionConfiguration {
             let sessionConfiguration = URLSessionConfiguration.default
 
-            let sessionUseProxy = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.bool(forKey: "useProxy")
-            let sessionProxyHost = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyHost")
-            let sessionProxyPort = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyPort")
-            let sessionProxyUserName = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyUserName")
-            let sessionProxyPassword = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyUserPassword")
+            let sessionUseProxy =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .bool(forKey: "useProxy")
+            let sessionProxyHost =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyHost")
+            let sessionProxyPort =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyPort")
+            let sessionProxyUserName =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyUserName")
+            let sessionProxyPassword =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyUserPassword")
             if sessionUseProxy {
                 guard let sessionProxyHost = sessionProxyHost else {
                     print("Proxy host error")
@@ -527,24 +693,54 @@ struct HttpMethod<T: Codable> {
                     return sessionConfiguration
                 }
 
-                if sessionProxyUserName != nil && sessionProxyUserName != "" && sessionProxyPassword != nil && sessionProxyPassword != "" {
+                if sessionProxyUserName != nil, sessionProxyUserName != "",
+                   sessionProxyPassword != nil, sessionProxyPassword != "" {
                     print("Proxy add authorization")
-                    let userPasswordString = "\(String(describing: sessionProxyUserName)):\(String(describing: sessionProxyPassword))"
-                    let userPasswordData = userPasswordString.data(using: String.Encoding.utf8)
-                    let base64EncodedCredential = userPasswordData!.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+                    let userPasswordString =
+                        "\(String(describing: sessionProxyUserName)):\(String(describing: sessionProxyPassword))"
+                    let userPasswordData = userPasswordString
+                        .data(using: String.Encoding.utf8)
+                    let base64EncodedCredential = userPasswordData!
+                        .base64EncodedString(
+                            options: Data
+                                .Base64EncodingOptions(rawValue: 0)
+                        )
                     let authString = "Basic \(base64EncodedCredential)"
-                    sessionConfiguration.httpAdditionalHeaders = ["Proxy-Authorization": authString]
-                    sessionConfiguration.httpAdditionalHeaders = ["Authorization" : authString]
+                    sessionConfiguration
+                        .httpAdditionalHeaders =
+                        ["Proxy-Authorization": authString]
+                    sessionConfiguration
+                        .httpAdditionalHeaders = ["Authorization": authString]
                 }
 
                 print("Use Proxy \(sessionProxyHost):\(sessionProxyPort)")
 
                 #if !os(watchOS)
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPEnable as String] = true
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPProxy as String] = sessionProxyHost
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPPort as String] = sessionProxyPort
-                sessionConfiguration.connectionProxyDictionary?[kCFProxyTypeHTTP as String] = "\(sessionProxyHost):\(sessionProxyPort)"
-                sessionConfiguration.connectionProxyDictionary?[kCFProxyTypeHTTPS as String] = "\(sessionProxyHost):\(sessionProxyPort)"
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPEnable as String
+                    ] =
+                    true
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPProxy as String
+                    ] =
+                    sessionProxyHost
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPPort as String
+                    ] =
+                    sessionProxyPort
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFProxyTypeHTTP as String
+                    ] =
+                    "\(sessionProxyHost):\(sessionProxyPort)"
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFProxyTypeHTTPS as String
+                    ] =
+                    "\(sessionProxyHost):\(sessionProxyPort)"
                 #endif
             } else {
                 print("No Proxy")
@@ -552,7 +748,12 @@ struct HttpMethod<T: Codable> {
             return sessionConfiguration
         }
 
-        func get_ds_token(scheduleType: String, uid: String, server_id: String) -> String {
+        func get_ds_token(
+            scheduleType: String,
+            uid: String,
+            server_id: String
+        )
+            -> String {
             let s: String
             switch region {
             case .cn:
@@ -561,15 +762,15 @@ struct HttpMethod<T: Codable> {
                 s = "okr4obncj8bw5a65hbnn5oo6ixjc3l9w"
             }
             let t = String(Int(Date().timeIntervalSince1970))
-            let r = String(Int.random(in: 100000..<200000))
-            let q = "role_id=\(uid)&schedule_type=\(scheduleType)&server=\(server_id)"
+            let r = String(Int.random(in: 100000 ..< 200000))
+            let q =
+                "role_id=\(uid)&schedule_type=\(scheduleType)&server=\(server_id)"
             let c = "salt=\(s)&t=\(t)&r=\(r)&b=&q=\(q)".md5
             return t + "," + r + "," + c
         }
 
         if networkReachability.reachable {
             DispatchQueue.global(qos: .userInteractive).async {
-
                 // 请求url前缀，后跟request的类型
                 let baseStr: String
                 let appVersion: String
@@ -579,12 +780,14 @@ struct HttpMethod<T: Codable> {
                 case .cn:
                     baseStr = "https://api-takumi-record.mihoyo.com/"
                     appVersion = "2.36.1"
-                    userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 15_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.36.1"
+                    userAgent =
+                        "Mozilla/5.0 (iPhone; CPU iPhone OS 15_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.36.1"
                     clientType = "5"
                 case .global:
                     baseStr = "https://bbs-api-os.hoyolab.com/"
                     appVersion = "2.9.1"
-                    userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 15_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.9.1"
+                    userAgent =
+                        "Mozilla/5.0 (iPhone; CPU iPhone OS 15_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.9.1"
                     clientType = "2"
                 }
                 // 由前缀和后缀共同组成的url
@@ -592,13 +795,17 @@ struct HttpMethod<T: Codable> {
                 url.queryItems = [
                     URLQueryItem(name: "schedule_type", value: scheduleType),
                     URLQueryItem(name: "server", value: serverID),
-                    URLQueryItem(name: "role_id", value: uid)
+                    URLQueryItem(name: "role_id", value: uid),
                 ]
                 // 初始化请求
                 var request = URLRequest(url: url.url!)
                 print(url.url!)
                 print(cookie)
-                let dsToken = get_ds_token(scheduleType: scheduleType, uid: uid, server_id: serverID)
+                let dsToken = get_ds_token(
+                    scheduleType: scheduleType,
+                    uid: uid,
+                    server_id: serverID
+                )
                 print(dsToken)
                 // 设置请求头
                 request.allHTTPHeaderFields = [
@@ -607,7 +814,7 @@ struct HttpMethod<T: Codable> {
                     "User-Agent": userAgent,
                     "x-rpc-client_type": clientType,
                     "Referer": "https://webstatic.mihoyo.com/",
-                    "Cookie": cookie
+                    "Cookie": cookie,
                 ]
                 // http方法
                 switch method {
@@ -619,17 +826,21 @@ struct HttpMethod<T: Codable> {
                     request.httpMethod = "PUT"
                 }
                 // 开始请求
-                let session = URLSession.init(configuration: getSessionConfiguration())
+                let session =
+                    URLSession(configuration: getSessionConfiguration())
                 session.dataTask(
                     with: request
                 ) { data, response, error in
                     // 判断有没有错误（这里无论如何都不会抛因为是自己手动返回错误信息的）
                     print(error ?? "ErrorInfo nil")
                     if let error = error {
-                        completion(.failure(.dataTaskError(error.localizedDescription)))
+                        completion(.failure(.dataTaskError(
+                            error
+                                .localizedDescription
+                        )))
                         print(
                             "DataTask error in General HttpMethod: " +
-                            error.localizedDescription + "\n"
+                                error.localizedDescription + "\n"
                         )
                     } else {
                         guard let data = data else {
@@ -650,11 +861,17 @@ struct HttpMethod<T: Codable> {
 //                            print(dictionary ?? "None")
 
                             do {
-                                let requestResult = try decoder.decode(T.self, from: data)
+                                let requestResult = try decoder.decode(
+                                    T.self,
+                                    from: data
+                                )
                                 completion(.success(requestResult))
                             } catch {
                                 print(error)
-                                completion(.failure(.decodeError(error.localizedDescription)))
+                                completion(.failure(.decodeError(
+                                    error
+                                        .localizedDescription
+                                )))
                             }
                         }
                     }
@@ -663,7 +880,7 @@ struct HttpMethod<T: Codable> {
         }
     }
 
-    /// 返回游戏账号基本信息
+    /// 返回游戏帐号基本信息
     /// - Parameters:
     ///   - method:Method, http方法的类型
     ///   - urlStr:String，url的字符串后缀，即request的类型
@@ -672,14 +889,14 @@ struct HttpMethod<T: Codable> {
     ///   - uid: String, UID
     ///   - cookie: String， 用户Cookie
     ///   - completion:异步返回处理好的data以及报错的类型
-    static func basicInfoRequest (
+    static func basicInfoRequest(
         _ method: Method,
         _ urlStr: String,
         _ region: Region,
         _ serverID: String,
         _ uid: String,
         _ cookie: String,
-        completion: @escaping(
+        completion: @escaping (
             (Result<T, RequestError>) -> ()
         )
     ) {
@@ -688,11 +905,21 @@ struct HttpMethod<T: Codable> {
         func getSessionConfiguration() -> URLSessionConfiguration {
             let sessionConfiguration = URLSessionConfiguration.default
 
-            let sessionUseProxy = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.bool(forKey: "useProxy")
-            let sessionProxyHost = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyHost")
-            let sessionProxyPort = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyPort")
-            let sessionProxyUserName = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyUserName")
-            let sessionProxyPassword = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyUserPassword")
+            let sessionUseProxy =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .bool(forKey: "useProxy")
+            let sessionProxyHost =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyHost")
+            let sessionProxyPort =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyPort")
+            let sessionProxyUserName =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyUserName")
+            let sessionProxyPassword =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyUserPassword")
             if sessionUseProxy {
                 guard let sessionProxyHost = sessionProxyHost else {
                     print("Proxy host error")
@@ -703,24 +930,54 @@ struct HttpMethod<T: Codable> {
                     return sessionConfiguration
                 }
 
-                if sessionProxyUserName != nil && sessionProxyUserName != "" && sessionProxyPassword != nil && sessionProxyPassword != "" {
+                if sessionProxyUserName != nil, sessionProxyUserName != "",
+                   sessionProxyPassword != nil, sessionProxyPassword != "" {
                     print("Proxy add authorization")
-                    let userPasswordString = "\(String(describing: sessionProxyUserName)):\(String(describing: sessionProxyPassword))"
-                    let userPasswordData = userPasswordString.data(using: String.Encoding.utf8)
-                    let base64EncodedCredential = userPasswordData!.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+                    let userPasswordString =
+                        "\(String(describing: sessionProxyUserName)):\(String(describing: sessionProxyPassword))"
+                    let userPasswordData = userPasswordString
+                        .data(using: String.Encoding.utf8)
+                    let base64EncodedCredential = userPasswordData!
+                        .base64EncodedString(
+                            options: Data
+                                .Base64EncodingOptions(rawValue: 0)
+                        )
                     let authString = "Basic \(base64EncodedCredential)"
-                    sessionConfiguration.httpAdditionalHeaders = ["Proxy-Authorization": authString]
-                    sessionConfiguration.httpAdditionalHeaders = ["Authorization" : authString]
+                    sessionConfiguration
+                        .httpAdditionalHeaders =
+                        ["Proxy-Authorization": authString]
+                    sessionConfiguration
+                        .httpAdditionalHeaders = ["Authorization": authString]
                 }
 
                 print("Use Proxy \(sessionProxyHost):\(sessionProxyPort)")
 
                 #if !os(watchOS)
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPEnable as String] = true
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPProxy as String] = sessionProxyHost
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPPort as String] = sessionProxyPort
-                sessionConfiguration.connectionProxyDictionary?[kCFProxyTypeHTTP as String] = "\(sessionProxyHost):\(sessionProxyPort)"
-                sessionConfiguration.connectionProxyDictionary?[kCFProxyTypeHTTPS as String] = "\(sessionProxyHost):\(sessionProxyPort)"
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPEnable as String
+                    ] =
+                    true
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPProxy as String
+                    ] =
+                    sessionProxyHost
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPPort as String
+                    ] =
+                    sessionProxyPort
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFProxyTypeHTTP as String
+                    ] =
+                    "\(sessionProxyHost):\(sessionProxyPort)"
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFProxyTypeHTTPS as String
+                    ] =
+                    "\(sessionProxyHost):\(sessionProxyPort)"
                 #endif
             } else {
                 print("No Proxy")
@@ -737,23 +994,14 @@ struct HttpMethod<T: Codable> {
                 s = "okr4obncj8bw5a65hbnn5oo6ixjc3l9w"
             }
             let t = String(Int(Date().timeIntervalSince1970))
-            let r = String(Int.random(in: 100000..<200000))
+            let r = String(Int.random(in: 100000 ..< 200000))
             let q = "role_id=\(uid)&server=\(server_id)"
             let c = "salt=\(s)&t=\(t)&r=\(r)&b=&q=\(q)".md5
             return t + "," + r + "," + c
         }
 
-        func get_language_code() -> String {
-            var languageCode = Locale.current.languageCode ?? "en-us"
-            if languageCode == "zh" {
-                languageCode = "zh-cn"
-            }
-            return languageCode
-        }
-
         if networkReachability.reachable {
             DispatchQueue.global(qos: .userInteractive).async {
-
                 // 请求url前缀，后跟request的类型
                 let baseStr: String
                 let appVersion: String
@@ -761,21 +1009,25 @@ struct HttpMethod<T: Codable> {
                 let clientType: String
                 switch region {
                 case .cn:
-                    baseStr = "https://api-takumi-record.mihoyo.com/game_record/app/"
+                    baseStr =
+                        "https://api-takumi-record.mihoyo.com/game_record/app/"
                     appVersion = "2.11.1"
-                    userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.11."
+                    userAgent =
+                        "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.11."
                     clientType = "5"
                 case .global:
-                    baseStr = "https://bbs-api-os.hoyoverse.com/game_record/app/"
+                    baseStr =
+                        "https://bbs-api-os.hoyoverse.com/game_record/app/"
                     appVersion = "2.9.1"
-                    userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.11."
+                    userAgent =
+                        "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.11."
                     clientType = "2"
                 }
                 // 由前缀和后缀共同组成的url
                 var url = URLComponents(string: baseStr + urlStr)!
                 url.queryItems = [
                     URLQueryItem(name: "server", value: serverID),
-                    URLQueryItem(name: "role_id", value: uid)
+                    URLQueryItem(name: "role_id", value: uid),
                 ]
                 // 初始化请求
                 var request = URLRequest(url: url.url!)
@@ -786,12 +1038,12 @@ struct HttpMethod<T: Codable> {
                     "x-rpc-app_version": appVersion,
                     "User-Agent": userAgent,
                     "x-rpc-client_type": clientType,
-                    "x-rpc-language": get_language_code(),
+                    "x-rpc-language": Locale.langCodeForAPI,
                     "Referer": "https://webstatic.mihoyo.com/app/community-game-records/index.html?v=6",
                     "X-Requested-With": "com.mihoyo.hyperion",
                     "Origin": "https://webstatic.mihoyo.com",
                     "Accept-Encoding": "gzip, deflate",
-                    "Cookie": cookie
+                    "Cookie": cookie,
                 ]
                 // http方法
                 switch method {
@@ -803,17 +1055,21 @@ struct HttpMethod<T: Codable> {
                     request.httpMethod = "PUT"
                 }
                 // 开始请求
-                let session = URLSession.init(configuration: getSessionConfiguration())
+                let session =
+                    URLSession(configuration: getSessionConfiguration())
                 session.dataTask(
                     with: request
                 ) { data, response, error in
                     // 判断有没有错误（这里无论如何都不会抛因为是自己手动返回错误信息的）
                     print(error ?? "ErrorInfo nil")
                     if let error = error {
-                        completion(.failure(.dataTaskError(error.localizedDescription)))
+                        completion(.failure(.dataTaskError(
+                            error
+                                .localizedDescription
+                        )))
                         print(
                             "DataTask error in General HttpMethod: " +
-                            error.localizedDescription + "\n"
+                                error.localizedDescription + "\n"
                         )
                     } else {
                         guard let data = data else {
@@ -834,11 +1090,17 @@ struct HttpMethod<T: Codable> {
 //                            print(dictionary ?? "None")
 
                             do {
-                                let requestResult = try decoder.decode(T.self, from: data)
+                                let requestResult = try decoder.decode(
+                                    T.self,
+                                    from: data
+                                )
                                 completion(.success(requestResult))
                             } catch {
                                 print(error)
-                                completion(.failure(.decodeError(error.localizedDescription)))
+                                completion(.failure(.decodeError(
+                                    error
+                                        .localizedDescription
+                                )))
                             }
                         }
                     }
@@ -855,13 +1117,13 @@ struct HttpMethod<T: Codable> {
     ///   - cookie: String， 用户Cookie
     ///   - serverID: String，服务器ID
     ///   - completion:异步返回处理好的data以及报错的类型
-    static func gameAccountRequest (
+    static func gameAccountRequest(
         _ method: Method,
         _ urlStr: String,
         _ region: Region,
         _ cookie: String,
         _ serverId: String?,
-        completion: @escaping(
+        completion: @escaping (
             (Result<T, RequestError>) -> ()
         )
     ) {
@@ -877,19 +1139,26 @@ struct HttpMethod<T: Codable> {
                 case .cn:
                     baseStr = "https://api-takumi.mihoyo.com/"
                     appVersion = "2.11.1"
-                    userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.11.1"
+                    userAgent =
+                        "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.11.1"
                 case .global:
                     baseStr = "https://api-account-os.hoyolab.com/"
                     appVersion = "2.9.1"
-                    userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.9.1"
+                    userAgent =
+                        "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.9.1"
                 }
                 // 由前缀和后缀共同组成的url
                 var url = URLComponents(string: baseStr + urlStr)!
                 switch region {
                 case .cn:
-                    url.queryItems = [URLQueryItem(name: "game_biz", value: "hk4e_cn")]
+                    url
+                        .queryItems =
+                        [URLQueryItem(name: "game_biz", value: "hk4e_cn")]
                 case .global:
-                    url.queryItems = [URLQueryItem(name: "game_biz", value: "hk4e_global"), URLQueryItem(name: "region", value: serverId)]
+                    url.queryItems = [
+                        URLQueryItem(name: "game_biz", value: "hk4e_global"),
+                        URLQueryItem(name: "region", value: serverId),
+                    ]
                 }
                 // 初始化请求
                 var request = URLRequest(url: url.url!)
@@ -902,7 +1171,7 @@ struct HttpMethod<T: Codable> {
                     "User-Agent": userAgent,
                     "Connection": "keep-alive",
                     "x-rpc-app_version": appVersion,
-                    "Referer": "https://webstatic.mihoyo.com/"
+                    "Referer": "https://webstatic.mihoyo.com/",
                 ]
                 // http方法
                 switch method {
@@ -920,10 +1189,13 @@ struct HttpMethod<T: Codable> {
                     // 判断有没有错误（这里无论如何都不会抛因为是自己手动返回错误信息的）
                     print(error ?? "ErrorInfo nil")
                     if let error = error {
-                        completion(.failure(.dataTaskError(error.localizedDescription)))
+                        completion(.failure(.dataTaskError(
+                            error
+                                .localizedDescription
+                        )))
                         print(
                             "DataTask error in General HttpMethod: " +
-                            error.localizedDescription + "\n"
+                                error.localizedDescription + "\n"
                         )
                     } else {
                         guard let data = data else {
@@ -939,18 +1211,23 @@ struct HttpMethod<T: Codable> {
                         DispatchQueue.main.async {
                             let decoder = JSONDecoder()
                             decoder.keyDecodingStrategy = .convertFromSnakeCase
-                            
+
 //                            let dictionary = try? JSONSerialization.jsonObject(with: data)
 //                            print(dictionary ?? "None")
-                            
+
                             do {
-                                let requestResult = try decoder.decode(T.self, from: data)
+                                let requestResult = try decoder.decode(
+                                    T.self,
+                                    from: data
+                                )
                                 completion(.success(requestResult))
                             } catch {
                                 print(error)
-                                completion(.failure(.decodeError(error.localizedDescription)))
+                                completion(.failure(.decodeError(
+                                    error
+                                        .localizedDescription
+                                )))
                             }
-                            
                         }
                     }
                 }.resume()
@@ -965,10 +1242,11 @@ struct HttpMethod<T: Codable> {
     ///   - completion:异步返回处理好的data以及报错的类型
     ///
     ///  需要自己传URL类型的url过来
-    static func openRequest (
+    static func openRequest(
         _ method: Method,
         _ url: URL,
-        completion: @escaping(
+        cachedPolicy: URLRequest.CachePolicy = .useProtocolCachePolicy,
+        completion: @escaping (
             (Result<T, RequestError>) -> ()
         )
     ) {
@@ -978,6 +1256,7 @@ struct HttpMethod<T: Codable> {
             DispatchQueue.global(qos: .userInteractive).async {
                 // 初始化请求
                 var request = URLRequest(url: url)
+                request.cachePolicy = cachedPolicy
                 // 设置请求头
                 request.allHTTPHeaderFields = [
                     "Accept-Encoding": "gzip, deflate, br",
@@ -1001,15 +1280,21 @@ struct HttpMethod<T: Codable> {
                 ) { data, response, error in
                     // 判断有没有错误（这里无论如何都不会抛因为是自己手动返回错误信息的）
                     print(error ?? "ErrorInfo nil")
-                    print("STATUSCODE: \((response as? HTTPURLResponse)?.statusCode ?? -999)")
-                    if let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode != 200 {
+                    print(
+                        "STATUSCODE: \((response as? HTTPURLResponse)?.statusCode ?? -999)"
+                    )
+                    if let statusCode = (response as? HTTPURLResponse)?
+                        .statusCode, statusCode != 200 {
                         completion(.failure(.errorWithCode(statusCode)))
                     }
                     if let error = error {
-                        completion(.failure(.dataTaskError(error.localizedDescription)))
+                        completion(.failure(.dataTaskError(
+                            error
+                                .localizedDescription
+                        )))
                         print(
                             "DataTask error in General HttpMethod: " +
-                            error.localizedDescription + "\n"
+                                error.localizedDescription + "\n"
                         )
                     } else {
                         guard let data = data else {
@@ -1030,14 +1315,19 @@ struct HttpMethod<T: Codable> {
 //                            print(dictionary ?? "None")
 
                             do {
-                                let requestResult = try decoder.decode(T.self, from: data)
+                                let requestResult = try decoder.decode(
+                                    T.self,
+                                    from: data
+                                )
 //                                let requestResult = try decoder.decode(T.self, from: Data(contentsOf: <#T##URL#>))
                                 completion(.success(requestResult))
                             } catch {
                                 print(error)
-                                completion(.failure(.decodeError(error.localizedDescription)))
+                                completion(.failure(.decodeError(
+                                    error
+                                        .localizedDescription
+                                )))
                             }
-
                         }
                     }
                 }.resume()
@@ -1055,7 +1345,7 @@ struct HttpMethod<T: Codable> {
     ///   - region:Region，请求的服务器地区类型
     ///   - cookie: String， 用户Cookie
     ///   - completion:异步返回处理好的data以及报错的类型
-    static func ledgerDataRequest (
+    static func ledgerDataRequest(
         _ method: Method,
         _ urlStr: String,
         _ month: Int,
@@ -1063,7 +1353,7 @@ struct HttpMethod<T: Codable> {
         _ serverID: String,
         _ region: Region,
         _ cookie: String,
-        completion: @escaping(
+        completion: @escaping (
             (Result<T, RequestError>) -> ()
         )
     ) {
@@ -1072,11 +1362,21 @@ struct HttpMethod<T: Codable> {
         func getSessionConfiguration() -> URLSessionConfiguration {
             let sessionConfiguration = URLSessionConfiguration.default
 
-            let sessionUseProxy = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.bool(forKey: "useProxy")
-            let sessionProxyHost = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyHost")
-            let sessionProxyPort = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyPort")
-            let sessionProxyUserName = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyUserName")
-            let sessionProxyPassword = UserDefaults(suiteName: "group.GenshinPizzaHelper")!.string(forKey: "proxyUserPassword")
+            let sessionUseProxy =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .bool(forKey: "useProxy")
+            let sessionProxyHost =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyHost")
+            let sessionProxyPort =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyPort")
+            let sessionProxyUserName =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyUserName")
+            let sessionProxyPassword =
+                UserDefaults(suiteName: "group.GenshinPizzaHelper")!
+                    .string(forKey: "proxyUserPassword")
             if sessionUseProxy {
                 guard let sessionProxyHost = sessionProxyHost else {
                     print("Proxy host error")
@@ -1087,24 +1387,54 @@ struct HttpMethod<T: Codable> {
                     return sessionConfiguration
                 }
 
-                if sessionProxyUserName != nil && sessionProxyUserName != "" && sessionProxyPassword != nil && sessionProxyPassword != "" {
+                if sessionProxyUserName != nil, sessionProxyUserName != "",
+                   sessionProxyPassword != nil, sessionProxyPassword != "" {
                     print("Proxy add authorization")
-                    let userPasswordString = "\(String(describing: sessionProxyUserName)):\(String(describing: sessionProxyPassword))"
-                    let userPasswordData = userPasswordString.data(using: String.Encoding.utf8)
-                    let base64EncodedCredential = userPasswordData!.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+                    let userPasswordString =
+                        "\(String(describing: sessionProxyUserName)):\(String(describing: sessionProxyPassword))"
+                    let userPasswordData = userPasswordString
+                        .data(using: String.Encoding.utf8)
+                    let base64EncodedCredential = userPasswordData!
+                        .base64EncodedString(
+                            options: Data
+                                .Base64EncodingOptions(rawValue: 0)
+                        )
                     let authString = "Basic \(base64EncodedCredential)"
-                    sessionConfiguration.httpAdditionalHeaders = ["Proxy-Authorization": authString]
-                    sessionConfiguration.httpAdditionalHeaders = ["Authorization" : authString]
+                    sessionConfiguration
+                        .httpAdditionalHeaders =
+                        ["Proxy-Authorization": authString]
+                    sessionConfiguration
+                        .httpAdditionalHeaders = ["Authorization": authString]
                 }
 
                 print("Use Proxy \(sessionProxyHost):\(sessionProxyPort)")
 
                 #if !os(watchOS)
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPEnable as String] = true
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPProxy as String] = sessionProxyHost
-                sessionConfiguration.connectionProxyDictionary?[kCFNetworkProxiesHTTPPort as String] = sessionProxyPort
-                sessionConfiguration.connectionProxyDictionary?[kCFProxyTypeHTTP as String] = "\(sessionProxyHost):\(sessionProxyPort)"
-                sessionConfiguration.connectionProxyDictionary?[kCFProxyTypeHTTPS as String] = "\(sessionProxyHost):\(sessionProxyPort)"
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPEnable as String
+                    ] =
+                    true
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPProxy as String
+                    ] =
+                    sessionProxyHost
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFNetworkProxiesHTTPPort as String
+                    ] =
+                    sessionProxyPort
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFProxyTypeHTTP as String
+                    ] =
+                    "\(sessionProxyHost):\(sessionProxyPort)"
+                sessionConfiguration
+                    .connectionProxyDictionary?[
+                        kCFProxyTypeHTTPS as String
+                    ] =
+                    "\(sessionProxyHost):\(sessionProxyPort)"
                 #endif
             } else {
                 print("No Proxy")
@@ -1121,26 +1451,14 @@ struct HttpMethod<T: Codable> {
                 s = "okr4obncj8bw5a65hbnn5oo6ixjc3l9w"
             }
             let t = String(Int(Date().timeIntervalSince1970))
-            let r = String(Int.random(in: 100000..<200000))
+            let r = String(Int.random(in: 100000 ..< 200000))
             let q = "role_id=\(uid)&server=\(server_id)"
             let c = "salt=\(s)&t=\(t)&r=\(r)&b=&q=\(q)".md5
             return t + "," + r + "," + c
         }
 
-        func get_language_code() -> String {
-            var languageCode = Locale.current.languageCode ?? "en-us"
-            if languageCode == "zh" {
-                languageCode = "zh-cn"
-            }
-            else if languageCode == "ja" {
-                languageCode = "ja-jp"
-            }
-            return languageCode
-        }
-
         if networkReachability.reachable {
             DispatchQueue.global(qos: .userInteractive).async {
-
                 // 请求url前缀，后跟request的类型
                 let baseStr: String
                 let appVersion: String
@@ -1152,14 +1470,16 @@ struct HttpMethod<T: Codable> {
                 case .cn:
                     baseStr = "https://hk4e-api.mihoyo.com/"
                     appVersion = "2.11.1"
-                    userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.11.1"
+                    userAgent =
+                        "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.11.1"
                     clientType = "5"
                     referer = "https://webstatic.mihoyo.com"
                     origin = "https://webstatic.mihoyo.com"
                 case .global:
                     baseStr = "https://sg-hk4e-api.hoyolab.com/"
                     appVersion = "2.9.1"
-                    userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBSOversea/2.20.0"
+                    userAgent =
+                        "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBSOversea/2.20.0"
                     clientType = "2"
                     referer = "https://act.hoyolab.com"
                     origin = "https://act.hoyolab.com"
@@ -1172,18 +1492,21 @@ struct HttpMethod<T: Codable> {
                         URLQueryItem(name: "month", value: String(month)),
                         URLQueryItem(name: "bind_uid", value: String(uid)),
                         URLQueryItem(name: "bind_region", value: serverID),
-                        URLQueryItem(name: "bbs_presentation_style", value: "fullscreen"),
+                        URLQueryItem(
+                            name: "bbs_presentation_style",
+                            value: "fullscreen"
+                        ),
                         URLQueryItem(name: "bbs_auth_required", value: "true"),
                         URLQueryItem(name: "utm_source", value: "bbs"),
                         URLQueryItem(name: "utm_medium", value: "mys"),
-                        URLQueryItem(name: "utm_compaign", value: "icon")
+                        URLQueryItem(name: "utm_compaign", value: "icon"),
                     ]
                 case .global:
                     url.queryItems = [
                         URLQueryItem(name: "month", value: String(month)),
                         URLQueryItem(name: "region", value: serverID),
                         URLQueryItem(name: "uid", value: String(uid)),
-                        URLQueryItem(name: "lang", value: get_language_code())
+                        URLQueryItem(name: "lang", value: Locale.langCodeForAPI),
                     ]
                 }
                 // 初始化请求
@@ -1195,12 +1518,12 @@ struct HttpMethod<T: Codable> {
                     "x-rpc-app_version": appVersion,
                     "User-Agent": userAgent,
                     "x-rpc-client_type": clientType,
-                    "x-rpc-language": get_language_code(),
+                    "x-rpc-language": Locale.langCodeForAPI,
                     "X-Requested-With": "com.mihoyo.hyperion",
                     "Origin": origin,
                     "Accept-Encoding": "gzip, deflate",
                     "Referer": referer,
-                    "Cookie": cookie
+                    "Cookie": cookie,
                 ]
                 // http方法
                 switch method {
@@ -1212,17 +1535,21 @@ struct HttpMethod<T: Codable> {
                     request.httpMethod = "PUT"
                 }
                 // 开始请求
-                let session = URLSession.init(configuration: getSessionConfiguration())
+                let session =
+                    URLSession(configuration: getSessionConfiguration())
                 session.dataTask(
                     with: request
                 ) { data, response, error in
                     // 判断有没有错误（这里无论如何都不会抛因为是自己手动返回错误信息的）
                     print(error ?? "ErrorInfo nil")
                     if let error = error {
-                        completion(.failure(.dataTaskError(error.localizedDescription)))
+                        completion(.failure(.dataTaskError(
+                            error
+                                .localizedDescription
+                        )))
                         print(
                             "DataTask error in General HttpMethod: " +
-                            error.localizedDescription + "\n"
+                                error.localizedDescription + "\n"
                         )
                     } else {
                         guard let data = data else {
@@ -1239,15 +1566,22 @@ struct HttpMethod<T: Codable> {
                             let decoder = JSONDecoder()
                             decoder.keyDecodingStrategy = .convertFromSnakeCase
 
-                            let dictionary = try? JSONSerialization.jsonObject(with: data)
+                            let dictionary = try? JSONSerialization
+                                .jsonObject(with: data)
                             print(dictionary ?? "None")
 
                             do {
-                                let requestResult = try decoder.decode(T.self, from: data)
+                                let requestResult = try decoder.decode(
+                                    T.self,
+                                    from: data
+                                )
                                 completion(.success(requestResult))
                             } catch {
                                 print(error)
-                                completion(.failure(.decodeError(error.localizedDescription)))
+                                completion(.failure(.decodeError(
+                                    error
+                                        .localizedDescription
+                                )))
                             }
                         }
                     }
@@ -1263,10 +1597,11 @@ struct HttpMethod<T: Codable> {
     ///   - completion:异步返回处理好的data以及报错的类型
     ///
     ///  需要自己传URL类型的url过来
-    static func homeRequest (
+    static func homeRequest(
         _ method: Method,
         _ urlStr: String,
-        completion: @escaping(
+        cachedPolicy: URLRequest.CachePolicy = .useProtocolCachePolicy,
+        completion: @escaping (
             (Result<T, RequestError>) -> ()
         )
     ) {
@@ -1275,11 +1610,12 @@ struct HttpMethod<T: Codable> {
         if networkReachability.reachable {
             DispatchQueue.global(qos: .userInteractive).async {
                 // 请求url前缀，后跟request的类型
-                let baseStr: String = "http://ophelper.top/"
+                let baseStr: String = "https://ophelper.top/"
                 // 由前缀和后缀共同组成的url
                 let url = URLComponents(string: baseStr + urlStr)!
                 // 初始化请求
                 var request = URLRequest(url: url.url!)
+                request.cachePolicy = cachedPolicy
                 // 设置请求头
                 request.allHTTPHeaderFields = [
                     "Accept-Encoding": "gzip, deflate, br",
@@ -1303,10 +1639,13 @@ struct HttpMethod<T: Codable> {
                     // 判断有没有错误（这里无论如何都不会抛因为是自己手动返回错误信息的）
                     print(error ?? "ErrorInfo nil")
                     if let error = error {
-                        completion(.failure(.dataTaskError(error.localizedDescription)))
+                        completion(.failure(.dataTaskError(
+                            error
+                                .localizedDescription
+                        )))
                         print(
                             "DataTask error in General HttpMethod: " +
-                            error.localizedDescription + "\n"
+                                error.localizedDescription + "\n"
                         )
                     } else {
                         guard let data = data else {
@@ -1327,13 +1666,18 @@ struct HttpMethod<T: Codable> {
 //                            print(dictionary ?? "None")
 
                             do {
-                                let requestResult = try decoder.decode(T.self, from: data)
+                                let requestResult = try decoder.decode(
+                                    T.self,
+                                    from: data
+                                )
                                 completion(.success(requestResult))
                             } catch {
                                 print(error)
-                                completion(.failure(.decodeError(error.localizedDescription)))
+                                completion(.failure(.decodeError(
+                                    error
+                                        .localizedDescription
+                                )))
                             }
-
                         }
                     }
                 }.resume()
@@ -1348,7 +1692,7 @@ struct HttpMethod<T: Codable> {
     ///   - completion:异步返回处理好的data以及报错的类型
     ///
     ///  需要自己传URL类型的url过来
-    static func postRequest (
+    static func postRequest(
         _ method: Method,
         baseHost: String = "http://81.70.76.222/",
         urlStr: String,
@@ -1357,7 +1701,7 @@ struct HttpMethod<T: Codable> {
         cookie: String? = nil,
         dseed: String? = nil,
         ds: String? = nil,
-        completion: @escaping(
+        completion: @escaping (
             (Result<T, RequestError>) -> ()
         )
     ) {
@@ -1381,36 +1725,59 @@ struct HttpMethod<T: Codable> {
                 if let cookie = cookie {
                     request.setValue(cookie, forHTTPHeaderField: "Cookie")
                 }
-                func get_language_code() -> String {
-                    let languageCode = Locale.current.languageCode ?? "en-us"
-                    print(languageCode)
-                    if languageCode == "zh" {
-                        return "zh-cn"
-                    } else if languageCode == "en" {
-                        return "en-us"
-                    } else if languageCode == "ja" {
-                        return "ja-jp"
-                    } else {
-                        return languageCode
-                    }
-                }
 
                 if let region = region {
                     switch region {
                     case .cn:
-                        request.setValue("5", forHTTPHeaderField: "x-rpc-client_type")
-                        request.setValue("Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.36.1", forHTTPHeaderField: "User-Agent")
-                        request.setValue("2.36.1", forHTTPHeaderField: "x-rpc-app_version")
-                        request.setValue("https://webstatic.mihoyo.com", forHTTPHeaderField: "Origin")
-                        request.setValue("https://webstatic.mihoyo.com", forHTTPHeaderField: "Referer")
-                        request.setValue(get_language_code(), forHTTPHeaderField: "x-rpc-language")
+                        request.setValue(
+                            "5",
+                            forHTTPHeaderField: "x-rpc-client_type"
+                        )
+                        request.setValue(
+                            "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.36.1",
+                            forHTTPHeaderField: "User-Agent"
+                        )
+                        request.setValue(
+                            "2.36.1",
+                            forHTTPHeaderField: "x-rpc-app_version"
+                        )
+                        request.setValue(
+                            "https://webstatic.mihoyo.com",
+                            forHTTPHeaderField: "Origin"
+                        )
+                        request.setValue(
+                            "https://webstatic.mihoyo.com",
+                            forHTTPHeaderField: "Referer"
+                        )
+                        request.setValue(
+                            Locale.langCodeForAPI,
+                            forHTTPHeaderField: "x-rpc-language"
+                        )
                     case .global:
-                        request.setValue("2", forHTTPHeaderField: "x-rpc-client_type")
-                        request.setValue("Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBSOversea/2.20.0", forHTTPHeaderField: "User-Agent")
-                        request.setValue("2.9.1", forHTTPHeaderField: "x-rpc-app_version")
-                        request.setValue("https://act.hoyolab.com", forHTTPHeaderField: "Origin")
-                        request.setValue("https://act.hoyolab.com", forHTTPHeaderField: "Referer")
-                        request.setValue(get_language_code(), forHTTPHeaderField: "x-rpc-language")
+                        request.setValue(
+                            "2",
+                            forHTTPHeaderField: "x-rpc-client_type"
+                        )
+                        request.setValue(
+                            "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBSOversea/2.20.0",
+                            forHTTPHeaderField: "User-Agent"
+                        )
+                        request.setValue(
+                            "2.9.1",
+                            forHTTPHeaderField: "x-rpc-app_version"
+                        )
+                        request.setValue(
+                            "https://act.hoyolab.com",
+                            forHTTPHeaderField: "Origin"
+                        )
+                        request.setValue(
+                            "https://act.hoyolab.com",
+                            forHTTPHeaderField: "Referer"
+                        )
+                        request.setValue(
+                            Locale.langCodeForAPI,
+                            forHTTPHeaderField: "x-rpc-language"
+                        )
                     }
                 }
                 if let dseed = dseed {
@@ -1434,7 +1801,10 @@ struct HttpMethod<T: Codable> {
                 }
                 // request body
                 request.httpBody = body
-                request.setValue("\(body.count)", forHTTPHeaderField: "Content-Length")
+                request.setValue(
+                    "\(body.count)",
+                    forHTTPHeaderField: "Content-Length"
+                )
                 print(body.count)
                 print(request.allHTTPHeaderFields!)
                 print(request)
@@ -1446,10 +1816,13 @@ struct HttpMethod<T: Codable> {
                     // 判断有没有错误（这里无论如何都不会抛因为是自己手动返回错误信息的）
                     print(error ?? "ErrorInfo nil")
                     if let error = error {
-                        completion(.failure(.dataTaskError(error.localizedDescription)))
+                        completion(.failure(.dataTaskError(
+                            error
+                                .localizedDescription
+                        )))
                         print(
                             "DataTask error in General HttpMethod: " +
-                            error.localizedDescription + "\n"
+                                error.localizedDescription + "\n"
                         )
                     } else {
                         guard let data = data else {
@@ -1465,20 +1838,26 @@ struct HttpMethod<T: Codable> {
                         DispatchQueue.main.async {
                             let decoder = JSONDecoder()
                             if baseHost != "http://81.70.76.222/" {
-                                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                                decoder
+                                    .keyDecodingStrategy = .convertFromSnakeCase
                             }
 
 //                            let dictionary = try? JSONSerialization.jsonObject(with: data)
 //                            print(dictionary ?? "None")
 
                             do {
-                                let requestResult = try decoder.decode(T.self, from: data)
+                                let requestResult = try decoder.decode(
+                                    T.self,
+                                    from: data
+                                )
                                 completion(.success(requestResult))
                             } catch {
                                 print(error)
-                                completion(.failure(.decodeError(error.localizedDescription)))
+                                completion(.failure(.decodeError(
+                                    error
+                                        .localizedDescription
+                                )))
                             }
-
                         }
                     }
                 }.resume()
@@ -1493,14 +1872,14 @@ struct HttpMethod<T: Codable> {
     ///   - completion:异步返回处理好的data以及报错的类型
     ///
     ///  需要自己传URL类型的url过来
-    static func homeServerRequest (
+    static func homeServerRequest(
         _ method: Method,
         baseHost: String = "http://81.70.76.222",
         urlStr: String,
         body: Data? = nil,
         headersDict: [String: String] = [:],
         parasDict: [String: String] = [:],
-        completion: @escaping(
+        completion: @escaping (
             (Result<T, RequestError>) -> ()
         )
     ) {
@@ -1514,7 +1893,8 @@ struct HttpMethod<T: Codable> {
                 var url = URLComponents(string: baseStr + urlStr)!
                 var urlQueryItems: [URLQueryItem] = url.queryItems ?? []
                 for para in parasDict {
-                    urlQueryItems.append(URLQueryItem(name: para.key, value: para.value))
+                    urlQueryItems
+                        .append(URLQueryItem(name: para.key, value: para.value))
                 }
                 url.queryItems = urlQueryItems
 
@@ -1526,12 +1906,18 @@ struct HttpMethod<T: Codable> {
                     "Accept-Language": "zh-CN,zh-Hans;q=0.9",
                     "Accept": "*/*",
                     "Connection": "keep-alive",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 ]
 
-                request.setValue("Genshin-Pizza-Helper/2.0", forHTTPHeaderField: "User-Agent")
+                request.setValue(
+                    "Genshin-Pizza-Helper/2.0",
+                    forHTTPHeaderField: "User-Agent"
+                )
                 for header in headersDict {
-                    request.setValue(header.value, forHTTPHeaderField: header.key)
+                    request.setValue(
+                        header.value,
+                        forHTTPHeaderField: header.key
+                    )
                 }
                 // http方法
                 switch method {
@@ -1545,7 +1931,10 @@ struct HttpMethod<T: Codable> {
                 // request body
                 if let body = body {
                     request.httpBody = body
-                    request.setValue("\(body.count)", forHTTPHeaderField: "Content-Length")
+                    request.setValue(
+                        "\(body.count)",
+                        forHTTPHeaderField: "Content-Length"
+                    )
                 }
 //                print(request)
 //                print(request.allHTTPHeaderFields!)
@@ -1557,10 +1946,13 @@ struct HttpMethod<T: Codable> {
                     // 判断有没有错误（这里无论如何都不会抛因为是自己手动返回错误信息的）
                     print(error ?? "ErrorInfo nil")
                     if let error = error {
-                        completion(.failure(.dataTaskError(error.localizedDescription)))
+                        completion(.failure(.dataTaskError(
+                            error
+                                .localizedDescription
+                        )))
                         print(
                             "DataTask error in General HttpMethod: " +
-                            error.localizedDescription + "\n"
+                                error.localizedDescription + "\n"
                         )
                     } else {
                         guard let data = data else {
@@ -1574,30 +1966,48 @@ struct HttpMethod<T: Codable> {
                             return
                         }
                         DispatchQueue.main.async {
-                            guard let stringData = String(data: data, encoding: .utf8) else {
-                                completion(.failure(.decodeError("fail convert data to .utf8 string"))); return
+                            guard let stringData = String(
+                                data: data,
+                                encoding: .utf8
+                            ) else {
+                                completion(
+                                    .failure(
+                                        .decodeError(
+                                            "fail convert data to .utf8 string"
+                                        )
+                                    )
+                                ); return
                             }
                             print(stringData)
-                            let data = stringData.replacingOccurrences(of: "\"NaN\"", with: "0").data(using: .utf8)!
+                            let data = stringData.replacingOccurrences(
+                                of: "\"NaN\"",
+                                with: "0"
+                            ).data(using: .utf8)!
                             let decoder = JSONDecoder()
                             if baseHost != "http://81.70.76.222" {
-                                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                                decoder
+                                    .keyDecodingStrategy = .convertFromSnakeCase
                             }
-                            guard let response = response as? HTTPURLResponse else {
+                            guard let response = response as? HTTPURLResponse
+                            else {
                                 completion(.failure(.responseError))
                                 return
                             }
                             print(response.statusCode)
 
                             do {
-
-                                let requestResult = try decoder.decode(T.self, from: data)
+                                let requestResult = try decoder.decode(
+                                    T.self,
+                                    from: data
+                                )
                                 completion(.success(requestResult))
                             } catch {
                                 print(error)
-                                completion(.failure(.decodeError(error.localizedDescription)))
+                                completion(.failure(.decodeError(
+                                    error
+                                        .localizedDescription
+                                )))
                             }
-
                         }
                     }
                 }.resume()
@@ -1607,6 +2017,8 @@ struct HttpMethod<T: Codable> {
         }
     }
 }
+
+// MARK: - API
 
 public class API {
     // API方法类，在这里只是一个空壳，以extension的方法扩展

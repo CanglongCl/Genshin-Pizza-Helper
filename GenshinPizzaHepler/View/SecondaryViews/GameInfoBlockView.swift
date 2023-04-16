@@ -5,10 +5,10 @@
 //  Created by Bill Haku on 2022/8/7.
 //  主页展示帐号信息的Block
 
+import HBMihoyoAPI
 import SwiftUI
 
 struct GameInfoBlock: View {
-
     var userData: UserData?
     let accountName: String?
     var accountUUIDString: String = UUID().uuidString
@@ -19,7 +19,7 @@ struct GameInfoBlock: View {
     var widgetBackground: WidgetBackground
 
     var fetchComplete: Bool
-    
+
     var body: some View {
         if let userData = userData {
             ZStack {
@@ -33,15 +33,21 @@ struct GameInfoBlock: View {
                             }
                             .font(.footnote)
                             .foregroundColor(Color("textColor3"))
-                            .matchedGeometryEffect(id: "\(accountUUIDString)name", in: animation)
+                            .matchedGeometryEffect(
+                                id: "\(accountUUIDString)name",
+                                in: animation
+                            )
                         }
                         HStack(alignment: .firstTextBaseline, spacing: 2) {
                             Text("\(userData.resinInfo.currentResin)")
-                                .font(.system(size: 50 , design: .rounded))
+                                .font(.system(size: 50, design: .rounded))
                                 .fontWeight(.medium)
                                 .foregroundColor(Color("textColor3"))
                                 .shadow(radius: 1)
-                                .matchedGeometryEffect(id: "\(accountUUIDString)curResin", in: animation)
+                                .matchedGeometryEffect(
+                                    id: "\(accountUUIDString)curResin",
+                                    in: animation
+                                )
                             Image("树脂")
                                 .resizable()
                                 .scaledToFit()
@@ -49,7 +55,10 @@ struct GameInfoBlock: View {
                                 .alignmentGuide(.firstTextBaseline) { context in
                                     context[.bottom] - 0.17 * context.height
                                 }
-                                .matchedGeometryEffect(id: "\(accountUUIDString)Resinlogo", in: animation)
+                                .matchedGeometryEffect(
+                                    id: "\(accountUUIDString)Resinlogo",
+                                    in: animation
+                                )
                         }
                         HStack {
                             Image(systemName: "hourglass.circle")
@@ -57,14 +66,20 @@ struct GameInfoBlock: View {
                                 .font(.title3)
                             recoveryTimeText(resinInfo: userData.resinInfo)
                         }
-                        .matchedGeometryEffect(id: "\(accountUUIDString)recovery", in: animation)
+                        .matchedGeometryEffect(
+                            id: "\(accountUUIDString)recovery",
+                            in: animation
+                        )
                     }
                     .padding()
                     Spacer()
                     DetailInfo(userData: userData, viewConfig: viewConfig)
                         .padding(.vertical)
                         .frame(maxWidth: UIScreen.main.bounds.width / 8 * 3)
-                        .matchedGeometryEffect(id: "\(accountUUIDString)detail", in: animation)
+                        .matchedGeometryEffect(
+                            id: "\(accountUUIDString)detail",
+                            in: animation
+                        )
                     Spacer()
                 }
                 .opacity(fetchComplete ? 1 : 0)
@@ -82,11 +97,17 @@ struct GameInfoBlock: View {
                     .scaledToFill()
                     .id(widgetBackground.imageName!)
                     .transition(.opacity)
-                    .matchedGeometryEffect(id: "\(accountUUIDString)bg", in: animation)
+                    .matchedGeometryEffect(
+                        id: "\(accountUUIDString)bg",
+                        in: animation
+                    )
                     .opacity(fetchComplete ? 1 : 0)
             )
             .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-            .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .contentShape(RoundedRectangle(
+                cornerRadius: 20,
+                style: .continuous
+            ))
         } else {
             HStack {
                 Spacer()
@@ -99,12 +120,16 @@ struct GameInfoBlock: View {
     @ViewBuilder
     func recoveryTimeText(resinInfo: ResinInfo) -> some View {
         if resinInfo.recoveryTime.second != 0 {
-            Text(LocalizedStringKey("\(resinInfo.recoveryTime.describeIntervalLong())\n\(resinInfo.recoveryTime.completeTimePointFromNow()) 回满"))
-                .font(.caption)
-                .lineLimit(2)
-                .minimumScaleFactor(0.2)
-                .foregroundColor(Color("textColor3"))
-                .lineSpacing(1)
+            Text(
+                LocalizedStringKey(
+                    "\(resinInfo.recoveryTime.describeIntervalLong())\n\(resinInfo.recoveryTime.completeTimePointFromNow()) 回满"
+                )
+            )
+            .font(.caption)
+            .lineLimit(2)
+            .minimumScaleFactor(0.2)
+            .foregroundColor(Color("textColor3"))
+            .lineSpacing(1)
         } else {
             Text("0小时0分钟\n树脂已全部回满")
                 .font(.caption)

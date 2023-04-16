@@ -7,17 +7,20 @@
 
 import Foundation
 
-struct TeamUtilizationData: Codable {
-    let totalUsers: Int
-    let teams: [Team]
-    let teamsFH: [Team]
-    let teamsSH: [Team]
+// MARK: - TeamUtilizationData
 
+struct TeamUtilizationData: Codable {
     struct Team: Codable {
         let team: [Int]
         let percentage: Double
     }
+
+    let totalUsers: Int
+    let teams: [Team]
+    let teamsFH: [Team]
+    let teamsSH: [Team]
 }
 
-typealias TeamUtilizationDataFetchModelResult = FetchHomeModelResult<TeamUtilizationData>
+typealias TeamUtilizationDataFetchModelResult =
+    FetchHomeModelResult<TeamUtilizationData>
 typealias TeamUtilizationDataFetchModel = FetchHomeModel<TeamUtilizationData>

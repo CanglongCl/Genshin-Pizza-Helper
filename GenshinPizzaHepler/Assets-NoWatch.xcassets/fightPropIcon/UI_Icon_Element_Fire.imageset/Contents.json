@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "UI_Icon_Element_Fire_22B1A5A9BF4EEABC.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "UI_Icon_Element_Fire_22B1A5A9BF4EEABC.heic",
       "idiom" : "universal",
       "scale" : "2x"
     },

@@ -8,6 +8,12 @@
 import Foundation
 
 struct GDDictionary: Codable {
+    struct Variants: Codable {
+        var en: [String]?
+        var ja: [String]?
+        var zhCN: [String]?
+    }
+
     var en: String
     var ja: String?
     var zhCN: String?
@@ -16,10 +22,4 @@ struct GDDictionary: Codable {
     var tags: [String]?
     var notes: String?
     var variants: Variants?
-
-    struct Variants: Codable {
-        var en: [String]?
-        var ja: [String]?
-        var zhCN: [String]?
-    }
 }

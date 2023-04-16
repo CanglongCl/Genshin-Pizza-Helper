@@ -5,16 +5,19 @@
 //  Created by Bill Haku on 2022/9/9.
 //
 
+import HBMihoyoAPI
 import SwiftUI
+
+// MARK: - WatchAccountDetailView
 
 struct WatchAccountDetailView: View {
     var userData: Result<UserData, FetchError>
     let accountName: String?
     var uid: String?
-    
+
     var body: some View {
         switch userData {
-        case .success(let data):
+        case let .success(data):
             ScrollView {
                 VStack(alignment: .leading) {
                     Group {
@@ -22,42 +25,75 @@ struct WatchAccountDetailView: View {
                         WatchResinDetailView(resinInfo: data.resinInfo)
                         Divider()
                         VStack(alignment: .leading, spacing: 5) {
-                            WatchAccountDetailItemView(title: "洞天宝钱", value: "\(data.homeCoinInfo.currentHomeCoin)", icon: Image("洞天宝钱"))
+                            WatchAccountDetailItemView(
+                                title: "洞天宝钱",
+                                value: "\(data.homeCoinInfo.currentHomeCoin)",
+                                icon: Image("洞天宝钱")
+                            )
                             Divider()
-                            WatchAccountDetailItemView(title: "每日委托", value: "\(data.dailyTaskInfo.finishedTaskNum) / \(data.dailyTaskInfo.totalTaskNum)", icon: Image("每日任务"))
+                            WatchAccountDetailItemView(
+                                title: "每日委托",
+                                value: "\(data.dailyTaskInfo.finishedTaskNum) / \(data.dailyTaskInfo.totalTaskNum)",
+                                icon: Image("每日任务")
+                            )
                             Divider()
-                            WatchAccountDetailItemView(title: "参量质变仪", value: "\(data.transformerInfo.recoveryTime.describeIntervalLong(finishedTextPlaceholder: "可使用".localized))", icon: Image("参量质变仪"))
+                            WatchAccountDetailItemView(
+                                title: "参量质变仪",
+                                value: "\(data.transformerInfo.recoveryTime.describeIntervalLong(finishedTextPlaceholder: "可使用".localized))",
+                                icon: Image("参量质变仪")
+                            )
                             Divider()
-                            WatchAccountDetailItemView(title: "周本折扣", value: "\(data.weeklyBossesInfo.hasUsedResinDiscountNum) / \(data.weeklyBossesInfo.resinDiscountNumLimit)", icon: Image("征讨领域"))
+                            WatchAccountDetailItemView(
+                                title: "周本折扣",
+                                value: "\(data.weeklyBossesInfo.hasUsedResinDiscountNum) / \(data.weeklyBossesInfo.resinDiscountNumLimit)",
+                                icon: Image("征讨领域")
+                            )
                             Divider()
-                            WatchAccountDetailItemView(title: "探索派遣", value: "\(data.expeditionInfo.currentOngoingTask) / \(data.expeditionInfo.maxExpedition)", icon: Image("派遣探索"))
+                            WatchAccountDetailItemView(
+                                title: "探索派遣",
+                                value: "\(data.expeditionInfo.currentOngoingTask) / \(data.expeditionInfo.maxExpedition)",
+                                icon: Image("派遣探索")
+                            )
                         }
                         Divider()
                         VStack(alignment: .leading, spacing: 10) {
-                            ForEach(data.expeditionInfo.expeditions, id: \.charactersEnglishName) { expedition in
-                                WatchEachExpeditionView(expedition: expedition, useAsyncImage: true)
-                                    .frame(maxHeight: 40)
+                            ForEach(
+                                data.expeditionInfo.expeditions,
+                                id: \.charactersEnglishName
+                            ) { expedition in
+                                WatchEachExpeditionView(
+                                    expedition: expedition,
+                                    useAsyncImage: true
+                                )
+                                .frame(maxHeight: 40)
                             }
                         }
                     }
                 }
             }
             .navigationTitle(accountName ?? "")
-        case .failure(_):
+        case .failure:
             Text("Error")
         }
     }
 
     func recoveryTimeText(resinInfo: ResinInfo) -> String {
         if resinInfo.recoveryTime.second != 0 {
-            let localizedStr = NSLocalizedString("%@ 回满", comment: "resin replenished")
-            return String(format: localizedStr, resinInfo.recoveryTime.completeTimePointFromNow())
+            let localizedStr = NSLocalizedString(
+                "%@ 回满",
+                comment: "resin replenished"
+            )
+            return String(
+                format: localizedStr,
+                resinInfo.recoveryTime.completeTimePointFromNow()
+            )
         } else {
             return "0小时0分钟\n树脂已全部回满".localized
         }
     }
 }
 
+// MARK: - WatchEachExpeditionView
 
 private struct WatchEachExpeditionView: View {
     let expedition: Expedition
@@ -70,8 +106,14 @@ private struct WatchEachExpeditionView: View {
             webView(url: expedition.avatarSideIconUrl)
                 .padding(.trailing)
             VStack(alignment: .leading) {
-                Text(expedition.recoveryTime.describeIntervalLong(finishedTextPlaceholder: "已完成".localized))
-                    .font(.footnote)
+                Text(
+                    expedition.recoveryTime
+                        .describeIntervalLong(
+                            finishedTextPlaceholder: "已完成"
+                                .localized
+                        )
+                )
+                .font(.footnote)
                 percentageBar(expedition.percentage)
             }
         }
@@ -98,7 +140,6 @@ private struct WatchEachExpeditionView: View {
 
     @ViewBuilder
     func percentageBar(_ percentage: Double) -> some View {
-
         let cornerRadius: CGFloat = 3
         GeometryReader { g in
             ZStack(alignment: .leading) {
@@ -106,9 +147,12 @@ private struct WatchEachExpeditionView: View {
                     .opacity(0.3)
                     .frame(width: g.size.width, height: g.size.height)
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .frame(width: g.size.width * percentage, height: g.size.height)
+                    .frame(
+                        width: g.size.width * percentage,
+                        height: g.size.height
+                    )
             }
-            .aspectRatio(30/1, contentMode: .fit)
+            .aspectRatio(30 / 1, contentMode: .fit)
         }
         .frame(height: 7)
     }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MaterialView: View {
     var today: MaterialWeekday = .today()
+
     var talentMaterialProvider: TalentMaterialProvider { .init(weekday: today) }
     var weaponMaterialProvider: WeaponMaterialProvider { .init(weekday: today) }
 
@@ -16,14 +17,20 @@ struct MaterialView: View {
         if today != .sunday {
             VStack {
                 HStack(spacing: -5) {
-                    ForEach(weaponMaterialProvider.todaysMaterials, id: \.imageString) { material in
+                    ForEach(
+                        weaponMaterialProvider.todaysMaterials,
+                        id: \.imageString
+                    ) { material in
                         Image(material.imageString)
                             .resizable()
                             .scaledToFit()
                     }
                 }
                 HStack(spacing: -5) {
-                    ForEach(talentMaterialProvider.todaysMaterials, id: \.imageString) { material in
+                    ForEach(
+                        talentMaterialProvider.todaysMaterials,
+                        id: \.imageString
+                    ) { material in
                         Image(material.imageString)
                             .resizable()
                             .scaledToFit()
@@ -39,4 +46,3 @@ struct MaterialView: View {
         }
     }
 }
-

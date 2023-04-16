@@ -6,13 +6,16 @@
 //
 
 import Foundation
+import HBMihoyoAPI
 
 extension API {
-    struct OpenAPIs {
+    enum OpenAPIs {
+        // MARK: Internal
+
         /// 获取当前活动信息
         /// - Parameters:
         ///     - completion: 数据
-        static func fetchCurrentEvents (
+        static func fetchCurrentEvents(
             completion: @escaping (
                 CurrentEventsFetchResult
             ) -> ()
@@ -25,17 +28,17 @@ extension API {
             HttpMethod<CurrentEvent>
                 .openRequest(
                     .get,
-                    url
+                    url,
+                    cachedPolicy: .reloadIgnoringLocalCacheData
                 ) { result in
                     switch result {
-
-                    case .success(let requestResult):
+                    case let .success(requestResult):
                         print("request succeed")
                         completion(.success(requestResult))
 
-                    case .failure(let requestError):
+                    case let .failure(requestError):
                         switch requestError {
-                        case .decodeError(let message):
+                        case let .decodeError(message):
                             completion(.failure(.decodeError(message)))
                         default:
                             completion(.failure(.requestError(requestError)))
@@ -48,44 +51,7 @@ extension API {
         /// - Parameters:
         ///     - uid: 用户UID
         ///     - completion: 数据
-        private static func fetchPlayerDatas (
-            _ uid: String,
-            completion: @escaping (
-                PlayerDetailsFetchResult
-            ) -> ()
-        ) {
-            // 请求类别
-            #if DEBUG
-//            let urlStr = "https://enka.network/u/153201631/__data.json"
-            let urlStr = "http://ophelper.top/static/player_detail_data_example.json"
-            #else
-            let urlStr = "https://enka.network/u/\(uid)/__data.json"
-            #endif
-            let url = URL(string: urlStr)!
-
-            // 请求
-            HttpMethod<PlayerDetailFetchModel>
-                .openRequest(
-                    .get,
-                    url
-                ) { result in
-                    switch result {
-
-                    case .success(let requestResult):
-                        print("request succeed")
-                        completion(.success(requestResult))
-                    case .failure(let requestError):
-                        completion(.failure(requestError))
-                    }
-                }
-        }
-
-
-        /// 获取游戏内玩家详细信息
-        /// - Parameters:
-        ///     - uid: 用户UID
-        ///     - completion: 数据
-        static func fetchPlayerDetail (
+        static func fetchPlayerDetail(
             _ uid: String,
             dateWhenNextRefreshable: Date?,
             completion: @escaping (
@@ -94,24 +60,48 @@ extension API {
         ) {
             if let date = dateWhenNextRefreshable, date > Date() {
                 completion(.failure(.refreshTooFast(dateWhenRefreshable: date)))
-                print("PLAYER DETAIL FETCH 刷新太快了，请在\(date.timeIntervalSinceReferenceDate - Date().timeIntervalSinceReferenceDate)秒后刷新")
+                print(
+                    "PLAYER DETAIL FETCH 刷新太快了，请在\(date.timeIntervalSinceReferenceDate - Date().timeIntervalSinceReferenceDate)秒后刷新"
+                )
             } else {
                 fetchPlayerDatas(uid) { result in
                     switch result {
-                    case .success(let model):
+                    case let .success(model):
                         completion(.success(model))
-                    case .failure(let error):
+                    case let .failure(error):
                         switch error {
-                        case .dataTaskError(let message):
-                            completion(.failure(.failToGetCharacterData(message: message)))
-                        case .decodeError(let message):
-                            completion(.failure(.failToGetCharacterData(message: message)))
-                        case .errorWithCode(let code):
-                            completion(.failure(.failToGetCharacterData(message: "ERROR CODE \(code)")))
+                        case let .dataTaskError(message):
+                            completion(
+                                .failure(
+                                    .failToGetCharacterData(message: message)
+                                )
+                            )
+                        case let .decodeError(message):
+                            completion(
+                                .failure(
+                                    .failToGetCharacterData(message: message)
+                                )
+                            )
+                        case let .errorWithCode(code):
+                            completion(
+                                .failure(
+                                    .failToGetCharacterData(
+                                        message: "ERROR CODE \(code)"
+                                    )
+                                )
+                            )
                         case .noResponseData:
-                            completion(.failure(.failToGetCharacterData(message: "未找到数据")))
+                            completion(
+                                .failure(
+                                    .failToGetCharacterData(message: "未找到数据")
+                                )
+                            )
                         case .responseError:
-                            completion(.failure(.failToGetCharacterData(message: "请求无响应")))
+                            completion(
+                                .failure(
+                                    .failToGetCharacterData(message: "请求无响应")
+                                )
+                            )
                         }
                     }
                 }
@@ -121,7 +111,7 @@ extension API {
         /// 获取原神辞典数据
         /// - Parameters:
         ///     - completion: 数据
-        static func fetchGenshinDictionaryData (
+        static func fetchGenshinDictionaryData(
             completion: @escaping (
                 [GDDictionary]
             ) -> ()
@@ -137,14 +127,50 @@ extension API {
                     url
                 ) { result in
                     switch result {
-
-                    case .success(let requestResult):
+                    case let .success(requestResult):
                         print("request succeed")
                         completion(requestResult)
 
-                    case .failure(_):
+                    case .failure:
                         print("request Genshin Dictionary Data Fail")
-                        break
+                    }
+                }
+        }
+
+        // MARK: Private
+
+        /// 获取游戏内玩家详细信息
+        /// - Parameters:
+        ///     - uid: 用户UID
+        ///     - completion: 数据
+        private static func fetchPlayerDatas(
+            _ uid: String,
+            completion: @escaping (
+                PlayerDetailsFetchResult
+            ) -> ()
+        ) {
+            // 请求类别
+            #if DEBUG
+//            let urlStr = "https://enka.network/api/uid/\(uid)/"
+            let urlStr =
+                "https://ophelper.top/static/player_detail_data_example_2.json"
+            #else
+            let urlStr = "https://enka.network/api/uid/\(uid)/"
+            #endif
+            let url = URL(string: urlStr)!
+
+            // 请求
+            HttpMethod<PlayerDetailFetchModel>
+                .openRequest(
+                    .get,
+                    url
+                ) { result in
+                    switch result {
+                    case let .success(requestResult):
+                        print("request succeed")
+                        completion(.success(requestResult))
+                    case let .failure(requestError):
+                        completion(.failure(requestError))
                     }
                 }
         }

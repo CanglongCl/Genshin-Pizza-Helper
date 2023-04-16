@@ -5,11 +5,13 @@
 //  Created by 戴藏龙 on 2022/9/28.
 //
 
+import HBMihoyoAPI
 import SwiftUI
 
 @available(iOSApplicationExtension 16.0, *)
 struct LockScreenLoopWidgetWeeklyBossesCircular: View {
-    @Environment(\.widgetRenderingMode) var widgetRenderingMode
+    @Environment(\.widgetRenderingMode)
+    var widgetRenderingMode
 
     let result: FetchResult
 
@@ -21,10 +23,12 @@ struct LockScreenLoopWidgetWeeklyBossesCircular: View {
                     .resizable()
                     .scaledToFit()
                 switch result {
-                case .success(let data):
-                    Text("\(data.weeklyBossesInfo.hasUsedResinDiscountNum) / \(data.weeklyBossesInfo.resinDiscountNumLimit)")
-                        .font(.system(.body, design: .rounded).weight(.medium))
-                case .failure(_):
+                case let .success(data):
+                    Text(
+                        "\(data.weeklyBossesInfo.hasUsedResinDiscountNum) / \(data.weeklyBossesInfo.resinDiscountNumLimit)"
+                    )
+                    .font(.system(.body, design: .rounded).weight(.medium))
+                case .failure:
                     Image(systemName: "ellipsis")
                 }
             }
@@ -42,10 +46,12 @@ struct LockScreenLoopWidgetWeeklyBossesCircular: View {
                     .scaledToFit()
                     .foregroundColor(Color("iconColor.weeklyBosses"))
                 switch result {
-                case .success(let data):
-                    Text("\(data.weeklyBossesInfo.hasUsedResinDiscountNum) / \(data.weeklyBossesInfo.resinDiscountNumLimit)")
-                        .font(.system(.body, design: .rounded).weight(.medium))
-                case .failure(_):
+                case let .success(data):
+                    Text(
+                        "\(data.weeklyBossesInfo.hasUsedResinDiscountNum) / \(data.weeklyBossesInfo.resinDiscountNumLimit)"
+                    )
+                    .font(.system(.body, design: .rounded).weight(.medium))
+                case .failure:
                     Image(systemName: "ellipsis")
                 }
             }
@@ -61,10 +67,12 @@ struct LockScreenLoopWidgetWeeklyBossesCircular: View {
                     .resizable()
                     .scaledToFit()
                 switch result {
-                case .success(let data):
-                    Text("\(data.weeklyBossesInfo.hasUsedResinDiscountNum) / \(data.weeklyBossesInfo.resinDiscountNumLimit)")
-                        .font(.system(.body, design: .rounded).weight(.medium))
-                case .failure(_):
+                case let .success(data):
+                    Text(
+                        "\(data.weeklyBossesInfo.hasUsedResinDiscountNum) / \(data.weeklyBossesInfo.resinDiscountNumLimit)"
+                    )
+                    .font(.system(.body, design: .rounded).weight(.medium))
+                case .failure:
                     Image(systemName: "ellipsis")
                 }
             }

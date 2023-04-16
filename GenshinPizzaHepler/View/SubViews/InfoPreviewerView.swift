@@ -7,7 +7,14 @@
 
 import SwiftUI
 
+// MARK: - InfoPreviewer
+
 struct InfoPreviewer: View {
+    enum ContentStyle {
+        case standard
+        case capsule
+    }
+
     var title: String
     var content: String
     var contentStyle: ContentStyle = .standard
@@ -36,19 +43,18 @@ struct InfoPreviewer: View {
             }
         }
     }
-
-    enum ContentStyle {
-        case standard
-        case capsule
-    }
 }
+
+// MARK: - InfoEditor
 
 struct InfoEditor: View {
     var title: String
-    @Binding var content: String
+    @Binding
+    var content: String
     var keyboardType: UIKeyboardType = .default
     var placeholderText: String = ""
-    @State var contentColor: Color = Color(UIColor.systemGray)
+    @State
+    var contentColor: Color = .init(UIColor.systemGray)
 
     var body: some View {
         HStack {
@@ -62,4 +68,3 @@ struct InfoEditor: View {
         }
     }
 }
-

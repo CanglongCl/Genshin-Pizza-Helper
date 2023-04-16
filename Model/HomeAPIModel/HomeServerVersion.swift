@@ -9,4 +9,5 @@ import Foundation
 
 typealias HomeServerVersion = String
 typealias HomeServerVersionFetchModel = FetchHomeModel<HomeServerVersion>
-typealias HomeServerVersionFetchModelResult = FetchHomeModelResult<HomeServerVersion>
+typealias HomeServerVersionFetchModelResult =
+    FetchHomeModelResult<HomeServerVersion>

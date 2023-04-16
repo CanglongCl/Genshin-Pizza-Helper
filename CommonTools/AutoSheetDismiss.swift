@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 
+// MARK: - MbModalHackView
+
 /// Control if allow to dismiss the sheet by the user actions
 /// - Drag down on the sheet on iPhone and iPad
 /// - Tap outside the sheet on iPad
@@ -19,18 +21,25 @@ import SwiftUI
 struct MbModalHackView: UIViewControllerRepresentable {
     var dismissable: () -> Bool = { false }
 
-    func makeUIViewController(context: UIViewControllerRepresentableContext<MbModalHackView>) -> UIViewController {
-        MbModalViewController(dismissable: self.dismissable)
+    func makeUIViewController(
+        context: UIViewControllerRepresentableContext<MbModalHackView>
+    )
+        -> UIViewController {
+        MbModalViewController(dismissable: dismissable)
     }
 
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
-
-    }
+    func updateUIViewController(
+        _ uiViewController: UIViewController,
+        context: Context
+    ) {}
 }
 
+// MARK: MbModalHackView.MbModalViewController
+
 extension MbModalHackView {
-    private final class MbModalViewController: UIViewController, UIAdaptivePresentationControllerDelegate {
-        let dismissable: () -> Bool
+    private final class MbModalViewController: UIViewController,
+        UIAdaptivePresentationControllerDelegate {
+        // MARK: Lifecycle
 
         init(dismissable: @escaping () -> Bool) {
             self.dismissable = dismissable
@@ -41,19 +50,30 @@ extension MbModalHackView {
             fatalError("init(coder:) has not been implemented")
         }
 
+        // MARK: Internal
+
+        let dismissable: () -> Bool
+
         override func didMove(toParent parent: UIViewController?) {
             super.didMove(toParent: parent)
 
             setup()
         }
 
-        func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        func presentationControllerShouldDismiss(
+            _ presentationController: UIPresentationController
+        )
+            -> Bool {
             dismissable()
         }
 
+        // MARK: Private
+
         // set delegate to the presentation of the root parent
         private func setup() {
-            guard let rootPresentationViewController = self.rootParent.presentationController, rootPresentationViewController.delegate == nil else { return }
+            guard let rootPresentationViewController = rootParent
+                .presentationController,
+                rootPresentationViewController.delegate == nil else { return }
             rootPresentationViewController.delegate = self
         }
     }
@@ -61,10 +81,9 @@ extension MbModalHackView {
 
 extension UIViewController {
     fileprivate var rootParent: UIViewController {
-        if let parent = self.parent {
+        if let parent = parent {
             return parent.rootParent
-        }
-        else {
+        } else {
             return self
         }
     }
@@ -74,14 +93,14 @@ extension UIViewController {
 /// view.allowAutoDismiss(...)
 extension View {
     /// Control if allow to dismiss the sheet by the user actions
-    public func allowAutoDismiss(_ dismissable: @escaping () -> Bool) -> some View {
+    public func allowAutoDismiss(_ dismissable: @escaping () -> Bool)
+        -> some View {
         if #available(iOS 15.0, *) {
             return self
                 .interactiveDismissDisabled()
         } else {
             // Fallback on earlier versions
-            return self
-                .background(MbModalHackView(dismissable: dismissable))
+            return background(MbModalHackView(dismissable: dismissable))
         }
     }
 
@@ -92,14 +111,15 @@ extension View {
                 .interactiveDismissDisabled()
         } else {
             // Fallback on earlier versions
-            return self
-                .background(MbModalHackView(dismissable: { dismissable }))
+            return background(MbModalHackView(dismissable: { dismissable }))
         }
     }
 }
 
+// MARK: - ModalContent
+
 struct ModalContent: View {
-    @Environment(\.presentationMode) private var presentationMode
+    // MARK: Internal
 
     var body: some View {
         VStack {
@@ -113,6 +133,9 @@ struct ModalContent: View {
             }
         }
     }
+
+    // MARK: Private
+
+    @Environment(\.presentationMode)
+    private var presentationMode
 }
-
-

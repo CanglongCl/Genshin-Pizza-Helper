@@ -6,14 +6,41 @@
 //
 
 import Foundation
+import HBMihoyoAPI
 #if canImport(ActivityKit)
 import ActivityKit
 
 @available(iOS 16.1, *)
 struct ResinRecoveryAttributes: ActivityAttributes {
+    // MARK: Public
+
     public typealias ResinRecoveryState = ContentState
 
     public struct ContentState: Codable, Hashable {
+        // MARK: Lifecycle
+
+        init(
+            resinInfo: ResinInfo,
+            expeditionInfo: ExpeditionInfo,
+            showExpedition: Bool,
+            background: ResinRecoveryActivityBackground
+        ) {
+            self.resinCountWhenUpdated = resinInfo.currentResin
+            self
+                .resinRecoveryTimeUntilFullInSecondWhenUpdated =
+                TimeInterval(resinInfo.recoveryTime.second)
+            self.updatedTime = resinInfo.updateDate
+            self
+                .expeditionAllCompleteTimeInterval = TimeInterval(
+                    expeditionInfo
+                        .allCompleteTime.second
+                )
+            self.showExpedition = showExpedition
+            self.background = background
+        }
+
+        // MARK: Internal
+
         let resinCountWhenUpdated: Int
         let resinRecoveryTimeUntilFullInSecondWhenUpdated: TimeInterval
         let updatedTime: Date
@@ -21,16 +48,9 @@ struct ResinRecoveryAttributes: ActivityAttributes {
         let showExpedition: Bool
 
         let background: ResinRecoveryActivityBackground
-
-        init(resinInfo: ResinInfo, expeditionInfo: ExpeditionInfo, showExpedition: Bool, background: ResinRecoveryActivityBackground) {
-            resinCountWhenUpdated = resinInfo.currentResin
-            resinRecoveryTimeUntilFullInSecondWhenUpdated = TimeInterval(resinInfo.recoveryTime.second)
-            updatedTime = resinInfo.updateDate
-            expeditionAllCompleteTimeInterval = TimeInterval(expeditionInfo.allCompleteTime.second)
-            self.showExpedition = showExpedition
-            self.background = background
-        }
     }
+
+    // MARK: Internal
 
     let accountName: String
     let accountUUID: UUID
@@ -40,7 +60,8 @@ struct ResinRecoveryAttributes: ActivityAttributes {
 extension ResinRecoveryAttributes.ResinRecoveryState {
     /// 求余获得**更新时**距离下一个树脂的TimeInterval
     var timeIntervalFromNextResinWhenUpdated: TimeInterval {
-        Double(resinRecoveryTimeUntilFullInSecondWhenUpdated).truncatingRemainder(dividingBy: Double(8*60))
+        Double(resinRecoveryTimeUntilFullInSecondWhenUpdated)
+            .truncatingRemainder(dividingBy: Double(8 * 60))
     }
 
     /// 距离信息更新时的TimeInterval
@@ -50,17 +71,21 @@ extension ResinRecoveryAttributes.ResinRecoveryState {
 
     /// 当前距离树脂回满需要的TimeInterval
     var resinRecoveryTimeIntervalUntilFull: TimeInterval {
-        resinRecoveryTimeUntilFullInSecondWhenUpdated - timeIntervalFromUpdatedTime
+        resinRecoveryTimeUntilFullInSecondWhenUpdated -
+            timeIntervalFromUpdatedTime
     }
 
     /// 树脂回满的时间点
     var resinFullTime: Date {
-        updatedTime.addingTimeInterval(resinRecoveryTimeUntilFullInSecondWhenUpdated)
+        updatedTime
+            .addingTimeInterval(
+                resinRecoveryTimeUntilFullInSecondWhenUpdated
+            )
     }
 
     /// 当前还需多少树脂才能回满
     var resinToFull: Int {
-        Int( ceil( resinRecoveryTimeIntervalUntilFull / (8*60) ) )
+        Int(ceil(resinRecoveryTimeIntervalUntilFull / (8 * 60)))
     }
 
     /// 当前树脂数量
@@ -70,7 +95,8 @@ extension ResinRecoveryAttributes.ResinRecoveryState {
 
     /// 当前距离下个树脂回复所需时间
     var nextResinRecoveryTimeInterval: TimeInterval {
-        resinRecoveryTimeIntervalUntilFull.truncatingRemainder(dividingBy: 8*60)
+        resinRecoveryTimeIntervalUntilFull
+            .truncatingRemainder(dividingBy: 8 * 60)
     }
 
     /// 下个树脂回复的时间点
@@ -80,7 +106,7 @@ extension ResinRecoveryAttributes.ResinRecoveryState {
 
     /// 下一20倍数树脂
     var next20ResinCount: Int {
-        Int(ceil((Double(currentResin)+0.01) / 20.0)) * 20
+        Int(ceil((Double(currentResin) + 0.01) / 20.0)) * 20
     }
 
     var showNext20Resin: Bool {
@@ -89,7 +115,8 @@ extension ResinRecoveryAttributes.ResinRecoveryState {
 
     /// 下一20倍数树脂回复所需时间
     var next20ResinRecoveryTimeInterval: TimeInterval {
-        resinRecoveryTimeIntervalUntilFull.truncatingRemainder(dividingBy: 8*60*20)
+        resinRecoveryTimeIntervalUntilFull
+            .truncatingRemainder(dividingBy: 8 * 60 * 20)
     }
 
     /// 下一20倍数树脂回复时间点

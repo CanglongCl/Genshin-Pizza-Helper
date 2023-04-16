@@ -14,15 +14,21 @@ struct ThanksView: View {
                 .font(.footnote)
             Divider()
             Group {
-                Text("SwiftPieChart - Nazar Ilamanov\nhttps://github.com/ilamanov/SwiftPieChart")
+                Text(
+                    "SwiftPieChart - Nazar Ilamanov\nhttps://github.com/ilamanov/SwiftPieChart"
+                )
             }
             .font(.caption)
             Divider()
             Group {
                 Text("Game Account Data API - 米游社 (CN) / HoYoLAB (OS)")
                 Text("Events API - Project Amber (https://ambr.top)")
-                Text("Character Showcase API - Enka Network (https://enka.network)")
-                Text("Genshin Dictionary API - Genshin Dictionary (https://genshin-dictionary.com)")
+                Text(
+                    "Character Showcase API - Enka Network (https://enka.network)"
+                )
+                Text(
+                    "Genshin Dictionary API - Genshin Dictionary (https://genshin-dictionary.com)"
+                )
             }
             .font(.caption)
             Spacer()

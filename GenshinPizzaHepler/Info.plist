@@ -21,6 +21,7 @@
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<string>vk</string>
 		<string>com.miHoYo.mhybbs</string>
 		<string>mihoyobbs</string>
 		<string>bilibili</string>

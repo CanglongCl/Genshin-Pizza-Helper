@@ -5,6 +5,7 @@
 //  Created by Bill Haku on 2022/9/8.
 //
 
+import HBMihoyoAPI
 import SwiftUI
 
 struct WatchGameInfoBlock: View {
@@ -15,18 +16,19 @@ struct WatchGameInfoBlock: View {
     var fetchComplete: Bool
     var background: WidgetBackground
 
-    @State var bindingBool = false
+    @State
+    var bindingBool = false
 
     var body: some View {
         switch userData {
-        case .success(let data):
+        case let .success(data):
             ZStack {
                 VStack(alignment: .leading) {
                     Text(accountName ?? "Name Nil")
                         .font(.caption)
                     HStack(alignment: .bottom) {
                         Text("\(data.resinInfo.currentResin)")
-                            .font(.system(size: 50 , design: .rounded))
+                            .font(.system(size: 50, design: .rounded))
                             .fontWeight(.medium)
                             .foregroundColor(Color("textColor3"))
                             .shadow(radius: 1)
@@ -54,7 +56,7 @@ struct WatchGameInfoBlock: View {
                     .transition(.opacity)
                     .opacity(fetchComplete ? 1 : 0)
             )
-        case .failure(_):
+        case .failure:
             Text("Error")
         }
     }

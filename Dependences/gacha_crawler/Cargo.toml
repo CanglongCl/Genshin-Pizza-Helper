@@ -1,0 +1,25 @@
+[package]
+name = "gacha_crawler"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["staticlib"]
+
+[build-dependencies]
+swift-bridge-build = "0.1"
+
+[dependencies]
+hudsucker = "0.19.1"
+rustls-pemfile = "1.0.2"
+snafu = "0.7.4"
+swift-bridge = { version = "0.1.51", features = ["async"] }
+tokio = { version = "1.26.0" }
+url = "2.3.1"
+
+[profile.release]
+opt-level = "z"  # Optimize for size.
+codegen-units = 1
+panic = "abort"

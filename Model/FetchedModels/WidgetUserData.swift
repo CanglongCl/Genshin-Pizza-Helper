@@ -8,9 +8,13 @@
 import Foundation
 
 struct WidgetUserData: Codable {
-    var data: WidgetUserDataDetail
-
     struct WidgetUserDataDetail: Codable {
+        struct DetailData: Codable {
+            var name: String
+            var type: String
+            var value: String
+        }
+
         var region: String
         var gameRoleId: String
         var backgroundImage: String
@@ -19,11 +23,7 @@ struct WidgetUserData: Codable {
         var gameId: Int
         var level: Int
         var regionName: String
-
-        struct DetailData: Codable {
-            var name: String
-            var type: String
-            var value: String
-        }
     }
+
+    var data: WidgetUserDataDetail
 }

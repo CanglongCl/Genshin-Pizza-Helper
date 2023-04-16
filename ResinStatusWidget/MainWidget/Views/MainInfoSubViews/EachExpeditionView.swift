@@ -5,6 +5,7 @@
 //  Created by 戴藏龙 on 2022/8/23.
 //  每条探索派遣信息View
 
+import HBMihoyoAPI
 import SwiftUI
 
 struct EachExpeditionView: View {
@@ -16,10 +17,16 @@ struct EachExpeditionView: View {
         HStack {
             webView(url: expedition.avatarSideIconUrl)
             VStack(alignment: .leading) {
-                Text(expedition.recoveryTime.describeIntervalLong(finishedTextPlaceholder: "已完成".localized))
-                    .lineLimit(1)
-                    .font(.footnote)
-                    .minimumScaleFactor(0.4)
+                Text(
+                    expedition.recoveryTime
+                        .describeIntervalLong(
+                            finishedTextPlaceholder: "已完成"
+                                .localized
+                        )
+                )
+                .lineLimit(1)
+                .font(.footnote)
+                .minimumScaleFactor(0.4)
                 percentageBar(expedition.percentage)
                     .environment(\.colorScheme, .light)
             }
@@ -47,38 +54,52 @@ struct EachExpeditionView: View {
 
     @ViewBuilder
     func percentageBar(_ percentage: Double) -> some View {
-
         let cornerRadius: CGFloat = 3
         if #available(iOS 15.0, iOSApplicationExtension 15.0, *) {
             GeometryReader { g in
                 ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                        .frame(width: g.size.width, height: g.size.height)
-                        .foregroundStyle(.ultraThinMaterial)
-                        .opacity(0.6)
-                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                        .frame(width: g.size.width * percentage, height: g.size.height)
-                        .foregroundStyle(.thickMaterial)
+                    RoundedRectangle(
+                        cornerRadius: cornerRadius,
+                        style: .continuous
+                    )
+                    .frame(width: g.size.width, height: g.size.height)
+                    .foregroundStyle(.ultraThinMaterial)
+                    .opacity(0.6)
+                    RoundedRectangle(
+                        cornerRadius: cornerRadius,
+                        style: .continuous
+                    )
+                    .frame(
+                        width: g.size.width * percentage,
+                        height: g.size.height
+                    )
+                    .foregroundStyle(.thickMaterial)
                 }
-                .aspectRatio(30/1, contentMode: .fit)
+                .aspectRatio(30 / 1, contentMode: .fit)
 //                .preferredColorScheme(.light)
             }
             .frame(height: 7)
         } else {
             GeometryReader { g in
                 ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                        .opacity(0.3)
-                        .frame(width: g.size.width, height: g.size.height)
-                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                        .frame(width: g.size.width * percentage, height: g.size.height)
+                    RoundedRectangle(
+                        cornerRadius: cornerRadius,
+                        style: .continuous
+                    )
+                    .opacity(0.3)
+                    .frame(width: g.size.width, height: g.size.height)
+                    RoundedRectangle(
+                        cornerRadius: cornerRadius,
+                        style: .continuous
+                    )
+                    .frame(
+                        width: g.size.width * percentage,
+                        height: g.size.height
+                    )
                 }
-                .aspectRatio(30/1, contentMode: .fit)
+                .aspectRatio(30 / 1, contentMode: .fit)
             }
             .frame(height: 7)
         }
-
-
-
     }
 }

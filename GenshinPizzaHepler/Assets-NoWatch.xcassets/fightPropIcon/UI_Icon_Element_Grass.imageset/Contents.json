@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "UI_Icon_Element_Grass_E74742179E581804.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "UI_Icon_Element_Grass_E74742179E581804.heic",
       "idiom" : "universal",
       "scale" : "2x"
     },

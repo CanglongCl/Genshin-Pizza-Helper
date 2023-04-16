@@ -5,6 +5,7 @@
 //  Created by 戴藏龙 on 2022/8/23.
 //  探索派遣View
 
+import HBMihoyoAPI
 import SwiftUI
 
 struct ExpeditionsView: View {
@@ -14,8 +15,13 @@ struct ExpeditionsView: View {
     var body: some View {
         VStack {
             ForEach(expeditions, id: \.charactersEnglishName) { expedition in
-                EachExpeditionView(expedition: expedition, useAsyncImage: useAsyncImage)
-                if expedition.charactersEnglishName != (expeditions.last?.charactersEnglishName ?? "") {
+                EachExpeditionView(
+                    expedition: expedition,
+                    useAsyncImage: useAsyncImage
+                )
+                if expedition
+                    .charactersEnglishName !=
+                    (expeditions.last?.charactersEnglishName ?? "") {
                     Spacer()
                 }
             }
@@ -23,5 +29,3 @@ struct ExpeditionsView: View {
 //        .background(WidgetBackgroundView(background: .randomNamecardBackground, darkModeOn: true))
     }
 }
-
-

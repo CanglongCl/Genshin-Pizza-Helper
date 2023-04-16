@@ -5,11 +5,20 @@
 //  Created by Bill Haku on 2022/9/18.
 //
 
+import HBMihoyoAPI
 import SwiftUI
 
 struct CurrentEventNavigator: View {
-    @Binding var eventContents: [EventModel]
-    typealias IntervalDate = (month: Int?, day: Int?, hour: Int?, minute: Int?, second: Int?)
+    typealias IntervalDate = (
+        month: Int?,
+        day: Int?,
+        hour: Int?,
+        minute: Int?,
+        second: Int?
+    )
+
+    @Binding
+    var eventContents: [EventModel]
 
     var body: some View {
         if !eventContents.isEmpty {
@@ -37,12 +46,35 @@ struct CurrentEventNavigator: View {
                             .foregroundColor(.secondary)
                             .frame(width: 4, height: 60)
                         VStack(spacing: 7) {
-                            ForEach(eventContents.filter({
+                            if eventContents.filter({
                                 (getRemainDays($0.endAt)?.day ?? 0) >= 0
-                                && (getRemainDays($0.endAt)?.hour ?? 0) >= 0
-                                && (getRemainDays($0.endAt)?.minute ?? 0) >= 0
-                            }).prefix(3), id: \.id) { content in
-                                eventItem(event: content)
+                                    && (getRemainDays($0.endAt)?.hour ?? 0) >= 0
+                                    && (getRemainDays($0.endAt)?.minute ?? 0) >=
+                                    0
+                            }).count <= 0 {
+                                HStack {
+                                    Spacer()
+                                    Text("暂无当前活动信息")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                    Spacer()
+                                }
+                            } else {
+                                ForEach(eventContents.filter {
+                                    (getRemainDays($0.endAt)?.day ?? 0) >= 0
+                                        && (
+                                            getRemainDays($0.endAt)?.hour ?? 0
+                                        ) >=
+                                        0
+                                        &&
+                                        (
+                                            getRemainDays($0.endAt)?
+                                                .minute ?? 0
+                                        ) >=
+                                        0
+                                }.prefix(3), id: \.id) { content in
+                                    eventItem(event: content)
+                                }
                             }
                         }
                     }
@@ -63,13 +95,11 @@ struct CurrentEventNavigator: View {
             Spacer()
             if getRemainDays(event.endAt) == nil {
                 Text(event.endAt)
-            }
-            else if getRemainDays(event.endAt)!.day! > 0 {
+            } else if getRemainDays(event.endAt)!.day! > 0 {
                 HStack(spacing: 0) {
                     Text("剩余 \(getRemainDays(event.endAt)!.day!)天")
                 }
-            }
-            else {
+            } else {
                 HStack(spacing: 0) {
                     Text("剩余 \(getRemainDays(event.endAt)!.hour!)小时")
                 }
@@ -79,7 +109,11 @@ struct CurrentEventNavigator: View {
         .foregroundColor(.primary)
     }
 
-    func getLocalizedContent(_ content: EventModel.MultiLanguageContents) -> String {
+    func getLocalizedContent(
+        _ content: EventModel
+            .MultiLanguageContents
+    )
+        -> String {
         let locale = Bundle.main.preferredLocalizations.first
         switch locale {
         case "zh-Hans":
@@ -90,6 +124,8 @@ struct CurrentEventNavigator: View {
             return content.EN
         case "ja":
             return content.JP
+        case "ru":
+            return content.RU
         default:
             return content.EN
         }
@@ -98,7 +134,11 @@ struct CurrentEventNavigator: View {
     func getRemainDays(_ endAt: String) -> IntervalDate? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX") 
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = Server(
+            rawValue: UserDefaults(suiteName: "group.GenshinPizzaHelper")?
+                .string(forKey: "defaultServer") ?? Server.asia.rawValue
+        )?.timeZone() ?? Server.asia.timeZone()
         let endDate = dateFormatter.date(from: endAt)
         guard let endDate = endDate else {
             return nil
@@ -107,18 +147,18 @@ struct CurrentEventNavigator: View {
         return interval
     }
 
-    func getCurrentEvent() -> Void {
+    func getCurrentEvent() {
         DispatchQueue.global().async {
             API.OpenAPIs.fetchCurrentEvents { result in
                 switch result {
-                case .success(let events):
+                case let .success(events):
                     withAnimation {
-                        self.eventContents = [EventModel](events.event.values)
-                        self.eventContents = eventContents.sorted {
+                        eventContents = [EventModel](events.event.values)
+                        eventContents = eventContents.sorted {
                             $0.endAt < $1.endAt
                         }
                     }
-                case .failure(_):
+                case .failure:
                     break
                 }
             }

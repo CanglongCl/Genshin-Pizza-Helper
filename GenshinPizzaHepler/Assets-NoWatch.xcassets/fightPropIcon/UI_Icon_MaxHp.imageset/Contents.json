@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "UI_Icon_MaxHp.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "UI_Icon_MaxHp@2x.heic",
       "idiom" : "universal",
       "scale" : "2x"
     },

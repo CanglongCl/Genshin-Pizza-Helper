@@ -7,13 +7,22 @@
 
 import Foundation
 
+// MARK: - DateRelationIdentifier
+
 enum DateRelationIdentifier {
     case today
     case tomorrow
     case other
 
-    static func getRelationIdentifier(of date: Date, from benchmarkDate: Date = Date()) -> Self {
-        let dayDiffer = Calendar.current.component(.day, from: date) - Calendar.current.component(.day, from: benchmarkDate)
+    // MARK: Internal
+
+    static func getRelationIdentifier(
+        of date: Date,
+        from benchmarkDate: Date = Date()
+    )
+        -> Self {
+        let dayDiffer = Calendar.current.component(.day, from: date) - Calendar
+            .current.component(.day, from: benchmarkDate)
         switch dayDiffer {
         case 0: return .today
         case 1: return .tomorrow
@@ -25,7 +34,8 @@ enum DateRelationIdentifier {
 extension Date {
     @available(iOS 16, *)
     func getRelativeDateString(benchmarkDate: Date = Date()) -> String {
-        let relationIdentifier: DateRelationIdentifier = .getRelationIdentifier(of: self)
+        let relationIdentifier: DateRelationIdentifier =
+            .getRelationIdentifier(of: self)
         let formatter = DateFormatter()
         var component = Locale.Components(locale: Locale.current)
         component.hourCycle = .zeroToTwentyThree

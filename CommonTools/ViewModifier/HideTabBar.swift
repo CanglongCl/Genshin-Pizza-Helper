@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - HideTabBar
+
 struct HideTabBar: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 16, *) {

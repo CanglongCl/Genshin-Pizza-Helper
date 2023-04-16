@@ -5,20 +5,19 @@
 //  Created by Bill Haku on 2022/9/11.
 //
 
-import WidgetKit
-import SwiftUI
 import Intents
+import SwiftUI
+import WidgetKit
 
 @main
-struct WatchWidgetLauncher {
+enum WatchWidgetLauncher {
     static func main() {
         WidgetsBundleiOS16.main()
     }
 }
 
-
-//@available(watchOSApplicationExtension 9.0, *)
-//struct WidgetsBundleiOS16: WidgetBundle {
+// @available(watchOSApplicationExtension 9.0, *)
+// struct WidgetsBundleiOS16: WidgetBundle {
 //    var body: some Widget {
 //        LockScreenResinWidget()
 //        LockScreenHomeCoinWidget()
@@ -26,4 +25,4 @@ struct WatchWidgetLauncher {
 //        LockScreenAllInfoWidget()
 //        LockScreenDailyTaskWidget()
 //    }
-//}
+// }

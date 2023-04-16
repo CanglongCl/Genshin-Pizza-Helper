@@ -7,22 +7,34 @@
 
 import SwiftUI
 
+// MARK: - OverflowHideIndexTabViewStyleModifier
+
 struct OverflowHideIndexTabViewStyleModifier: ViewModifier {
-    @State private var contentOverflow: Bool = false
+    // MARK: Internal
 
     func body(content: Content) -> some View {
         GeometryReader { geometry in
             content
-            .background(
-                GeometryReader { contentGeometry in
-                    Color.clear.onAppear {
-                        contentOverflow = contentGeometry.size.height > geometry.size.height * 0.9
+                .background(
+                    GeometryReader { contentGeometry in
+                        Color.clear.onAppear {
+                            contentOverflow = contentGeometry.size
+                                .height > geometry
+                                .size.height * 0.9
+                        }
                     }
-                }
-            )
-            .tabViewStyle(.page(indexDisplayMode: contentOverflow ? .never : .always))
+                )
+                .tabViewStyle(.page(
+                    indexDisplayMode: contentOverflow ? .never :
+                        .always
+                ))
         }
     }
+
+    // MARK: Private
+
+    @State
+    private var contentOverflow: Bool = false
 }
 
 extension View {

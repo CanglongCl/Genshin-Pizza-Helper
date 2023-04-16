@@ -8,9 +8,12 @@
 import Foundation
 import SwiftUI
 
+// MARK: - ProgressGaugeStyle
+
 @available(iOS 16.0, *)
 struct ProgressGaugeStyle: GaugeStyle {
     var circleColor: Color = .white
+
 //    var valueTextColor: Color = .white
 //    var labelColor: Color = .white
 
@@ -23,11 +26,23 @@ struct ProgressGaugeStyle: GaugeStyle {
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             TotalArc()
-                .stroke(circleColor, style: StrokeStyle(lineWidth: strokeLineWidth, lineCap: .round))
+                .stroke(
+                    circleColor,
+                    style: StrokeStyle(
+                        lineWidth: strokeLineWidth,
+                        lineCap: .round
+                    )
+                )
                 .widgetAccentable()
                 .opacity(0.5)
             Arc(percentage: configuration.value)
-                .stroke(circleColor, style: StrokeStyle(lineWidth: strokeLineWidth, lineCap: .round))
+                .stroke(
+                    circleColor,
+                    style: StrokeStyle(
+                        lineWidth: strokeLineWidth,
+                        lineCap: .round
+                    )
+                )
                 .widgetAccentable()
                 .shadow(radius: 1)
             configuration.currentValueLabel
@@ -35,19 +50,21 @@ struct ProgressGaugeStyle: GaugeStyle {
             VStack {
                 Spacer()
                 configuration.label
-                    #if os(watchOS)
+                #if os(watchOS)
                     .frame(width: 10, height: 10)
                     .padding(.bottom, -1.5)
-                    #else
+                #else
                     .frame(width: 12, height: 12)
                     .padding(.bottom, -1.5)
-                    #endif
+                #endif
             }
             .widgetAccentable()
         }
-        .padding(strokeLineWidth * 1/2)
+        .padding(strokeLineWidth * 1 / 2)
     }
 }
+
+// MARK: - TotalArc
 
 struct TotalArc: Shape {
 //    #if os(watchOS)
@@ -56,25 +73,29 @@ struct TotalArc: Shape {
 //    #else
     let startAngle: Angle = .degrees(50)
     let endAngle: Angle = .degrees(130)
+
 //    #endif
 
     func path(in rect: CGRect) -> Path {
         var path = Path()
         let radius = max(rect.size.width, rect.size.height) / 2
-        path.addArc(center: CGPoint(x: rect.midX, y: rect.midY),
-                    radius: radius,
-                    startAngle: startAngle,
-                    endAngle: endAngle,
-                    clockwise: true)
+        path.addArc(
+            center: CGPoint(x: rect.midX, y: rect.midY),
+            radius: radius,
+            startAngle: startAngle,
+            endAngle: endAngle,
+            clockwise: true
+        )
         return path
     }
 }
+
+// MARK: - Arc
 
 struct Arc: Shape {
     let percentage: Double
 
     func path(in rect: CGRect) -> Path {
-
 //        #if os(watchOS)
 //        let startAngle: Angle = .degrees(45 - (1 - percentage) * 270)
 //        let endAngle: Angle = .degrees(135)
@@ -85,11 +106,13 @@ struct Arc: Shape {
 
         var path = Path()
         let radius = max(rect.size.width, rect.size.height) / 2
-        path.addArc(center: CGPoint(x: rect.midX, y: rect.midY),
-                    radius: radius,
-                    startAngle: startAngle,
-                    endAngle: endAngle,
-                    clockwise: true)
+        path.addArc(
+            center: CGPoint(x: rect.midX, y: rect.midY),
+            radius: radius,
+            startAngle: startAngle,
+            endAngle: endAngle,
+            clockwise: true
+        )
         return path
     }
 }

@@ -5,14 +5,15 @@
 //  Created by Bill Haku on 2022/9/8.
 //
 
-import WatchKit
 import SwiftUI
 import UserNotifications
+import WatchKit
 
-class NotificationController: WKUserNotificationHostingController<NotificationView> {
-
+class NotificationController: WKUserNotificationHostingController<
+    NotificationView
+> {
     override var body: NotificationView {
-        return NotificationView()
+        NotificationView()
     }
 
     override func willActivate() {

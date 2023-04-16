@@ -5,11 +5,14 @@
 //  Created by 戴藏龙 on 2022/9/11.
 //
 
+import HBMihoyoAPI
 import SwiftUI
 
 @available(iOSApplicationExtension 16.0, *)
-struct AlternativeLockScreenResinWidgetCircular<T>: View where T: SimplifiedUserDataContainer {
-    @Environment(\.widgetRenderingMode) var widgetRenderingMode
+struct AlternativeLockScreenResinWidgetCircular<T>: View
+    where T: SimplifiedUserDataContainer {
+    @Environment(\.widgetRenderingMode)
+    var widgetRenderingMode
 
     let result: SimplifiedUserDataContainerResult<T>
 
@@ -21,10 +24,10 @@ struct AlternativeLockScreenResinWidgetCircular<T>: View where T: SimplifiedUser
                     .resizable()
                     .scaledToFit()
                 switch result {
-                case .success(let data):
+                case let .success(data):
                     Text("\(data.resinInfo.currentResin)")
                         .font(.system(.body, design: .rounded).weight(.medium))
-                case .failure(_):
+                case .failure:
                     Image(systemName: "ellipsis")
                 }
             }
@@ -37,15 +40,25 @@ struct AlternativeLockScreenResinWidgetCircular<T>: View where T: SimplifiedUser
             .widgetAccentable()
         case .fullColor:
             VStack(spacing: 0) {
-                LinearGradient(colors: [.init("iconColor.resin.dark"), .init("iconColor.resin.middle"), .init("iconColor.resin.light")], startPoint: .top, endPoint: .bottom)
-                    .mask(Image("icon.resin")
+                LinearGradient(
+                    colors: [
+                        .init("iconColor.resin.dark"),
+                        .init("iconColor.resin.middle"),
+                        .init("iconColor.resin.light"),
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .mask(
+                    Image("icon.resin")
                         .resizable()
-                        .scaledToFit())
+                        .scaledToFit()
+                )
                 switch result {
-                case .success(let data):
+                case let .success(data):
                     Text("\(data.resinInfo.currentResin)")
                         .font(.system(.body, design: .rounded).weight(.medium))
-                case .failure(_):
+                case .failure:
                     Image(systemName: "ellipsis")
                 }
             }
@@ -61,10 +74,10 @@ struct AlternativeLockScreenResinWidgetCircular<T>: View where T: SimplifiedUser
                     .resizable()
                     .scaledToFit()
                 switch result {
-                case .success(let data):
+                case let .success(data):
                     Text("\(data.resinInfo.currentResin)")
                         .font(.system(.body, design: .rounded).weight(.medium))
-                case .failure(_):
+                case .failure:
                     Image(systemName: "ellipsis")
                 }
             }
@@ -77,4 +90,3 @@ struct AlternativeLockScreenResinWidgetCircular<T>: View where T: SimplifiedUser
         }
     }
 }
-

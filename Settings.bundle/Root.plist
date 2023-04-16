@@ -3,25 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>StringsTable</key>
-	<string>Root</string>
+	<string>Settings</string>
 	<key>PreferenceSpecifiers</key>
 	<array>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>⚠️如果你没有在此找到“偏好语言”选项</string>
-			<key>FooterText</key>
-			<string>请前往📱 [设置] App -&gt; [通用] -&gt; [语言与地区]，添加你希望修改的语言为第二语言。</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>🌐本App支持的语言</string>
-			<key>FooterText</key>
-			<string>简体中文、日本語、English、繁體中文、繁體中文（香港）、Français</string>
-		</dict>
 		<dict>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
@@ -36,7 +20,23 @@
 			<key>Title</key>
 			<string>🌐 Supported Languages</string>
 			<key>FooterText</key>
-			<string>简体中文, 日本語, English, 繁體中文, 繁體中文（香港）, Français</string>
+			<string>简体中文, 日本語, English, 繁體中文, 繁體中文（香港）, Français, Русский, Tiếng Việt</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>​⚠️If you don&apos;t see the &quot;Preferred language&quot; option here</string>
+			<key>FooterText</key>
+			<string>​Please go to 📱 [Settings] -&gt; [General] -&gt; [Language &amp; Region] and add the language you wish to set as the second language. </string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>​🌐 Supported Languages</string>
+			<key>FooterText</key>
+			<string>​简体中文, 日本語, English, 繁體中文, 繁體中文（香港）, Français, Русский, Tiếng Việt</string>
 		</dict>
 	</array>
 </dict>

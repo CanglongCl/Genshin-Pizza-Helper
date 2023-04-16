@@ -5,11 +5,13 @@
 //  Created by 戴藏龙 on 2022/11/14.
 //
 
+import HBMihoyoAPI
 import SwiftUI
 import WidgetKit
 
 struct MainWidgetSimplifiedView: View {
-    @Environment(\.widgetFamily) var family: WidgetFamily
+    @Environment(\.widgetFamily)
+    var family: WidgetFamily
     var userData: SimplifiedUserData
     let viewConfig: WidgetViewConfiguration
     let accountName: String?
@@ -17,14 +19,30 @@ struct MainWidgetSimplifiedView: View {
     var body: some View {
         switch family {
         case .systemSmall:
-            MainInfoSimplified(userData: userData, viewConfig: viewConfig, accountName: viewConfig.showAccountName ? accountName : nil)
-                .padding()
+            MainInfoSimplified(
+                userData: userData,
+                viewConfig: viewConfig,
+                accountName: viewConfig.showAccountName ? accountName : nil
+            )
+            .padding()
         case .systemMedium:
-            MainInfoWithDetailSimplified(userData: userData, viewConfig: viewConfig, accountName: viewConfig.showAccountName ? accountName : nil)
+            MainInfoWithDetailSimplified(
+                userData: userData,
+                viewConfig: viewConfig,
+                accountName: viewConfig.showAccountName ? accountName : nil
+            )
         case .systemLarge:
-            LargeWidgetViewSimplified(userData: userData, viewConfig: viewConfig, accountName: viewConfig.showAccountName ? accountName : nil)
+            LargeWidgetViewSimplified(
+                userData: userData,
+                viewConfig: viewConfig,
+                accountName: viewConfig.showAccountName ? accountName : nil
+            )
         default:
-            MainInfoWithDetailSimplified(userData: userData, viewConfig: viewConfig, accountName: viewConfig.showAccountName ? accountName : nil)
+            MainInfoWithDetailSimplified(
+                userData: userData,
+                viewConfig: viewConfig,
+                accountName: viewConfig.showAccountName ? accountName : nil
+            )
         }
     }
 }

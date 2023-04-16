@@ -7,15 +7,22 @@
 
 import Foundation
 
-struct PlayerDetailFetchModel: Codable {
-    /// 账号基本信息
-    var playerInfo: PlayerInfo
-    /// 正在展示的角色的详细信息
-    var avatarInfoList: [AvatarInfo]?
-    var ttl: Int?
-    var uid: String?
+// MARK: - PlayerDetailFetchModel
 
+struct PlayerDetailFetchModel: Codable {
     struct PlayerInfo: Codable {
+        struct ShowAvatarInfo: Codable {
+            /// 角色ID
+            var avatarId: Int
+            /// 角色等级
+            var level: Int
+        }
+
+        struct ProfilePicture: Codable {
+            /// 头像对应的角色ID
+            var avatarId: Int
+        }
+
         /// 名称
         var nickname: String
         /// 等级
@@ -38,47 +45,11 @@ struct PlayerDetailFetchModel: Codable {
         var showNameCardIdList: [Int]?
         /// 玩家头像的角色的ID: profilePicture.avatarId
         var profilePicture: ProfilePicture
-
-
-        struct ShowAvatarInfo: Codable {
-            /// 角色ID
-            var avatarId: Int
-            /// 角色等级
-            var level: Int
-        }
-
-        struct ProfilePicture: Codable {
-            /// 头像对应的角色ID
-            var avatarId: Int
-        }
     }
 
     struct AvatarInfo: Codable {
-        /// 角色ID
-        var avatarId: Int
-        /// 命之座ID列表
-        let talentIdList: [Int]?
-        /// 角色属性
-        var propMap: PropMap
-        /// 角色战斗属性
-        var fightPropMap: FightPropMap
-        /// 角色天赋ID
-        var skillDepotId: Int
-        /// 所有固定天赋ID的列表
-        var inherentProudSkillList: [Int]
-        /// 天赋等级的字典，skillLevelMap.skillLevel: [天赋ID(String) : 等级(Int)]
-        var skillLevelMap: SkillLevelMap
-        /// 装备列表，包括武器和圣遗物
-        var equipList: [EquipList]
-        /// 角色好感等级，fetterInfo.expLevel
-        var fetterInfo: FetterInfo
-
         struct PropMap: Codable {
-            var exp: Exp
-            /// 等级突破
-            var levelStage: LevelStage
-            /// 等级
-            var level: Level
+            // MARK: Internal
 
             struct Exp: Codable {
                 var type: Int
@@ -97,6 +68,14 @@ struct PlayerDetailFetchModel: Codable {
                 var val: String
             }
 
+            var exp: Exp
+            /// 等级突破
+            var levelStage: LevelStage
+            /// 等级
+            var level: Level
+
+            // MARK: Private
+
             private enum CodingKeys: String, CodingKey {
                 case exp = "1001"
                 case levelStage = "1002"
@@ -105,43 +84,46 @@ struct PlayerDetailFetchModel: Codable {
         }
 
         struct SkillLevelMap: Codable {
-            var skillLevel: [String: Int]
-
-            struct SkillKey: CodingKey {
-                var stringValue: String
-                var intValue: Int?
-                init?(stringValue: String) {
-                    self.stringValue = stringValue
-                }
-                init?(intValue: Int) {
-                    self.stringValue = "\(intValue)"
-                    self.intValue = intValue
-                }
-            }
+            // MARK: Lifecycle
 
             init(from decoder: Decoder) throws {
                 let container = try decoder.container(keyedBy: SkillKey.self)
 
                 var skill = [String: Int]()
                 for key in container.allKeys {
-                    if let model = try? container.decode(Int.self, forKey: key) {
+                    if let model = try? container
+                        .decode(Int.self, forKey: key) {
                         skill[key.stringValue] = model
                     }
                 }
                 self.skillLevel = skill
             }
+
+            // MARK: Internal
+
+            struct SkillKey: CodingKey {
+                // MARK: Lifecycle
+
+                init?(stringValue: String) {
+                    self.stringValue = stringValue
+                }
+
+                init?(intValue: Int) {
+                    self.stringValue = "\(intValue)"
+                    self.intValue = intValue
+                }
+
+                // MARK: Internal
+
+                var stringValue: String
+                var intValue: Int?
+            }
+
+            var skillLevel: [String: Int]
         }
 
         /// 装备列表的一项，包括武器和圣遗物
         struct EquipList: Codable {
-            /// 物品的ID，武器和圣遗物共用
-            var itemId: Int
-            /// 圣遗物
-            var reliquary: Reliquary?
-            /// 武器
-            var weapon: Weapon?
-            var flat: Flat
-
             /// 圣遗物
             struct Reliquary: Codable {
                 /// 圣遗物等级
@@ -153,43 +135,72 @@ struct PlayerDetailFetchModel: Codable {
             }
 
             struct Weapon: Codable {
+                struct AffixMap: Codable {
+                    // MARK: Lifecycle
+
+                    init(from decoder: Decoder) throws {
+                        let container = try decoder
+                            .container(keyedBy: AffixKey.self)
+
+                        var affixDict = [String: Int]()
+                        for key in container.allKeys {
+                            if let model = try? container.decode(
+                                Int.self,
+                                forKey: key
+                            ) {
+                                affixDict[key.stringValue] = model
+                            }
+                        }
+                        self.affix = affixDict
+                    }
+
+                    // MARK: Internal
+
+                    struct AffixKey: CodingKey {
+                        // MARK: Lifecycle
+
+                        init?(stringValue: String) {
+                            self.stringValue = stringValue
+                        }
+
+                        init?(intValue: Int) {
+                            self.stringValue = "\(intValue)"
+                            self.intValue = intValue
+                        }
+
+                        // MARK: Internal
+
+                        var stringValue: String
+                        var intValue: Int?
+                    }
+
+                    var affix: [String: Int]
+                }
+
                 /// 武器等级
                 var level: Int
                 /// 武器突破等级
                 var promoteLevel: Int?
                 /// 武器精炼等级（0-4）
                 var affixMap: AffixMap?
-
-                struct AffixMap: Codable {
-                    var affix: [String: Int]
-
-                    struct AffixKey: CodingKey {
-                        var stringValue: String
-                        var intValue: Int?
-                        init?(stringValue: String) {
-                            self.stringValue = stringValue
-                        }
-                        init?(intValue: Int) {
-                            self.stringValue = "\(intValue)"
-                            self.intValue = intValue
-                        }
-                    }
-
-                    init(from decoder: Decoder) throws {
-                        let container = try decoder.container(keyedBy: AffixKey.self)
-
-                        var affixDict = [String: Int]()
-                        for key in container.allKeys {
-                            if let model = try? container.decode(Int.self, forKey: key) {
-                                affixDict[key.stringValue] = model
-                            }
-                        }
-                        self.affix = affixDict
-                    }
-                }
             }
 
             struct Flat: Codable {
+                struct ReliquaryMainstat: Codable {
+                    var mainPropId: String
+                    var statValue: Double
+                }
+
+                struct ReliquarySubstat: Codable, Hashable {
+                    var appendPropId: String
+                    var statValue: Double
+                }
+
+                struct WeaponStat: Codable {
+                    var appendPropId: String
+                    var statValue: Double
+                }
+
                 /// 装备名的哈希值
                 var nameTextMapHash: String
                 /// 圣遗物套装名称的哈希值
@@ -208,31 +219,56 @@ struct PlayerDetailFetchModel: Codable {
                 var icon: String
                 /// 圣遗物类型：花/羽毛/沙漏/杯子/头
                 var equipType: String?
-
-                struct ReliquaryMainstat: Codable {
-                    var mainPropId: String
-                    var statValue: Double
-                }
-
-                struct ReliquarySubstat: Codable, Hashable {
-                    var appendPropId: String
-                    var statValue: Double
-                }
-
-                struct WeaponStat: Codable {
-                    var appendPropId: String
-                    var statValue: Double
-                }
             }
+
+            /// 物品的ID，武器和圣遗物共用
+            var itemId: Int
+            /// 圣遗物
+            var reliquary: Reliquary?
+            /// 武器
+            var weapon: Weapon?
+            var flat: Flat
         }
 
         struct FetterInfo: Codable {
             var expLevel: Int
         }
+
+        /// 角色ID
+        var avatarId: Int
+        /// 命之座ID列表
+        let talentIdList: [Int]?
+        /// 角色属性
+        var propMap: PropMap
+        /// 角色战斗属性
+        var fightPropMap: FightPropMap
+        /// 角色天赋技能组ID
+        var skillDepotId: Int
+        /// 所有固定天赋ID的列表
+        var inherentProudSkillList: [Int]
+        /// 天赋等级的字典，skillLevelMap.skillLevel: [天赋ID(String) : 等级(Int)]
+        var skillLevelMap: SkillLevelMap
+        /// 装备列表，包括武器和圣遗物
+        var equipList: [EquipList]
+        /// 角色好感等级，fetterInfo.expLevel
+        var fetterInfo: FetterInfo
+        /// 命之座带来的额外技能等级加成
+        var proudSkillExtraLevelMap: [String: Int]?
     }
+
+    /// 帐号基本信息
+    var playerInfo: PlayerInfo
+    /// 正在展示的角色的详细信息
+    var avatarInfoList: [AvatarInfo]?
+    var ttl: Int?
+    var uid: String?
 }
 
+// MARK: - FightPropMap
+
 struct FightPropMap: Codable {
+    // MARK: Internal
+
     /// 基础生命
     var baseHP: Double
     /// 基础攻击力
@@ -300,6 +336,8 @@ struct FightPropMap: Codable {
     var ATK: Double
     /// 防御力
     var DEF: Double
+
+    // MARK: Private
 
     private enum CodingKeys: String, CodingKey {
         case baseHP = "1"

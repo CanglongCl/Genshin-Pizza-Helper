@@ -6,13 +6,14 @@ import PackageDescription
 let package = Package(
     name: "SwiftPieChart",
     platforms: [
-        .iOS(.v13), .macOS(.v11)
+        .iOS(.v13), .macOS(.v11),
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "SwiftPieChart",
-            targets: ["SwiftPieChart"]),
+            targets: ["SwiftPieChart"]
+        ),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -23,9 +24,11 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "SwiftPieChart",
-            dependencies: []),
+            dependencies: []
+        ),
         .testTarget(
             name: "SwiftPieChartTests",
-            dependencies: ["SwiftPieChart"]),
+            dependencies: ["SwiftPieChart"]
+        ),
     ]
 )

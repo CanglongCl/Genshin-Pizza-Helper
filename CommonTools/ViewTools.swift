@@ -21,7 +21,10 @@ extension View {
         let renderer = UIGraphicsImageRenderer(size: targetSize)
 
         return renderer.image { _ in
-            view?.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
+            view?.drawHierarchy(
+                in: controller.view.bounds,
+                afterScreenUpdates: true
+            )
         }
     }
 }
@@ -31,7 +34,11 @@ extension View {
     /// - Parameters:
     ///   - view: View to navigate to.
     ///   - binding: Only navigates when this condition is `true`.
-    func navigate<NewView: View>(to view: NewView, when binding: Binding<Bool>) -> some View {
+    func navigate<NewView: View>(
+        to view: NewView,
+        when binding: Binding<Bool>
+    )
+        -> some View {
         ZStack {
             self
                 .navigationBarTitle("")
@@ -51,20 +58,25 @@ extension View {
     }
 }
 
+// MARK: - ScrollViewOffsetPreferenceKey
+
 // Scroll View Offset Getter
 struct ScrollViewOffsetPreferenceKey: PreferenceKey {
+    typealias value = CGPoint
+
     static var defaultValue: CGPoint = .zero
 
     static func reduce(value: inout CGPoint, nextValue: () -> CGPoint) {
         value = nextValue()
     }
-
-    typealias value = CGPoint
 }
+
+// MARK: - ScrollViewOffsetModifier
 
 struct ScrollViewOffsetModifier: ViewModifier {
     let coordinateSpace: String
-    @Binding var offset: CGPoint
+    @Binding
+    var offset: CGPoint
 
     func body(content: Content) -> some View {
         ZStack {
@@ -72,7 +84,10 @@ struct ScrollViewOffsetModifier: ViewModifier {
             GeometryReader { proxy in
                 let x = proxy.frame(in: .named(coordinateSpace)).minX
                 let y = proxy.frame(in: .named(coordinateSpace)).minY
-                Color.clear.preference(key: ScrollViewOffsetPreferenceKey.self, value: CGPoint(x: x * -1, y: y * -1))
+                Color.clear.preference(
+                    key: ScrollViewOffsetPreferenceKey.self,
+                    value: CGPoint(x: x * -1, y: y * -1)
+                )
             }
         }
         .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
@@ -82,27 +97,86 @@ struct ScrollViewOffsetModifier: ViewModifier {
 }
 
 extension View {
-    func readingScrollView(from coordinateSpace: String, into binding: Binding<CGPoint>) -> some View {
-        modifier(ScrollViewOffsetModifier(coordinateSpace: coordinateSpace, offset: binding))
+    func readingScrollView(
+        from coordinateSpace: String,
+        into binding: Binding<CGPoint>
+    )
+        -> some View {
+        modifier(ScrollViewOffsetModifier(
+            coordinateSpace: coordinateSpace,
+            offset: binding
+        ))
     }
 }
 
 // MARK: - Blur Background
+
 extension View {
     func blurMaterialBackground() -> some View {
         modifier(BlurMaterialBackground())
     }
+
+    func alternativeBlurMaterialBackground() -> some View {
+        modifier(AlternativeBlurMaterialBackground())
+    }
 }
+
+// MARK: - BlurMaterialBackground
 
 struct BlurMaterialBackground: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 15.0, *) {
-            content.background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-                .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+            content.background(
+                .regularMaterial,
+                in: RoundedRectangle(cornerRadius: 20, style: .continuous)
+            )
+            .contentShape(RoundedRectangle(
+                cornerRadius: 20,
+                style: .continuous
+            ))
         } else {
-            content.background(RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .foregroundColor(Color(UIColor.systemGray6)))
-                .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+            content
+                .background(
+                    RoundedRectangle(
+                        cornerRadius: 20,
+                        style: .continuous
+                    )
+                    .foregroundColor(Color(UIColor.systemGray6))
+                )
+                .contentShape(RoundedRectangle(
+                    cornerRadius: 20,
+                    style: .continuous
+                ))
+        }
+    }
+}
+
+// MARK: - AlternativeBlurMaterialBackground
+
+struct AlternativeBlurMaterialBackground: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 15.0, *) {
+            content.background(
+                .ultraThinMaterial,
+                in: RoundedRectangle(cornerRadius: 20, style: .continuous)
+            )
+            .contentShape(RoundedRectangle(
+                cornerRadius: 20,
+                style: .continuous
+            ))
+        } else {
+            content
+                .background(
+                    RoundedRectangle(
+                        cornerRadius: 20,
+                        style: .continuous
+                    )
+                    .foregroundColor(Color(UIColor.systemGray4).opacity(0.5))
+                )
+                .contentShape(RoundedRectangle(
+                    cornerRadius: 20,
+                    style: .continuous
+                ))
         }
     }
 }

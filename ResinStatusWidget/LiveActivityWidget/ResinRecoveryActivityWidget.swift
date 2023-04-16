@@ -6,15 +6,18 @@
 //
 
 #if canImport(ActivityKit)
-import Foundation
-import WidgetKit
-import SwiftUI
 import ActivityKit
+import Foundation
+import SwiftUI
+import WidgetKit
 
 @available(iOS 16.1, *)
 struct ResinRecoveryActivityWidget: Widget {
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: ResinRecoveryAttributes.self) { context in
+        ActivityConfiguration(
+            for: ResinRecoveryAttributes
+                .self
+        ) { context in
             ResinRecoveryActivityWidgetLockScreenView(context: context)
         } dynamicIsland: { context in
             DynamicIsland {
@@ -50,16 +53,23 @@ struct ResinRecoveryActivityWidget: Widget {
                                 .scaledToFit()
                                 .frame(maxHeight: 40)
                             VStack(alignment: .leading) {
-                                Text("距离\(context.state.next20ResinCount)树脂")
-                                    .font(.caption2)
-                                Text(timerInterval: Date()...context.state.next20ResinRecoveryTime, countsDown: true)
-                                    .multilineTextAlignment(.leading)
-                                    .font(.system(.title2, design: .rounded))
-                                    .foregroundColor(Color("textColor.originResin"))
+                                Text(
+                                    "距离\(context.state.next20ResinCount)树脂"
+                                )
+                                .font(.caption2)
+                                Text(
+                                    timerInterval: Date() ... context.state
+                                        .next20ResinRecoveryTime,
+                                    countsDown: true
+                                )
+                                .multilineTextAlignment(.leading)
+                                .font(.system(.title2, design: .rounded))
+                                .foregroundColor(
+                                    Color("textColor.originResin")
+                                )
                             }
                             .gridColumnAlignment(.leading)
                             .frame(width: 100)
-
                         }
                         Spacer()
                         HStack {
@@ -70,10 +80,16 @@ struct ResinRecoveryActivityWidget: Widget {
                             VStack(alignment: .leading) {
                                 Text("距离160树脂")
                                     .font(.caption2)
-                                Text(timerInterval: Date()...context.state.resinFullTime, countsDown: true)
-                                    .multilineTextAlignment(.leading)
-                                    .font(.system(.title2, design: .rounded))
-                                    .foregroundColor(Color("textColor.originResin"))
+                                Text(
+                                    timerInterval: Date() ... context.state
+                                        .resinFullTime,
+                                    countsDown: true
+                                )
+                                .multilineTextAlignment(.leading)
+                                .font(.system(.title2, design: .rounded))
+                                .foregroundColor(
+                                    Color("textColor.originResin")
+                                )
                             }
                             .gridColumnAlignment(.leading)
                             .frame(width: 100)
@@ -84,16 +100,20 @@ struct ResinRecoveryActivityWidget: Widget {
             } compactLeading: {
                 Image("树脂").resizable().scaledToFit()
             } compactTrailing: {
-                Text(timerInterval: Date()...context.state.next20ResinRecoveryTime, countsDown: true, showsHours: false)
-                    .monospacedDigit()
-                    .multilineTextAlignment(.center)
-                    .frame(width: 60)
-                    .foregroundColor(Color("textColor2"))
+                Text(
+                    timerInterval: Date() ... context.state
+                        .next20ResinRecoveryTime,
+                    countsDown: true,
+                    showsHours: false
+                )
+                .monospacedDigit()
+                .multilineTextAlignment(.center)
+                .frame(width: 60)
+                .foregroundColor(Color("textColor2"))
             } minimal: {
                 Image("树脂").resizable().scaledToFit()
             }
         }
-
     }
 }
 
@@ -115,9 +135,13 @@ struct ResinRecoveryActivityWidgetLockScreenView: View {
                         VStack(alignment: .leading) {
                             Text("距离\(context.state.next20ResinCount)树脂")
                                 .font(.caption2)
-                            Text(timerInterval: Date()...context.state.next20ResinRecoveryTime, countsDown: true)
-                                .multilineTextAlignment(.leading)
-                                .font(.system(.title2, design: .rounded))
+                            Text(
+                                timerInterval: Date() ... context.state
+                                    .next20ResinRecoveryTime,
+                                countsDown: true
+                            )
+                            .multilineTextAlignment(.leading)
+                            .font(.system(.title2, design: .rounded))
                         }
                         .gridColumnAlignment(.leading)
 //                        .frame(width: 140)
@@ -131,13 +155,16 @@ struct ResinRecoveryActivityWidgetLockScreenView: View {
                     VStack(alignment: .leading) {
                         Text("距离160树脂")
                             .font(.caption2)
-                        Text(timerInterval: Date()...context.state.resinFullTime, countsDown: true)
-                            .multilineTextAlignment(.leading)
-                            .font(.system(.title2, design: .rounded))
+                        Text(
+                            timerInterval: Date() ... context.state
+                                .resinFullTime,
+                            countsDown: true
+                        )
+                        .multilineTextAlignment(.leading)
+                        .font(.system(.title2, design: .rounded))
                     }
                     .gridColumnAlignment(.leading)
 //                    .frame(width: 140)
-
                 }
                 if context.state.showExpeditionInfo {
                     GridRow {
@@ -148,9 +175,13 @@ struct ResinRecoveryActivityWidgetLockScreenView: View {
                         VStack(alignment: .leading) {
                             Text("距离派遣探索全部完成")
                                 .font(.caption2)
-                            Text(timerInterval: Date()...context.state.allExpeditionCompleteTime, countsDown: true)
-                                .multilineTextAlignment(.leading)
-                                .font(.system(.title2, design: .rounded))
+                            Text(
+                                timerInterval: Date() ... context.state
+                                    .allExpeditionCompleteTime,
+                                countsDown: true
+                            )
+                            .multilineTextAlignment(.leading)
+                            .font(.system(.title2, design: .rounded))
                         }
                         .gridColumnAlignment(.leading)
 //                        .frame(width: 140)
@@ -175,9 +206,19 @@ struct ResinRecoveryActivityWidgetLockScreenView: View {
         .background(alignment: .center) {
             switch context.state.background {
             case .ramdom:
-                WidgetBackgroundView(background: .randomNamecardBackground, darkModeOn: true)
-            case .customize(let backgroundOptions) :
-                WidgetBackgroundView(background: backgroundOptions.map( { WidgetBackground(identifier: $0, display: $0) } ).randomElement()!, darkModeOn: true)
+                WidgetBackgroundView(
+                    background: .randomNamecardBackground,
+                    darkModeOn: true
+                )
+            case let .customize(backgroundOptions):
+                WidgetBackgroundView(
+                    background: backgroundOptions
+                        .map {
+                            WidgetBackground(identifier: $0, display: $0)
+                        }
+                        .randomElement()!,
+                    darkModeOn: true
+                )
             case .noBackground:
                 EmptyView()
             }

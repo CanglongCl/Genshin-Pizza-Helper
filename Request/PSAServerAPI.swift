@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import HBMihoyoAPI
 
 extension API {
-    struct PSAServer {
+    enum PSAServer {
         /// 上传数据
         static func uploadUserData(
             path: String,
@@ -21,7 +22,10 @@ extension API {
             let ds = (stringData.sha256 + salt).sha256
             headers.updateValue(ds, forKey: "ds")
 
-            headers.updateValue(String(Int.random(in: 0...999999)), forKey: "dseed")
+            headers.updateValue(
+                String(Int.random(in: 0 ... 999999)),
+                forKey: "dseed"
+            )
 
             // 请求
             HttpMethod<PSAServerPostResultModel>
@@ -32,7 +36,7 @@ extension API {
                     headersDict: headers
                 ) { result in
                     switch result {
-                    case .success(let requestResult):
+                    case let .success(requestResult):
                         print("request succeed")
 //                        let userData = requestResult.data
 //                        let retcode = requestResult.retCode
@@ -44,10 +48,16 @@ extension API {
                             completion(.success(requestResult))
                         default:
                             print("fail")
-                            completion(.failure(.uploadError(requestResult.message)))
+                            completion(.failure(.uploadError(
+                                requestResult
+                                    .message
+                            )))
                         }
-                    case .failure(let error):
-                        completion(.failure(.uploadError(error.localizedDescription)))
+                    case let .failure(error):
+                        completion(.failure(.uploadError(
+                            error
+                                .localizedDescription
+                        )))
                     }
                 }
         }
@@ -57,6 +67,7 @@ extension API {
             season: Int? = nil,
             server: Server? = nil,
             floor: Int = 12,
+            pvp: Bool,
             _ completion: @escaping (UtilizationDataFetchModelResult) -> ()
         ) {
             // 请求类别
@@ -64,13 +75,18 @@ extension API {
 
             var paraDict = [String: String]()
             if let season = season {
-                paraDict.updateValue(String(describing: season), forKey: "season")
+                paraDict.updateValue(
+                    String(describing: season),
+                    forKey: "season"
+                )
             }
 
             paraDict.updateValue(String(describing: floor), forKey: "floor")
             if let server = server {
                 paraDict.updateValue(server.id, forKey: "server")
             }
+
+            paraDict.updateValue(String(pvp), forKey: "pvp")
 
             // 请求
             HttpMethod<UtilizationDataFetchModel>
@@ -80,8 +96,7 @@ extension API {
                     parasDict: paraDict
                 ) { result in
                     switch result {
-
-                    case .success(let requestResult):
+                    case let .success(requestResult):
                         print("request succeed")
 //                        let userData = requestResult.data
 //                        let retcode = requestResult.retCode
@@ -93,11 +108,17 @@ extension API {
                             completion(.success(requestResult))
                         default:
                             print("fail")
-                            completion(.failure(.getDataError(requestResult.message)))
+                            completion(.failure(.getDataError(
+                                requestResult
+                                    .message
+                            )))
                         }
 
-                    case .failure(let error):
-                        completion(.failure(.getDataError(error.localizedDescription)))
+                    case let .failure(error):
+                        completion(.failure(.getDataError(
+                            error
+                                .localizedDescription
+                        )))
                     }
                 }
         }
@@ -106,14 +127,18 @@ extension API {
         static func fetchFullStarHoldingRateData(
             season: Int? = nil,
             server: Server? = nil,
-            _ completion: @escaping (AvatarHoldingReceiveDataFetchModelResult) -> ()
+            _ completion: @escaping (AvatarHoldingReceiveDataFetchModelResult)
+                -> ()
         ) {
             // 请求类别
             let urlStr = "/abyss/holding/full_star"
 
             var paraDict = [String: String]()
             if let season = season {
-                paraDict.updateValue(String(describing: season), forKey: "season")
+                paraDict.updateValue(
+                    String(describing: season),
+                    forKey: "season"
+                )
             }
 
             if let server = server {
@@ -128,8 +153,7 @@ extension API {
                     parasDict: paraDict
                 ) { result in
                     switch result {
-
-                    case .success(let requestResult):
+                    case let .success(requestResult):
                         print("request succeed")
 //                        let userData = requestResult.data
 //                        let retcode = requestResult.retCode
@@ -141,11 +165,17 @@ extension API {
                             completion(.success(requestResult))
                         default:
                             print("fail")
-                            completion(.failure(.getDataError(requestResult.message)))
+                            completion(.failure(.getDataError(
+                                requestResult
+                                    .message
+                            )))
                         }
 
-                    case .failure(let error):
-                        completion(.failure(.getDataError(error.localizedDescription)))
+                    case let .failure(error):
+                        completion(.failure(.getDataError(
+                            error
+                                .localizedDescription
+                        )))
                     }
                 }
         }
@@ -154,7 +184,8 @@ extension API {
         static func fetchHoldingRateData(
             queryStartDate: Date? = nil,
             server: Server? = nil,
-            _ completion: @escaping (AvatarHoldingReceiveDataFetchModelResult) -> ()
+            _ completion: @escaping (AvatarHoldingReceiveDataFetchModelResult)
+                -> ()
         ) {
             // 请求类别
             let urlStr = "/user_holding/holding_rate"
@@ -163,7 +194,13 @@ extension API {
             if let queryStartDate = queryStartDate {
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "yyyy-MM-dd"
-                paraDict.updateValue(String(describing: dateFormatter.string(from: queryStartDate)), forKey: "start")
+                paraDict.updateValue(
+                    String(
+                        describing: dateFormatter
+                            .string(from: queryStartDate)
+                    ),
+                    forKey: "start"
+                )
             }
             if let server = server {
                 paraDict.updateValue(server.id, forKey: "server")
@@ -177,8 +214,7 @@ extension API {
                     parasDict: paraDict
                 ) { result in
                     switch result {
-
-                    case .success(let requestResult):
+                    case let .success(requestResult):
                         print("request succeed")
 //                        let userData = requestResult.data
 //                        let retcode = requestResult.retCode
@@ -190,11 +226,17 @@ extension API {
                             completion(.success(requestResult))
                         default:
                             print("fail")
-                            completion(.failure(.getDataError(requestResult.message)))
+                            completion(.failure(.getDataError(
+                                requestResult
+                                    .message
+                            )))
                         }
 
-                    case .failure(let error):
-                        completion(.failure(.getDataError(error.localizedDescription)))
+                    case let .failure(error):
+                        completion(.failure(.getDataError(
+                            error
+                                .localizedDescription
+                        )))
                     }
                 }
         }
@@ -213,8 +255,7 @@ extension API {
                     urlStr: urlStr
                 ) { result in
                     switch result {
-
-                    case .success(let requestResult):
+                    case let .success(requestResult):
                         print("request succeed")
 //                        let userData = requestResult.data
 //                        let retcode = requestResult.retCode
@@ -226,11 +267,17 @@ extension API {
                             completion(.success(requestResult))
                         default:
                             print("fail")
-                            completion(.failure(.getDataError(requestResult.message)))
+                            completion(.failure(.getDataError(
+                                requestResult
+                                    .message
+                            )))
                         }
 
-                    case .failure(let error):
-                        completion(.failure(.getDataError(error.localizedDescription)))
+                    case let .failure(error):
+                        completion(.failure(.getDataError(
+                            error
+                                .localizedDescription
+                        )))
                     }
                 }
         }
@@ -247,7 +294,10 @@ extension API {
 
             var paraDict = [String: String]()
             if let season = season {
-                paraDict.updateValue(String(describing: season), forKey: "season")
+                paraDict.updateValue(
+                    String(describing: season),
+                    forKey: "season"
+                )
             }
 
             paraDict.updateValue(String(describing: floor), forKey: "floor")
@@ -263,8 +313,7 @@ extension API {
                     parasDict: paraDict
                 ) { result in
                     switch result {
-
-                    case .success(let requestResult):
+                    case let .success(requestResult):
                         print("request succeed")
 //                        let userData = requestResult.data
 //                        let retcode = requestResult.retCode
@@ -276,11 +325,17 @@ extension API {
                             completion(.success(requestResult))
                         default:
                             print("fail")
-                            completion(.failure(.getDataError(requestResult.message)))
+                            completion(.failure(.getDataError(
+                                requestResult
+                                    .message
+                            )))
                         }
 
-                    case .failure(let error):
-                        completion(.failure(.getDataError(error.localizedDescription)))
+                    case let .failure(error):
+                        completion(.failure(.getDataError(
+                            error
+                                .localizedDescription
+                        )))
                     }
                 }
         }

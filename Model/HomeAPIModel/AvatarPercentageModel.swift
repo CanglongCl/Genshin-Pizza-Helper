@@ -8,11 +8,11 @@
 import Foundation
 
 struct AvatarPercentageModel: Codable {
-    let totalUsers: Int
-    let avatars: [Avatar]
-
     struct Avatar: Codable {
         let charId: Int
         let percentage: Double?
     }
+
+    let totalUsers: Int
+    let avatars: [Avatar]
 }

@@ -5,8 +5,8 @@
 //  Created by 戴藏龙 on 2022/9/10.
 //
 
-import WidgetKit
 import SwiftUI
+import WidgetKit
 
 #if !os(watchOS)
 struct WidgetsBundleLowerThaniOS16: WidgetBundle {
@@ -17,16 +17,18 @@ struct WidgetsBundleLowerThaniOS16: WidgetBundle {
 }
 #endif
 
+// MARK: - WidgetsBundleiOS16
+
 @available(iOSApplicationExtension 16.0, watchOSApplicationExtension 9.0, *)
 struct WidgetsBundleiOS16: WidgetBundle {
     var body: some Widget {
         #if !os(watchOS)
         WidgetsBundleLowerThaniOS16().body
-            #if canImport(ActivityKit)
-            if #available(iOS 16.1, *) {
-                ResinRecoveryActivityWidget()
-            }
-            #endif
+        #if canImport(ActivityKit)
+        if #available(iOS 16.1, *) {
+            ResinRecoveryActivityWidget()
+        }
+        #endif
         #else
         AlternativeWatchCornerResinWidget()
         #endif
@@ -36,6 +38,8 @@ struct WidgetsBundleiOS16: WidgetBundle {
         SubWidgetsBundleiOS16().body
     }
 }
+
+// MARK: - SubWidgetsBundleiOS16
 
 // 因为一个body只能放10个
 @available(iOSApplicationExtension 16.0, watchOSApplicationExtension 9.0, *)

@@ -9,12 +9,18 @@ import Foundation
 import SwiftUI
 import WidgetKit
 
+// MARK: - LockScreenResinFullTimeWidget
+
 @available(iOSApplicationExtension 16.0, *)
 struct LockScreenResinFullTimeWidget: Widget {
     let kind: String = "LockScreenResinFullTimeWidget"
 
     var body: some WidgetConfiguration {
-        IntentConfiguration(kind: kind, intent: SelectOnlyAccountIntent.self, provider: LockScreenWidgetProvider(recommendationsTag: "的原粹树脂回满时间")) { entry in
+        IntentConfiguration(
+            kind: kind,
+            intent: SelectOnlyAccountIntent.self,
+            provider: LockScreenWidgetProvider(recommendationsTag: "的原粹树脂回满时间")
+        ) { entry in
             LockScreenResinFullTimeWidgetView(entry: entry)
         }
         .configurationDisplayName("原粹树脂回满时间")
@@ -23,10 +29,14 @@ struct LockScreenResinFullTimeWidget: Widget {
     }
 }
 
-@available (iOS 16.0, *)
+// MARK: - LockScreenResinFullTimeWidgetView
+
+@available(iOS 16.0, *)
 struct LockScreenResinFullTimeWidgetView: View {
-    @Environment(\.widgetFamily) var family: WidgetFamily
+    @Environment(\.widgetFamily)
+    var family: WidgetFamily
     let entry: LockScreenWidgetProvider.Entry
+
     var dataKind: WidgetDataKind { entry.widgetDataKind }
     var accountName: String? { entry.accountName }
 
@@ -36,24 +46,27 @@ struct LockScreenResinFullTimeWidgetView: View {
             components.scheme = "ophelperwidget"
             components.host = "accountSetting"
             components.queryItems = [
-                .init(name: "accountUUIDString", value: entry.accountUUIDString)
+                .init(
+                    name: "accountUUIDString",
+                    value: entry.accountUUIDString
+                ),
             ]
             return components.url!
         }()
 
         switch entry.widgetDataKind {
-        case .normal(let result):
+        case let .normal(result):
             switch result {
-            case .success(_):
+            case .success:
                 return nil
-            case .failure(_):
+            case .failure:
                 return errorURL
             }
-        case .simplified(let result):
+        case let .simplified(result):
             switch result {
-            case .success(_):
+            case .success:
                 return nil
-            case .failure(_):
+            case .failure:
                 return errorURL
             }
         }
@@ -62,13 +75,12 @@ struct LockScreenResinFullTimeWidgetView: View {
     var body: some View {
         Group {
             switch dataKind {
-            case .normal(let result):
+            case let .normal(result):
                 LockScreenResinFullTimeWidgetCircular(result: result)
-            case .simplified(let result):
+            case let .simplified(result):
                 LockScreenResinFullTimeWidgetCircular(result: result)
             }
         }
         .widgetURL(url)
-
     }
 }

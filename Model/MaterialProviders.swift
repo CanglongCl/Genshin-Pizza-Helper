@@ -6,30 +6,39 @@
 //  提供今日材料信息的工具类
 
 import Foundation
+import HBMihoyoAPI
+
+// MARK: - WeaponOrTalentMaterial
 
 struct WeaponOrTalentMaterial: Equatable {
-    static func == (lhs: WeaponOrTalentMaterial, rhs: WeaponOrTalentMaterial) -> Bool {
-        lhs.imageString == rhs.imageString
+    struct RelatedItem {
+        let imageString: String
+        let nameToLocalize: String
+
+        var displayName: String {
+            nameToLocalize.localizedWithFix
+        }
     }
 
     let imageString: String
-    let localizedName: String
+    let nameToLocalize: String
     let weekday: MaterialWeekday
     var relatedItem: [RelatedItem] = []
 
     var displayName: String {
-        NSLocalizedString(localizedName, comment: "weapon or talent material name")
+        nameToLocalize.localizedWithFix
     }
 
-    struct RelatedItem {
-        let imageString: String
-        let localizedName: String
-
-        var displayName: String {
-            localizedName.localized
-        }
+    static func == (
+        lhs: WeaponOrTalentMaterial,
+        rhs: WeaponOrTalentMaterial
+    )
+        -> Bool {
+        lhs.imageString == rhs.imageString
     }
 }
+
+// MARK: - WeaponMaterialProvider
 
 struct WeaponMaterialProvider {
     var weekday: MaterialWeekday = .today()
@@ -39,13 +48,17 @@ struct WeaponMaterialProvider {
     }
 }
 
+// MARK: - TalentMaterialProvider
+
 struct TalentMaterialProvider {
     var weekday: MaterialWeekday = .today()
 
     var todaysMaterials: [WeaponOrTalentMaterial] {
-        return WeaponOrTalentMaterial.allTalentMaterialsOf(weekday: weekday)
+        WeaponOrTalentMaterial.allTalentMaterialsOf(weekday: weekday)
     }
 }
+
+// MARK: - MaterialWeekday
 
 enum MaterialWeekday: CaseIterable {
     case mondayAndThursday
@@ -53,9 +66,18 @@ enum MaterialWeekday: CaseIterable {
     case wednesdayAndSaturday
     case sunday
 
+    // MARK: Internal
+
     static func today() -> Self {
-        let isTimePast4am: Bool = Date() > Calendar.current.date(bySettingHour: 4, minute: 0, second: 0, of: Date())!
-        let todayWeekDayNum = Calendar.current.dateComponents([.weekday], from: Date()).weekday!
+        var calendar = Calendar.current
+        calendar.timeZone = Server(
+            rawValue: UserDefaults(suiteName: "group.GenshinPizzaHelper")?
+                .string(forKey: "defaultServer") ?? Server.asia.rawValue
+        )?.timeZone() ?? Server.asia.timeZone()
+        let isTimePast4am: Bool = Date() > calendar
+            .date(bySettingHour: 4, minute: 0, second: 0, of: Date())!
+        let todayWeekDayNum = calendar.dateComponents([.weekday], from: Date())
+            .weekday!
         let weekdayNum = isTimePast4am ? todayWeekDayNum : (todayWeekDayNum - 1)
         switch weekdayNum {
         case 1:
@@ -64,7 +86,7 @@ enum MaterialWeekday: CaseIterable {
             return .mondayAndThursday
         case 3, 6:
             return .tuesdayAndFriday
-        case 4, 7, 0:
+        case 0, 4, 7:
             return .wednesdayAndSaturday
         default:
             return .sunday

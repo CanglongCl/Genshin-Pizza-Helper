@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import HBMihoyoAPI
+
+// MARK: - FetchHomeModel
 
 struct FetchHomeModel<T: Codable>: Codable {
     let retCode: Int
@@ -13,4 +16,7 @@ struct FetchHomeModel<T: Codable>: Codable {
     let data: T
 }
 
-typealias FetchHomeModelResult<T: Codable> = Result<FetchHomeModel<T>, PSAServerError>
+typealias FetchHomeModelResult<T: Codable> = Result<
+    FetchHomeModel<T>,
+    PSAServerError
+>
